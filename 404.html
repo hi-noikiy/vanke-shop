@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="format-detection" content="telephone=no"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no"/>
+<meta name="msapplication-tap-highlight" content="no" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+<title>未找到内容</title>
+<link rel="stylesheet" type="text/css" href="/wap/css/base.css">
+<link rel="stylesheet" type="text/css" href="/wap/css/nctouch_categroy.css">
+	<style>
+		.norecord {
+			margin: 14px;
+			padding: 20px;
+			text-align: center;
+			font-size: 0.75rem;
+			background: #fff;
+		}
+		#div404 {
+			width: 520px;
+			height: 220px;
+			margin: 10% auto 0px;
+			text-align: center;
+			font-size: 0.75rem;
+			border: 1px solid #eee;
+			border-radius: 5px;
+			background: #fff;
+		}
+		.error1 {
+			text-align: center;
+			padding: 40px;
+			line-height: 50px;;
+			font-size: 15px;
+			color: #5c5c5c;
+		}
+		.error2 a {
+			float: left;
+			margin-left: 110px;
+			width: 100px;
+			height: 30px;
+			line-height: 30px;
+			border-radius: 3px;
+			color: #fff;
+			display: inline-block;
+			font-size: 15px;
+			text-align: center;
+			background: #ff4100;
+		}
+	</style>
+
+	<script src="/wap/js/mobile-detect.min.js" ></script>
+	<script>
+		var md = new MobileDetect(window.navigator.userAgent);
+	</script>
+</head>
+<body>
+<header id="header" style="display:none;">
+	<div class="header-wrap">
+		<div class="header-l"><a href="javascript:history.go(-1);"><i class="back"></i></a></div>
+		<div class="header-title">
+			<h1>出错了</h1>
+		</div>
+		<div class="header-r"><a id="header-nav" href="javascript:void(0);"><i class="more"></i><sup></sup></a></div>
+	</div>
+	<div class="nctouch-nav-layout">
+		<div class="nctouch-nav-menu"><span class="arrow"></span>
+			<ul>
+				<li><a href="/wap/index.html"><i class="home"></i>首页</a></li>
+				<li><a href="/wap/search.html"><i class="search"></i>搜索</a></li>
+				<li><a href="/wap/cart_list.html"><i class="cart"></i>购物车</a><sup></sup></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="nctouch-main-layout">
+	<div class="norecord" style="display: none;">
+		抱歉！没找到您要的内容
+	</div>
+	<div id="div404" style="display: none;">
+		<div class="error1" style="font-size:20px;">很抱歉，您要访问的页面不存在！</div>
+		<div class="error2"><a href="javascript:history.go(-1);">返回上一页</a><a href="/">首页</a></div>
+		</div>
+</div>
+<footer id="footer" class="fixed-Width"></footer>
+</body>
+<script type="text/javascript" src="/wap/js/config.js"></script>
+<script type="text/javascript" src="/wap/js/zepto.min.js"></script>
+<script type="text/javascript" src="/wap/js/common.js"></script>
+<script type="text/javascript" src="/wap/js/iscroll.js"></script>
+<script>
+	if(md.mobile()){
+		$("#header").show();
+		$(".norecord").show();
+		var f = '<div class="menubar" data-position="fixed" data-role="footer" style="border:none;border-top:1px solid #e0e0e0;background:#fff;"><ul><li><a href="' + WapSiteUrl + '/index.html"><p><i class="home"></i></p><p><b>首页</b></p></a></li><li><a href="' + WapSiteUrl + '/tmpl/product_first_categroy.html"><p><i class="type"></i></p><p><b>分类</b></p></a></li><li>';
+		f += '<a href="' + WapSiteUrl + '/tmpl/cart_list.html" data-icon="mycart"><p><i class="cart"></i></p><p><b>购物车</b></p></a></li><li><a href="' + WapSiteUrl + '/tmpl/member/member.html"><p><i class="my"></i></p><p><b>我的</b></p></a></li></ul></div>';
+		$("#footer").html(f);
+	}else{
+		$("#div404").show();
+	}
+</script>
+</html>

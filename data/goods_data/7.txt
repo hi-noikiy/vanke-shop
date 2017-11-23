@@ -1,0 +1,32 @@
+a:33:{s:11:"form_submit";s:2:"ok";s:8:"commonid";s:4:"5296";s:7:"type_id";s:2:"54";s:7:"ref_url";s:69:"http://www.wk_line.com/shop/index.php?act=store_goods_online&op=index";s:7:"cate_id";s:3:"290";s:9:"cate_name";s:43:"电脑办公 &gt;电脑整机 &gt;笔记本";s:6:"g_name";s:82:"HP EliteBook 820 G3 12英寸商务超薄笔记本电脑-I5/8G/256固态/3年服务";s:8:"g_jingle";s:0:"";s:10:"image_path";s:24:"67_05508429480242384.jpg";s:11:"goods_image";s:0:"";s:6:"b_name";s:0:"";s:4:"b_id";s:1:"0";s:20:"search_brand_keyword";s:0:"";s:4:"attr";a:3:{i:241;a:2:{s:4:"name";s:6:"版本";i:0;s:6:"不限";}i:242;a:2:{s:4:"name";s:12:"存储容量";i:0;s:6:"不限";}i:243;a:2:{s:4:"name";s:12:"屏幕尺寸";i:0;s:6:"不限";}}s:6:"g_body";s:1686:"<span> </span> 
+<p>
+	<span>CPU: Intel i5 CPU</span> 
+</p>
+<span> </span> 
+<p>
+	<span><span style=\"font-family:宋体;\">内存：</span><span>8G </span><span style=\"font-family:宋体;\">内存</span></span> 
+</p>
+<span> </span> 
+<p>
+	<span><span style=\"font-family:宋体;\">硬盘：</span><span>256G </span><span style=\"font-family:宋体;\">高速固态硬盘</span></span> 
+</p>
+<span> </span> 
+<p>
+	<span><span style=\"font-family:宋体;\">显示屏：</span><span>12</span><span style=\"font-family:宋体;\">寸屏幕，</span><span>1080p</span></span> 
+</p>
+<span> </span> 
+<p>
+	<span><span style=\"font-family:宋体;\">续航时间：</span><span>5</span><span style=\"font-family:宋体;\">小时续航时间</span></span> 
+</p>
+<span> </span> 
+<p>
+	<span><span style=\"font-family:宋体;\">服务：</span><span>3</span><span style=\"font-family:宋体;\">年整机保及电池三年保，硬盘不返还</span></span> 
+</p>
+<p>
+	<br />
+</p>
+<p>
+	<span><span style=\"font-family:宋体;\"><br />
+</span></span> 
+</p>
+<span> </span><img alt=\"image\" src=\"https://mall.vankeservice.com/data/upload/shop/store/goods/67/67_05481903831946213_1280.jpg\" /><img alt=\"image\" src=\"https://mall.vankeservice.com/data/upload/shop/store/goods/67/67_05481903756886545_1280.jpg\" /><img alt=\"image\" src=\"https://mall.vankeservice.com/data/upload/shop/store/goods/67/67_05481903679406982_1280.jpg\" /><img alt=\"image\" src=\"https://mall.vankeservice.com/data/upload/shop/store/goods/67/67_05481903609882636_1280.jpg\" /><img alt=\"image\" src=\"https://mall.vankeservice.com/data/upload/shop/store/goods/67/67_05481903539633067_1280.jpg\" />";s:9:"add_album";s:0:"";s:6:"m_body";s:0:"";s:9:"plate_top";s:9:"请选择";s:12:"plate_bottom";s:9:"请选择";s:6:"region";s:2:"22";s:11:"province_id";s:2:"22";s:7:"city_id";s:1:"0";s:7:"freight";s:1:"0";s:9:"g_freight";s:4:"0.00";s:12:"transport_id";s:1:"0";s:15:"transport_title";s:0:"";s:5:"g_vat";s:1:"1";s:11:"city_center";a:1:{i:0;s:1:"1";}s:14:"city_center_id";s:1:"1";s:9:"sgcate_id";a:1:{i:0;s:1:"0";}s:7:"g_state";s:1:"1";s:10:"g_saledate";s:0:"";s:9:"g_commend";s:1:"1";}

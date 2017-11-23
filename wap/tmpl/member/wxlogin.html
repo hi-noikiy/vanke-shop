@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="stylesheet" type="text/css" href="../../css/base.css">
+<link rel="stylesheet" type="text/css" href="../../css/nctouch_common.css">
+<link rel="stylesheet" type="text/css" href="../../css/nctouch_cart.css">
+</head>
+<body>
+<header id="header" class="fixed">
+    <div class="header-wrap">
+        <div class="header-title">
+            <h1>微信登录</h1>
+        </div>
+    </div>
+</header>
+<div class="nctouch-main-layout">
+    <div id="cart-list-wp">
+
+        <div class="nctouch-norecord talk">
+            <div class="norecord-ico"><i></i></div>
+            <dl>
+                <dt>微信账号登陆</dt>
+                <dd><span id="step_info">正在向微信服务器获取请求...</span>(<span id="st">0</span>)</dd>
+                <dd>登陆后，请绑定您的手机号</dd>
+            </dl>
+        </div>
+
+
+    </div>
+</div>
+<input type="hidden" name="referurl">
+<script type="text/javascript" src="../../js/config.js"></script> 
+<script type="text/javascript" src="../../js/zepto.min.js"></script> 
+<script type="text/javascript" src="../../js/template.js"></script> 
+<script type="text/javascript" src="../../js/common.js"></script>
+<script>
+    var start_count = 0;
+    function init(){
+        start_count = start_count + 1;
+        $("#st").html(start_count);
+        if(start_count> 5){
+            $("#step_info").html("连接成功,正在保存您的信息");
+		}else if(start_count>10){
+			$("#step_info").html("文化普惠,连系千商万户");
+        }else if(start_count>15){
+            $("#step_info").html("请绑定您的手机号,享受更便利的服务");
+        }else if(start_count>20){
+            $("#step_info").html("注册完成");
+            location.href = WapSiteUrl+'/tmpl/member/member_mobile_bind.html';
+            $.ajax({
+                type:'post',
+                url:ApiUrl+"/index.php?act=connectwx",
+                dataType:'json',
+                success:function(result){
+                    //console.log('wxlogin.js check again');
+                    //console.log(result);
+
+                    if(!result.datas.error){
+                        if(typeof(result.datas.key)=='undefined'){
+                            return false;
+                        }else{
+                            addCookie('username',result.datas.username);
+                            addCookie('key',result.datas.key);
+                            if(result.datas.reg){//cary 判断注册
+                                location.href = WapSiteUrl+'/tmpl/member/member_mobile_bind.html';
+                            }else{
+                                location.href = WapSiteUrl+'/tmpl/member/member.html?act=member&from=wx&'+result.datas.reg;
+                            }
+
+                        }
+                        //$(".error-tips").hide();
+                    }else{
+                        location.href = WapSiteUrl+'/index.html';
+                        //$(".error-tips").html(result.datas.error).show();
+                    }
+                }
+            });
+        }
+    }
+    setInterval("init()", 1000);
+</script>
+<script type="text/javascript" src="../../js/tmpl/wxlogin.js"></script>
+</body>
+</html>

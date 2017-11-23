@@ -1,0 +1,1 @@
+Alter table sc_store_joinin drop primary key;

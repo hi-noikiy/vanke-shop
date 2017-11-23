@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="format-detection" content="telephone=no"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="msapplication-tap-highlight" content="no" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+<title>物业采购员认证申请</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css">
+<link rel="stylesheet" type="text/css" href="../css/nctouch_member.css">
+<link rel="stylesheet" type="text/css" href="../css/nctouch_common.css">
+</head>
+<body>
+<header id="header">
+  <div class="header-wrap">
+    <div class="header-l"> </div>
+    <div class="header-title">
+      <h1>物业采购员认证申请</h1>
+    </div>
+  </div>
+</header>
+<div class="nctouch-main-layout">
+  <form id="this_form_up_third">
+    <div class="nctouch-inp-con">
+      <ul class="form-box">
+        <li class="form-item">
+          <h4>姓名</h4>
+          <div class="input-box">
+            <input type="text" class="inp" name="name" id="true_name" />
+            <span class="input-del"></span> </div>
+        </li>
+        <li class="form-item">
+          <h4>职务</h4>
+          <div class="input-box">
+            <input type="tel" class="inp" name="job_name" id="mob_phone" />
+            <span class="input-del"></span> </div>
+        </li>
+        <li class="form-item">
+          <h4>所在城市</h4>
+          <div class="input-box">
+              <select name="city_centre" class='city_list'>
+                  <option value="1" selected="selected">事业本部</option>
+              </select>
+          </div>
+        </li>
+        <li class="form-item">
+          <h4>公司名称</h4>
+          <div class="input-box">
+            <input type="text" class="inp" name="company_name"  />
+            <span class="input-del"></span> </div>
+        </li>
+        <li>
+          <h4>项目名称</h4>
+          <div class="input-box">
+            <input type="text" class="inp" name="product_name" />
+            <span class="input-del"></span> </div>
+        </li>
+        <li>
+          <h4>营业执照</h4>
+          <div class="input-box">
+            <div class="upload-area">
+			<div class="J_UploadBtn upload-btn" style="overflow: hidden;">
+				<input class="J_FileInput file-input" type="file" capture="camera" accept="image/*">
+			</div>
+		</div>
+            <span class="input-del"></span> </div>
+            
+		
+        </li>
+      </ul>
+      <div class="error-tips"></div>
+      <div class="form-btn"><a class="btn" href="javascript:;">提交审核</a></div>
+    </div>
+  </form>
+</div>
+    <div>
+         <div class="btn_two_state" style='display: none;width: 25%;margin:100px auto;color: red;' >审核中<br><a class="logout" style="width: 150px;display: block;" href="javascript:;">返回重新登录</a></div>
+         
+    </div>
+<footer id="footer" class="bottom"></footer>
+
+<script type="text/javascript" src="../js/zepto.min.js"></script> 
+<script type="text/javascript" src="../js/config.js"></script> 
+<script type="text/javascript" src="../js/common.js"></script> 
+<script type="text/javascript" src="../js/uploadfy/lib/exif.js"></script>
+<script type="text/javascript" src="../js/uploadfy/wrapper.js"></script>
+<script type="text/javascript" src="../js/uploadfy/upload_image.js"></script>
+
+<script type="text/javascript">
+	var i = function(){
+    	return $("img.preview").length;
+    }
+	//上传地址
+	var uploaderUrl = ApiUrl + "/index.php?act=index&op=gettimestamp_post";
+	    new ImageUploader($(".upload-area"),{
+	    	uploaderUrl:uploaderUrl,
+	    	inputName:"consultFormDto.imgs",
+	    	beforeComplete:function(){
+	    		
+	    	},
+	    	afterComplete: function() {
+	    		$('.J_FileInput').hide();
+	    		if(i() > 0){
+	    			$(".J_Showmeonfileuploaded").hide()
+	    		}
+	    		if(5 === i()){
+	    			$(".upload-btn").hide();
+	    		}
+	        }
+    });
+    $(function(){
+        
+//        $.post(
+//            ApiUrl + '/index.php?act=third_gys&op=getcity_id',
+//            {},
+//            function(data){
+//                var re_data = eval(data);
+////                console.log(data);
+//                var hhtml = '';
+//                $.each(re_data, function(index,item){
+////                        console.log(item); 
+//                    hhtml  += '<option value="'+item.id+'">'+item.city_name+'</option>';
+//                });  
+//                $('.city_list').html(hhtml);
+//            }
+//        )
+
+        
+        $.post(
+            ApiUrl + '/index.php?act=third_gys&op=index',
+            {},
+            function(data){
+                if(data > 0){
+                    $('#this_form_up_third').hide();
+                    var vhtml = '';
+                    if(data == '100002'){
+                        alert('请您先登录！');
+                        window.location.href = WapSiteUrl;
+                    }else if(data == '100005'){
+                        vhtml = '审核中 <br/><br/><a class="logout" style="width: 150px;display: block;" href="javascript:;">返回重新登录</a>';
+                        $('.btn_two_state').css('display','block');
+                        $('.btn_two_state').html(vhtml);
+                    }else if(data == '101010'){
+                        vhtml = '审核通过 <br/><br/><br/><a class="logout" style="width: 150px;display: block;" href="javascript:;">返回重新登录</a>';
+                        $('.btn_two_state').css('display','block');
+                        $('.btn_two_state').html(vhtml);
+                    }else if(data == '100006'){
+                        vhtml = '申请拒绝<br/><br/><br/><a class="news_send" style="width: 150px;display: block;" href="javascript:;">重新填写资料</a>';
+                        $('.btn_two_state').css('display','block');
+                        $('.btn_two_state').html(vhtml);
+                    }else if(data == '100007'){
+                         vhtml = '已通过！如无法正常查看请重新登录！<br/><br/><br/><a class="news_send" style="width: 150px;display: block;" href="javascript:;">重新填写资料</a>';
+                        $('.btn_two_state').css('display','block');
+                        $('.btn_two_state').html(vhtml);
+                    }
+                    $(".news_send").bind("click",function(){
+                        $('.btn_two_state').css('display','none;');
+                        $('#this_form_up_third').show();
+                    });
+                    $(".logout").bind("click",function(){
+                        var a = getCookie("username");
+                        var e = getCookie("key");
+                        var i = "wap";
+                        $.ajax({
+                            type: "get",
+                            url: ApiUrl + "/index.php?act=third_gys&op=logout",
+                            data: {
+                                username: a,
+                                key: e,
+                                client: i
+                            },
+                            success: function(a) {
+                                if (a == 1) {
+                                    delCookie("username");
+                                    delCookie("key");
+                                    delCookie("has_store");
+                                    delCookie("member_key");
+                                    location.href = WapSiteUrl
+                                }
+                            }
+                        })
+                    });
+                    return false;
+                }
+            }
+        )
+        
+        
+        $('.btn').click(function(){
+            //验证是否填写消息为空，
+            var name = $('input[name="name"]').val();
+            var job_name = $('input[name="job_name"]').val();
+            var city_centre = $('.city_list').val()
+            var company_name = $('input[name="company_name"]').val();
+            var product_name = $('input[name="product_name"]').val();
+            var upload_yinyeimg = $('input[name="upload_yinyeimg"]').val();
+            if(name == ''){
+                alert('请填写您的姓名');return false;
+            }
+            if(job_name == ''){
+                alert('请填写您的项目名称');return false;
+            }
+            if(city_centre == ''){
+                alert('请选择您的所在城市');return false;
+            }
+            if(company_name == ''){
+                alert('请填写您的公司名称');return false;
+            }
+            if(product_name == ''){
+                alert('请填写您的项目名称');return false;
+            }
+            if(upload_yinyeimg == '' || upload_yinyeimg == undefined){
+                alert('请上传您的营业执照');return false;
+            }
+            $.post(
+                    ApiUrl + '/index.php?act=third_gys&op=add',
+                    {
+                        name:name,
+                        job_name:job_name,
+                        city_centre:city_centre,
+                        company_name:company_name,
+                        product_name:product_name,
+                        upload_yinyeimg:upload_yinyeimg
+                    },
+                    function(data){
+                        if(data == '100002'){
+                            alert('请您先登录！');
+                            window.location.href = WapSiteUrl;
+                        }else if(data == '100001'){
+                            alert('请认真填写必填项');
+                        }else if(data == '101010'){
+                            alert('提交成功，请等待审核！');
+                            window.location.reload();
+                        }
+                    }
+        )
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1"/>
+    <title>商品订单统计</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/nctouch_member.css">
+    <link rel="stylesheet" type="text/css" href="../../js/mobiscroll/css/mobiscroll.custom-2.16.1.min.css">
+</head>
+<body>
+
+<header id="header" class="">
+    <div class="header-wrap">
+        <div class="header-l"><a href="statistics.html"><i class="back"></i></a></div>
+        <span class="header-tab"><a href="javascript:dt('day');" class="dt_day cur">日</a><a href="javascript:dt('week');" class="dt_week">周</a><a href="javascript:dt('month');" class="dt_month">月</a></span>
+        <!--<div class="header-title">-->
+            <!--<h1>商品订单统计</h1>-->
+        <!--</div>-->
+        <div class="header-r"><a id="date_rang_btn" href="javascript:void(0);" class="text">日期</a></div>
+    </div>
+</header>
+
+
+
+<div class="nctouch-main-layout">
+    <div class="nctouch-single-nav">
+        <ul id="filtrate_ul" class="area">
+            <li class="ordersamount"><a href="javascript:chart_show('ordersamount');">订单金额</a></li>
+            <li class="ordersnum"><a href="javascript:chart_show('ordersnum');">订单数量</a></li>
+        </ul>
+    </div>
+
+    <div id="container"></div>
+    <input id="show_type" type="hidden" value="day" />
+    <input id="startDate" type="hidden"/>
+    <input id="endDate" type="hidden"/>
+    <footer id="footer"></footer>
+</div>
+
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="/data/resource/js/jquery.js"></script>
+<script type="text/javascript" src="../../js/stat_base.js"></script>
+<script type="text/javascript" src="../../js/mobiscroll/js/mobiscroll.custom-2.16.1.min.js"></script>
+
+<script>
+var today =  new Date().format('YYYY-MM-DD');
+var timestamp30 = Date.parse(new Date())-3600*24*30*1000;
+var day30 = new Date(timestamp30).format('YYYY-MM-DD');
+
+var startDate= day30;
+var endDate = today;
+var time_range = day30 + ' / ' + today;
+
+var getkey;
+var show_type = 'day';
+var cur_select = 'ordersamount';
+
+
+function getCookie(e) {
+    var t = document.cookie;
+    var a = t.split("; ");
+    for (var n = 0; n < a.length; n++) {
+        var r = a[n].split("=");
+        if (r[0] == e) return unescape(r[1])
+    }
+    return null
+}
+
+function dt(e){
+    show_type = e;
+    $(".header-tab a").removeClass("cur");
+    $(".dt_"+e).addClass("cur");
+
+    if( cur_select!= '' && time_range!= ''){
+        chart_show(cur_select);
+    }
+}
+
+function chart_show(t){
+    cur_select = t;
+    var load_url = ApiUrl +  '/index.php?act=seller_stat&op='+ t ;
+    $("#filtrate_ul li").removeClass("selected");
+    $("."+t).addClass("selected");
+
+    $.ajax({
+        type: "POST",
+        url: load_url,
+        data: {
+            'key': getkey,
+            'starttime' : startDate,
+            'endtime' : endDate,
+            'show_type': show_type
+        },
+        dataType: 'json',
+        success: function(data){
+            if(data){
+                draw_chart(data, t);
+            }
+        }
+    });
+}
+
+function draw_chart(data,type){
+    var yt='',st='';
+    switch (type){
+        case "ordersamount": yt="金额(元)";st="时间"; break;
+        case "ordersnum": yt="数量(件)";st="时间"; break;
+    }
+
+    $('#container').highcharts({
+        "xAxis":{"categories": data.datas.x },
+        "series": [{
+            "data": data.datas.y,
+            "name": st
+        }],
+        "title": {
+            "text": "<b>"+ time_range +"<\/b>", //标题
+            "x": -20
+        },
+        "chart":{"type":"line"},
+        "yAxis": {
+            "title": {
+                "text": yt,  //右下 脚注
+                "align": "high"
+            }
+        },
+
+        "credits": {
+            "enabled": false
+        },
+        "exporting": {
+            "enabled": false
+        },
+
+        "colors":["#058DC7","#ED561B","#8bbc21","#0d233a"],
+
+        "legend": {
+            "enabled": false
+        }
+
+    });
+}
+</script>
+
+<script type="text/javascript" src="../../js/highstock.js"></script>
+<script>
+    $(function () {
+        getkey = getCookie("seller_key");
+        $("#range").mobiscroll().range({theme: 'ios'});
+
+        $('#date_rang_btn').mobiscroll().range({
+            theme: 'mobiscroll',
+            lang: 'zh',
+            display: 'bottom',
+            controls: ['calendar'],
+            defaultValue: [new Date(timestamp30), new Date()],
+            dateFormat: 'yy-mm-dd',
+            startInput: '#startDate',
+            endInput: '#endDate',
+            onSelect: function (valueText, inst) {
+                startDate = $("#startDate").val();
+                endDate = $("#endDate").val();
+                time_range = startDate + '-' + endDate;
+
+                if( cur_select!= '' && time_range!= ''){
+                    chart_show(cur_select);
+                }
+            }
+        });
+
+        chart_show(cur_select);
+    });
+</script>
+</body>
+</html>

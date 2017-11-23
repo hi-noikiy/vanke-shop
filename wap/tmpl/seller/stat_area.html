@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1"/>
+    <title>区域销售统计</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/nctouch_member.css">
+    <link rel="stylesheet" type="text/css" href="../../js/mobiscroll/css/mobiscroll.custom-2.16.1.min.css">
+</head>
+<body>
+
+<header id="header" class="">
+    <div class="header-wrap">
+        <div class="header-l"><a href="statistics.html"><i class="back"></i></a></div>
+        <div class="header-title">
+            <h1>区域销售统计</h1>
+        </div>
+        <div class="header-r"><a id="date_rang_btn" href="javascript:void(0);" class="text">日期</a></div>
+    </div>
+</header>
+
+
+<div class="nctouch-main-layout">
+    <div class="nctouch-single-nav">
+        <ul id="filtrate_ul" class="area">
+            <li class="areasalesamount"><a href="javascript:chart_show('areasalesamount');">下单金额</a></li>
+            <li class="areasalesnum"><a href="javascript:chart_show('areasalesnum');">下单数量</a></li>
+            <li class="areamembernum"><a href="javascript:chart_show('areamembernum');">下单人数</a></li>
+        </ul>
+    </div>
+
+    <div id="container"></div>
+    <input id="startDate" type="hidden"/>
+    <input id="endDate" type="hidden"/>
+    <footer id="footer"></footer>
+</div>
+
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="/data/resource/js/jquery.js"></script>
+<script type="text/javascript" src="../../js/stat_base.js"></script>
+<script type="text/javascript" src="../../js/mobiscroll/js/mobiscroll.custom-2.16.1.min.js"></script>
+<script>
+var today =  new Date().format('YYYY-MM-DD');
+var timestamp30 = Date.parse(new Date())-3600*24*30*1000;
+var day30 = new Date(timestamp30).format('YYYY-MM-DD');
+
+var startDate= day30;
+var endDate = today;
+var time_range = day30 + ' / ' + today;
+var getkey;
+var cur_select = 'areasalesamount';
+
+function getCookie(e) {
+    var t = document.cookie;
+    var a = t.split("; ");
+    for (var n = 0; n < a.length; n++) {
+        var r = a[n].split("=");
+        if (r[0] == e) return unescape(r[1])
+    }
+    return null
+}
+
+function chart_show(t){
+    var load_url = ApiUrl +  '/index.php?act=seller_stat&op='+ t ;
+    $("#filtrate_ul li").removeClass("selected");
+    $("."+t).addClass("selected");
+
+    $.ajax({
+        type: "POST",
+        url: load_url,
+        data: {
+            'key': getkey,
+            'starttime' : startDate,
+            'endtime' : endDate
+        },
+        dataType: 'json',
+        success: function(data){
+            if(data){
+                draw_chart(data, t);
+            }
+        }
+    });
+}
+
+
+function draw_chart(data,type){
+    var yt='',st='';
+    switch (type){
+        case "areasalesamount": yt="下单金额";st="金额"; break;
+        case "areasalesnum": yt="下单数量";st="数量"; break;
+        case "areamembernum": yt="下单人数";st="人数"; break;
+    }
+
+    var data_y = [];
+    $.each(data.datas.y, function(key,val){
+        data_y.push({
+            "name": val.name,
+            "y": parseFloat(val.y),
+            "color": val.color
+        });
+    });
+    $('#container').highcharts({
+        "series": [{
+            "data": data_y,
+            "name": st
+        }],
+        "xAxis": {
+            "categories": []
+        },
+        "title": {
+            "text": "<b>"+ time_range +"<\/b>", //标题
+            "x": -20
+        },
+        "legend": {
+            "enabled": false
+        },
+        "yAxis": {
+            "title": {
+                "text": yt,  //右下 脚注
+                "align": "high"
+            }
+        },
+        "chart": {
+            "type": "bar"
+        },
+        "credits": {
+            "enabled": false
+        },
+        "exporting": {
+            "enabled": false
+        },
+        "plotOptions": {
+            "bar": {
+                "dataLabels": {
+                    "enabled": true
+                }
+            }
+        }
+    });
+}
+</script>
+
+<script type="text/javascript" src="../../js/highstock.js"></script>
+<script>
+    $(function () {
+        getkey = getCookie("seller_key");
+        $("#range").mobiscroll().range({theme: 'ios'});
+        $('#date_rang_btn').mobiscroll().range({
+            theme: 'mobiscroll',
+            lang: 'zh',
+            display: 'bottom',
+            controls: ['calendar'],
+            defaultValue: [new Date(timestamp30), new Date()],
+            dateFormat: 'yy-mm-dd',
+            startInput: '#startDate',
+            endInput: '#endDate',
+            onSelect: function (valueText, inst) {
+                startDate = $("#startDate").val();
+                endDate = $("#endDate").val();
+                time_range = startDate + '-' + endDate;
+            }
+        });
+
+        chart_show(cur_select);
+    });
+</script>
+</body>
+</html>

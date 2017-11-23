@@ -1,0 +1,321 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="format-detection" content="telephone=no"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="msapplication-tap-highlight" content="no" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+<title>首页</title>
+<link rel="stylesheet" type="text/css" href="css/base.css">
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<link rel="stylesheet" type="text/css" href="css/fix_whk.css">
+
+<link rel="apple-touch-icon" href="images/touch-icon-iphone.png"/>
+	<script> window.mb_curr = 'index';</script>
+<style>
+.item img {height: auto !important;}
+.home2 .home2_3{overflow: hidden;}
+.home2 .home2_3>div{height:auto;}
+
+.home2 .home2_3>div{width: -moz-calc(100%/3 - 1px);width: -webkit-calc(100%/3 - 1px);width: calc(100%/3 - 1px);padding:0;font-size:12px}
+.home2_1{padding:0;width:50%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+.item a{position:relative;width:100%;height:100%;display:block;box-sizing:border-box;}
+.item a img{width:100%;left:0;top:0}
+.txt-bg{position:absolute;left:0;bottom:0;background:rgba(0,0,0,.5);color:#fff;z-index:1;width:100%}
+.item-name{display:block;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding:0 8px;color:#fff}
+.item-price{padding-left:8px;color:#fff}
+.item-old-price{color:#ddd}
+
+.fix-block-r a.app_down i {
+	opacity: 1;
+	background-image: url(images/app_down.png);
+}
+</style>
+</head>
+<body>
+<div class="nctouch-home-top fixed-Width">
+  <header id="header" class="transparent">
+  	<div class="logo"></div>
+    <div class="header-wrap">
+      <a href="tmpl/search.html" class="header-inp"> <i class="icon"></i> <span class="search-input" id="keyword">请输入关键词</span> </a>
+    </div>
+    <div class="header-r"><a id="header-nav" href="tmpl/member/chat_list.html"><i class="message"></i>
+      <p>消息</p>
+      <sup></sup></a></div>
+  </header>
+  <div class="cohesive"></div>
+  <div class="adv_list" id="main-container1"></div>
+</div>
+<div class="nctouch-home-nav fixed-Width">
+  <ul>
+      <li style="width:33%"><a href="tmpl/product_first_categroy.html"><span><i></i></span>
+      <p>分类</p>
+      </a></li>
+    <li style="width:33%"><a href="tmpl/cart_list.html"><span><i></i></span>
+      <p>购物车</p>
+      </a></li>
+    <li style="width:33%"><a href="tmpl/member/member.html"><span><i></i></span>
+      <p>我的商城</p>
+      </a></li>
+<!--    <li><a href="tmpl/member/signin.html"><span><i></i></span>
+      <p>每日签到</p>
+      </a></li>-->
+      <!--<li><a href="tmpl/product_first_categroy.html"><span><i></i></span>
+      <p>分类</p>
+      </a></li>
+    <li><a href="tmpl/cart_list.html"><span><i></i></span>
+      <p>购物车</p>
+      </a></li>
+    <li><a href="tmpl/member/member.html"><span><i></i></span>
+      <p>我的商城</p>
+      </a></li>
+    <li><a href="tmpl/member/signin.html"><span><i></i></span>
+      <p>每日签到</p>
+      </a></li>-->
+  </ul>
+</div>
+<div class="nctouch-home-layout" id="main-container2"></div>
+<div class="fix-block-r">
+	<!--<a class="app_down" href="http://ymh.ox.pw/pw.html"><i></i></a>-->
+	<a href="javascript:void(0);" class="gotop-btn gotop hide" id="goTopBtn"><i></i></a>
+</div>
+<footer id="footer" class="fixed-Width"></footer>
+<script type="text/html" id="adv_list">
+		<div class="swipe-wrap">
+		<% for (var i in item) { %>
+			<div class="item">
+				<a href="<%= item[i].url %>">
+					<img src="<%= item[i].image %>" alt="">
+				</a>
+			</div>
+		<% } %>
+		</div>
+</script> 
+<script type="text/html" id="home1">
+	<div class="nctouch-home-block">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<div class="item-pic">
+			<a href="<%= url %>">
+				<img src="<%= image %>" alt="">
+			</a>
+		</div>
+	</div>
+</script> 
+<script type="text/html" id="home2">
+	<div class="nctouch-home-block">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<ul class="item-pic-l1-r2">
+			<li>
+				<a href="<%= square_url %>"><img src="<%= square_image %>" alt=""></a>
+			</li>
+			<li>
+				<a href="<%= rectangle1_url %>"><img src="<%= rectangle1_image %>" alt=""></a>
+			</li>
+			<li>
+				<a href="<%= rectangle2_url %>"><img src="<%= rectangle2_image %>" alt=""></a>
+			</li>
+		</ul>
+	</div>
+</script> 
+<script type="text/html" id="home3">
+	<div class="nctouch-home-block">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<ul class="item-pic-list">
+		<% for (var i in item) { %>
+			<li>
+				<a href="<%= item[i].url %>"><img src="<%= item[i].image %>" alt=""></a>
+			</li>
+		<% } %>
+		</ul>
+	</div>
+</script> 
+<script type="text/html" id="home4">
+	<div class="nctouch-home-block">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<ul class="item-pic-l2-r1">
+			<li>
+				<a href="<%= rectangle1_url %>"><img src="<%= rectangle1_image %>" alt=""></a>
+			</li>
+			<li>
+				<a href="<%= rectangle2_url %>"><img src="<%= rectangle2_image %>" alt=""></a>
+			</li>
+			<li>
+				<a href="<%= square_url %>"><img src="<%= square_image %>" alt=""></a>
+			</li>
+		</ul>
+	</div>
+</script>
+<script type="text/html" id="home5">
+	<div class="index_block home2">
+		<% if (title) { %>
+		<div class="title"><%= title %>
+			<div class="more">
+				<a href="tmpl/product_list.html?gc_id=<%= catalog_id %>">更多<span>&gt;</span></a>
+			</div>
+		</div>
+		<% } %>
+		<div class="content">
+			<div class="item home2_1">
+				<a href="<%= square_url %>">
+					<img src="<%= square_image %>" alt="">
+					<% if (left_title) { %>
+					<div class="txt-bg">
+						<div class="item-name"><%= left_title %></div>
+						<div class="item-price">￥<%= left_price %><span class="item-old-price">￥<%= left_market %></span></div>
+					</div>
+					<% } %>
+				</a>
+			</div>
+			<div class="item home2_2">
+				<div class="border-left">
+					<div class="border-bottom">
+						<a href="<%= rectangle1_url %>">
+							<% if (right_title1) { %>
+							<div class="txt-bg">
+								<div class="item-name"><%= right_title1 %></div>
+								<div class="item-price">￥<%= right_price1 %><span class="item-old-price">￥<%= right_market1 %></span></div>
+							</div>
+							<% } %>
+							<img src="<%= rectangle1_image %>" alt="">
+						</a>
+					</div>
+					<div>
+						<a href="<%= rectangle2_url %>">
+							<% if (right_title1) { %>
+							<div class="txt-bg">
+								<div class="item-name"><%= right_title2 %></div>
+								<div class="item-price">￥<%= right_price2 %><span class="item-old-price">￥<%= right_market2 %></span></div>
+							</div>
+							<% } %>
+							<img src="<%= rectangle2_image %>" alt="">
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="item home2_3">
+				<div class="border-right">
+					<a href="<%= bottom1_url %>">
+						<% if (bottom_title1) { %>
+						<div class="txt-bg">
+							<div class="item-name"><%= bottom_title1 %></div>
+							<div class="item-price">￥<%= bottom_price1 %><span class="item-old-price">￥<%= bottom_market1 %></span></div>
+						</div>
+						<% } %>
+						<img src="<%= bottom1_image %>" alt=""></a>
+				</div>
+				<div class="border-right">
+					<a href="<%= bottom2_url %>">
+						<% if (bottom_title2) { %>
+						<div class="txt-bg">
+							<div class="item-name"><%= bottom_title2 %></div>
+							<div class="item-price">￥<%= bottom_price2 %><span class="item-old-price">￥<%= bottom_market2 %></span></div>
+						</div>
+						<% } %>
+						<img src="<%= bottom2_image %>" alt="">
+					</a>
+				</div>
+				<div>
+					<a href="<%= bottom3_url %>">
+						<% if (bottom_title3) { %>
+						<div class="txt-bg">
+							<div class="item-name"><%= bottom_title3 %></div>
+							<div class="item-price">￥<%= bottom_price3 %><span class="item-old-price">￥<%= bottom_market3 %></span></div>
+						</div>
+						<% } %>
+						<img src="<%= bottom3_image %>" alt="">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="goods">
+	<div class="nctouch-home-block item-goods">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<ul class="goods-list">
+		<% for (var i in item) { %>
+			<li>
+				<a href="tmpl/product_detail.html?goods_id=<%= item[i].goods_id %>">
+					<div class="goods-pic"><img src="<%= item[i].goods_image %>" alt=""></div>
+					<dl class="goods-info">
+						<dt class="goods-name"><%= item[i].goods_name %></dt>
+						<dd class="goods-price">￥<em><%= item[i].goods_promotion_price %></em></dd>
+					</dl>
+				</a>
+			</li>
+		<% } %>
+		</ul>
+	</div>
+</script>
+<script type="text/html" id="goods1">
+	<div class="nctouch-home-block item-goods">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<ul class="goods-list">
+		<% for (var i in item) { %>
+			<li>
+			<i><div>打折</div></i>
+			<a href="tmpl/product_detail.html?goods_id=<%= item[i].goods_id %>">
+			<div class="goods-pic"><img src="<%= item[i].goods_image %>" alt=""></div>
+					<dl class="goods-info">
+						<dt class="goods-name"><%= item[i].goods_name %></dt>
+						<dd class="goods-price">￥<em><%= item[i].goods_promotion_price %></em><i class="list-price">￥<%= item[i].goods_price %></i></dd>
+					</dl>
+			</a>
+				</li>
+			
+		<% } %>
+		</ul>
+	</div>
+</script>
+<script type="text/html" id="goods2">
+	<div class="nctouch-home-block item-goods">
+	<% if (title) { %>
+		<div class="tit-bar"><%= title %></div>
+	<% } %>
+		<ul class="goods-list">
+		<% for (var i in item) { %>
+			<li>
+			<i><div>抢购</div></i>
+			<a href="tmpl/product_detail.html?goods_id=<%= item[i].goods_id %>">
+			<div class="goods-pic"><img src="<%= item[i].goods_image %>" alt=""></div>
+					<dl class="goods-info">
+						<dt class="goods-name"><%= item[i].goods_name %></dt>
+						<dd class="goods-price">￥<em><%= item[i].goods_promotion_price %></em><i class="list-price">￥<%= item[i].goods_price %></i></dd>
+					</dl>
+			</a>
+				</li>
+			
+		<% } %>
+		</ul>
+	</div>
+</script>
+<script type="text/javascript" src="js/config.js"></script> 
+<script type="text/javascript" src="js/zepto.min.js"></script> 
+<script type="text/javascript" src="js/template.js"></script> 
+<script type="text/javascript" src="js/common.js"></script> 
+<script type="text/javascript" src="js/swipe.js"></script>
+<script type="text/javascript" src="js/tmpl/footer.js"></script>
+
+<script type="text/javascript" src="js/index.js"></script>
+
+</body>
+</html>
