@@ -17,8 +17,23 @@ class zgy_testControl extends BaseHomeControl {
     }
 
     public function indexOp(){
-        $member_storeLogic = 'a:6:{s:5:"phone";s:11:"18896541112";s:9:"mob_phone";s:11:"18896541112";s:9:"tel_phone";s:0:"";s:7:"address";s:103:"江苏	苏州市	苏州工业园区 工业园区星汉街108号湖左岸花园幸福驿站2楼办公室";s:4:"area";s:35:"江苏	苏州市	苏州工业园区";s:6:"street";s:67:"工业园区星汉街108号湖左岸花园幸福驿站2楼办公室";}';
-        var_dump(unserialize($member_storeLogic));
+        $uid = "v0035866";$sap="00163144";
+        $key = $this->getRandomString(9);
+        $user_str = $uid."|".$sap."|".time();
+        $uinfo = $this->encrypt($user_str, 'E', $key);
+        var_dump('shop/index.php?act=connect_wk&uid='.urlencode($uinfo).'&code='.$key);
+        //$aa = explode('|',$this->encrypt(urldecode($string), 'D', 'vanke'));
+    }
+
+    function getRandomString($len, $chars=null){
+        if (is_null($chars)){
+            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        }
+        mt_srand(10000000*(double)microtime());
+        for ($i = 0, $str = '', $lc = strlen($chars)-1; $i < $len; $i++){
+            $str .= $chars[mt_rand(0, $lc)];
+        }
+        return $str;
     }
 
     public function getCityInfoByMemberId($member_id,$split,$field="bukrs",$city_id){
@@ -142,6 +157,42 @@ class zgy_testControl extends BaseHomeControl {
 
         }
 
+    }
+
+    private function encrypt($string,$operation,$key=''){
+        $key=md5($key);
+        $key_length=strlen($key);
+        $string=$operation=='D'?base64_decode($string):substr(md5($string.$key),0,8).$string;
+        $string_length=strlen($string);
+        $rndkey=$box=array();
+        $result='';
+        for($i=0;$i<=255;$i++) {
+            $rndkey[$i]=ord($key[$i%$key_length]);
+            $box[$i]=$i;
+        }
+        for($j=$i=0;$i<256;$i++) {
+            $j=($j+$box[$i]+$rndkey[$i])%256;
+            $tmp=$box[$i];
+            $box[$i]=$box[$j];
+            $box[$j]=$tmp;
+        }
+        for($a=$j=$i=0;$i<$string_length;$i++) {
+            $a=($a+1)%256;
+            $j=($j+$box[$a])%256;
+            $tmp=$box[$a];
+            $box[$a]=$box[$j];
+            $box[$j]=$tmp;
+            $result.=chr(ord($string[$i])^($box[($box[$a]+$box[$j])%256]));
+        }
+        if($operation=='D') {
+            if(substr($result,0,8)==substr(md5(substr($result,8).$key),0,8)) {
+                return substr($result,8);
+            }else{
+                return'';
+            }
+        }else{
+            return str_replace('=','',base64_encode($result));
+        }
     }
 	
 }

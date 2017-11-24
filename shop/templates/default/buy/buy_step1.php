@@ -6,11 +6,14 @@
 <div class="ncc-main">
   <div class="ncc-title">
     <h3><?php echo $lang['cart_index_ensure_info'];?></h3>
-    <h5>请仔细核对填写收货、发票等信息，以确保物流快递及时准确投递。1111</h5>
+    <h5>请仔细核对填写收货、发票等信息，以确保物流快递及时准确投递。</h5>
   </div>
+    <!--收货人地址信息-->
     <?php include template('buy/buy_address');?>
-    <?php include template('buy/buy_payment');?>
+    <?php /*include template('buy/buy_payment');*/?>
+    <!--发票信息-->
     <?php include template('buy/buy_invoice');?>
+    <?php include template('buy/buy_budget');?>
     <?php include template('buy/buy_goods_list');?>
     <?php include template('buy/buy_amount');?>
     <input value="buy" type="hidden" name="act">

@@ -24,36 +24,46 @@ class connect_wkControl extends BaseHomeControl{
 			showDialog('登录成功','index.php?act=member&op=home','succ');
 		    //header('location: http://10.0.73.55/shop');	
 		}else {
-			$this->autologin($_GET['uid']);
+			$this->autologin($_GET['uid'],$_GET['code']);
 		}
 	}
 
 	/**
 	 * 自动登录
 	 */
-	public function autologin($id_cord){
-		//查询是否已存在手机号
-		$model_member	= Model('member');
-		//处理返回的字符串
-        list($uid,$sapid) = explode('|',$this->encrypt($id_cord, 'D', 'vanke'));
-		$member_info = $model_member->getMemberInfo(array('member_name'=>$sapid));
-		if (is_array($member_info) && count($member_info)>0){
-			if(!$member_info['member_state']){//1为启用 0 为禁用
-				showMessage('无权限登录','','html','error');
-			}
-			$model_member->createSession($member_info);
-			showDialog('登录成功','index.php?act=member&op=home','succ');
+	public function autologin($id_cord,$key){
+	    if(!empty($id_cord) && !empty($key)){
+            //查询是否已存在手机号
+            $model_member	= Model('member');
+            //处理返回的字符串
+            list($uid,$sapid,$times) = explode('|',$this->encrypt($id_cord, 'D', $key));
+            $new_time = $times+60;
+            if($new_time >= time()){
+                $member_info = $model_member->getMemberInfo(array('member_name'=>$sapid));
+                if (is_array($member_info) && count($member_info)>0){
+                    if(!$member_info['member_state']){//1为启用 0 为禁用
+                        showMessage('无权限登录','','html','error');exit;
+                    }
+                    $model_member->createSession($member_info);
+                    showDialog('登录成功','index.php?act=member&op=home','succ');
+                    //header('location: http://10.0.73.55/shop');
+                }else{
+                    $member_info = $model_member->getMemberInfo(array('member_name'=>$uid));
+                    if (is_array($member_info) && count($member_info)>0){
+                        if(!$member_info['member_state']){//1为启用 0 为禁用
+                            showMessage('无权限登录','','html','error');exit;
+                        }
+                        $model_member->createSession($member_info);
+                        showDialog('登录成功','index.php?act=member&op=home','succ');
                         //header('location: http://10.0.73.55/shop');
-		}else{
-            $member_info = $model_member->getMemberInfo(array('member_name'=>$uid));
-            if (is_array($member_info) && count($member_info)>0){
-                if(!$member_info['member_state']){//1为启用 0 为禁用
-                    showMessage('无权限登录','','html','error');
+                    }
                 }
-                $model_member->createSession($member_info);
-                showDialog('登录成功','index.php?act=member&op=home','succ');
-                //header('location: http://10.0.73.55/shop');
+            }else{
+                showMessage('登陆认证超时！','','html','error');
+                exit;
             }
+        }else{
+            showMessage('登陆校验错误！','','html','error');exit;
         }
 	}
 

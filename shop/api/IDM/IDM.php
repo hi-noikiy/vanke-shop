@@ -44,9 +44,10 @@ function IDM_logon(){
             if(!empty($AccessData['attributes'])){
                 //获取用户数据
                 if(!empty($AccessData['attributes']['uid']) && !empty($AccessData['attributes']['employeeNumber'])){
-                    $user_str = $AccessData['attributes']['uid']."|".$AccessData['attributes']['employeeNumber'];
-                    $uinfo = encrypt($user_str, 'E', 'vanke');
-                    header('location: '.$item_url.'shop/index.php?act=connect_wk&uid='.$uinfo);
+                    $key = getRandomString(9);
+                    $user_str = $AccessData['attributes']['uid']."|".$AccessData['attributes']['employeeNumber']."|".time();
+                    $uinfo = encrypt($user_str, 'E', $key);
+                    header('location: '.$item_url.'shop/index.php?act=connect_wk&uid='.urlencode($uinfo).'&code='.$key);
                 }
             }
         }else{
@@ -147,6 +148,18 @@ function encrypt($string,$operation,$key=''){
     }else{
         return str_replace('=','',base64_encode($result));
     }
+}
+
+
+function getRandomString($len, $chars=null){
+    if (is_null($chars)){
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    }
+    mt_srand(10000000*(double)microtime());
+    for ($i = 0, $str = '', $lc = strlen($chars)-1; $i < $len; $i++){
+        $str .= $chars[mt_rand(0, $lc)];
+    }
+    return $str;
 }
 
 IDM_logon();
