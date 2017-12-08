@@ -266,12 +266,6 @@ class member_inorderControl extends BaseMemberControl {
         //显示分享
         $order_info['if_share'] = $model_order->getOrderOperateState('share',$order_info);
 
-        //显示系统自动取消订单日期
-        if ($order_info['order_state'] == ORDER_STATE_NEW) {
-            //$order_info['order_cancel_day'] = $order_info['add_time'] + ORDER_AUTO_CANCEL_DAY * 24 * 3600;
-			// by abc.com
-			$order_info['order_cancel_day'] = $order_info['add_time'] + ORDER_AUTO_CANCEL_DAY + 3 * 24 * 3600;
-        }
 
         //显示快递信息
         if ($order_info['shipping_code'] != '') {
@@ -279,13 +273,6 @@ class member_inorderControl extends BaseMemberControl {
             $order_info['express_info']['e_code'] = $express[$order_info['extend_order_common']['shipping_express_id']]['e_code'];
             $order_info['express_info']['e_name'] = $express[$order_info['extend_order_common']['shipping_express_id']]['e_name'];
             $order_info['express_info']['e_url'] = $express[$order_info['extend_order_common']['shipping_express_id']]['e_url'];
-        }
-
-        //显示系统自动收获时间
-        if ($order_info['order_state'] == ORDER_STATUS_SEND_HET) {
-           //$order_info['order_confirm_day'] = $order_info['delay_time'] + ORDER_AUTO_RECEIVE_DAY * 24 * 3600;
-			//by abc.com
-			$order_info['order_confirm_day'] = $order_info['delay_time'] + ORDER_AUTO_RECEIVE_DAY + 15 * 24 * 3600;
         }
 
         //如果订单已取消，取得取消原因、时间，操作人
@@ -303,12 +290,6 @@ class member_inorderControl extends BaseMemberControl {
             } else {
                 $order_info['goods_list'][] = $value;
             }
-        }
-
-        if (empty($order_info['zengpin_list'])) {
-            $order_info['goods_count'] = count($order_info['goods_list']);
-        } else {
-            $order_info['goods_count'] = count($order_info['goods_list']) + 1;
         }
 
         Tpl::output('order_info',$order_info);

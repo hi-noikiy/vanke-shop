@@ -43,6 +43,7 @@ class dashboardControl extends SystemControl{
         }else{
             $where = "(end_time-unix_timestamp(now())) < (3600*24*30) and concat(city_center_list,',') like '%".$tmp['city_id']."%'";
         }
+        $where.= " and level != '3'";
         $list_num = $model->table('supplier')->where($where)->count();
 
         //  c extension

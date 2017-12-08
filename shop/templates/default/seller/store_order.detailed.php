@@ -38,11 +38,9 @@ body { background: #FFF none;
   <div class="print-page">
     <div id="printarea">
       <div class="orderprint">
-                      <div style="float:left"><img src="<?php echo UPLOAD_SITE_URL.DS.ATTACH_COMMON.DS; ?>/1logo.png"></div>
-        <div class="top" >
-            <div class="logo-title" style="text-align:center;float:left;">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                万科<?php echo $output['buyer_name']['ktext'];?>采购订单</div>
+                      <div style="float:left"><img src="<?php echo UPLOAD_SITE_URL.DS.ATTACH_COMMON.DS; ?>1logo.png"></div>
+        <div class="top" style="width:100%;text-align:center;">
+                万科<?php echo $output['buyer_name']['project_name'];?>采购订单
         </div>
           <tr>
                 <td><strong>一,产品清单</strong></td>
@@ -51,12 +49,12 @@ body { background: #FFF none;
           <tr>
             <td>订单号：<?php echo $output['order_info']['order_sn'];?></td>
             <td><?php echo $lang['member_printorder_orderadddate'].$lang['nc_colon'];?><?php echo @date('Y-m-d',$output['order_info']['add_time']);?></td>
-            <td>城市中心：<?php echo $output['buyer_name']['butxt'];?></td>
+            <td>城市中心：<?php echo $output['buyer_name']['project_city'];?></td>
           </tr>
             <tr>
-            <td>下单人：<?php echo $output['buyer_name']['sname'];?></td>
-            <td>所在部门：<?php echo $output['buyer_name']['ktext'];?></td>   
-             <td>联系号码：<?php echo $output['buyer_name']['Telnr'];?></td>    
+            <td>下单人：<?php echo $output['buyer_name']['buy_name'];?></td>
+            <td>所在部门：<?php echo $output['buyer_name']['project_name'];?></td>
+             <td>联系号码：<?php echo $output['buyer_name']['buy_tel'];?></td>
             </tr>
             <tr>
                 
@@ -73,42 +71,60 @@ body { background: #FFF none;
         <table class="order-info">
           <thead>
             <tr>
-              <th class="w40"><?php echo $lang['member_printorder_serialnumber'];?></th>
-              <th class="tl"><?php echo $lang['member_printorder_goodsname'];?></th>
-              <th class="w70 tl"><?php echo $lang['member_printorder_goodsprice'];?>(<?php echo $lang['currency_zh'];?>)</th>
-              <th class="w50"><?php echo $lang['member_printorder_goodsnum'];?></th>
-              <th class="w70 tl"><?php echo $lang['member_printorder_subtotal'];?>(<?php echo $lang['currency_zh'];?>)</th>
+                <th class="w40"><?php echo $lang['member_printorder_shop'].$lang['nc_colon'];?></th>
+                <th class="tl" colspan="4"><?php echo $output['store_info']['store_name'];?></th>
+            </tr>
+            <tr>
+              <th style="border-bottom:none" class="w40"><?php echo $lang['member_printorder_serialnumber'];?></th>
+              <th style="border-bottom:none" class="tl"><?php echo $lang['member_printorder_goodsname'];?></th>
+              <th style="border-bottom:none" class="w70 tl"><?php echo $lang['member_printorder_goodsprice'];?>(<?php echo $lang['currency_zh'];?>)</th>
+              <th style="border-bottom:none" class="w50"><?php echo $lang['member_printorder_goodsnum'];?></th>
+              <th style="border-bottom:none;width: 100px;"><?php echo $lang['member_printorder_subtotal'];?>(<?php echo $lang['currency_zh'];?>)</th>
             </tr>
           </thead>
-         <?php foreach ($output['goods_list'] as $item_k =>$item_v){?>        
-          <tbody>
-            <?php foreach ($item_v as $k=>$v){?>
+          <?php foreach ($output['goods_list'] as $item_k =>$item_v){?>
+            <tbody>
+                <?php foreach ($item_v as $k=>$v){?>
+                    <tr>
+                      <td style="border:none"><?php echo $k;?></td>
+                      <td class="tl" style="border:none"><?php echo $v['goods_name'];?></td>
+                      <td class="tl" style="border:none"><?php echo $lang['currency'].$v['goods_price'];?></td>
+                      <td style="border:none"><?php echo $v['goods_num'];?></td>
+                      <td style="text-align: right !important;border:none">
+                          <?php echo $lang['currency'].'&nbsp;'.$v['goods_all_price'];?>
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                      </td>
+                    </tr>
+                <?php }?>
+            </tbody>
+          <?php }?>
             <tr>
-              <td><?php echo $k;?></td>
-              <td class="tl"><?php echo $v['goods_name'];?></td>
-              <td class="tl"><?php echo $lang['currency'].$v['goods_price'];?></td>
-              <td><?php echo $v['goods_num'];?></td>
-              <td class="tl"><?php echo $lang['currency'].$v['goods_all_price'];?></td>
+                <th style="border:none"></th>
+                <th colspan="2" style="border:none">商品总价：</th>
+                <th style="border:none"><?php echo $output['goods_all_num'];?></th>
+                <th style="text-align: right !important;border:none">
+                    <?php echo $lang['currency'].'&nbsp;'.$output['goods_total_price'];?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </th>
             </tr>
-            <?php }?>
-          </tbody>
-             <?php }?> 
+            <tr>
+                <th style="border:none"></th>
+                <th colspan="2" style="border:none">运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</th>
+                <th colspan="2" style="text-align: right !important;border:none">
+                    <?php echo $lang['currency'].'&nbsp;'.$output['shipping_fee'];?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </th>
+            </tr>
             <tr>
               <th></th>
-              <th colspan="2" class="tl"><?php echo $lang['member_printorder_amountto'];?></th>
-              <th><?php echo $output['goods_all_num'];?></th>
-              <th class="tl"><?php echo $lang['currency'].$output['goods_total_price'];?></th>
+              <th colspan="2" style="font-size:14px;" align="right">
+                  <?php echo $lang['member_printorder_amountto'];?>
+              </th>
+              <th colspan="2" style="font-size:14px;text-align: right !important;">
+                  <?php echo $lang['currency'].'&nbsp;'.$output['order_money'];?>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+              </th>
             </tr>
-          <tfoot>
-            <tr>
-              <th colspan="10"><span><?php echo $lang['member_printorder_totle'].$lang['nc_colon'];?><?php echo $lang['currency'].$output['goods_total_price'];?></span><span><?php echo $lang['member_printorder_freight'].$lang['nc_colon'];?><?php echo $lang['currency'].$output['order_info']['shipping_fee'];?></span><span><?php echo $lang['member_printorder_privilege'].$lang['nc_colon'];?><?php echo $lang['currency'].$output['promotion_amount'];?></span><span><?php echo $lang['member_printorder_orderamount'].$lang['nc_colon'];?><?php echo $lang['currency'].$output['order_info']['order_amount'];?></span><span><?php echo $lang['member_printorder_shop'].$lang['nc_colon'];?><?php echo $output['store_info']['store_name'];?></span>
-                <?php if (!empty($output['store_info']['store_qq'])){?>
-                <span>QQ：<?php echo $output['store_info']['store_qq'];?></span>
-                <?php }elseif (!empty($output['store_info']['store_ww'])){?>
-                <span><?php echo $lang['member_printorder_shopww'].$lang['nc_colon'];?><?php echo $output['store_info']['store_ww'];?></span>
-                <?php }?></th>
-            </tr>
-          </tfoot>
         </table>
             <br/>    <br/>
             <tr>
@@ -116,15 +132,29 @@ body { background: #FFF none;
             </tr>
         <table class="buyer-info">
           <tr>
-            <td class="w200"><?php echo $lang['member_printorder_truename'].$lang['nc_colon']; ?><?php echo $output['order_info']['extend_order_common']['reciver_name'];?></td><br/>
+            <td class="w200">收&nbsp;&nbsp;货&nbsp;&nbsp;人：
+                <?php echo $output['order_info']['extend_order_common']['reciver_name'];?></td><br/>
             <tr>
-            <td><?php echo '电话'.$lang['nc_colon']; ?><?php echo @$output['order_info']['extend_order_common']['reciver_info']['phone'];?></td>
+            <td>联系电话：
+                <?php echo @$output['order_info']['extend_order_common']['reciver_info']['mob_phone'];?>
+                <?php if($output['order_info']['extend_order_common']['reciver_info']['tel_phone']){?>
+                &nbsp;&nbsp;/&nbsp;&nbsp;
+                    <?php echo @$output['order_info']['extend_order_common']['reciver_info']['tel_phone'];?>
+                <?php }?>
+            </td>
              </tr>
             <td></td>
           </tr>
           <tr>
-            <td colspan="3"><?php echo $lang['member_printorder_address'].$lang['nc_colon']; ?><?php echo @$output['order_info']['extend_order_common']['reciver_info']['address'];?></td>
+            <td colspan="3">详细地址：
+                <?php echo @$output['order_info']['extend_order_common']['reciver_info']['address'];?>
+            </td>
           </tr>
+            <tr>
+                <td colspan="3">买家留言：
+                    <?php echo $output['order_info']['extend_order_common']['order_message']; ?>
+                </td>
+            </tr>
         </table>
           
            <tr>
@@ -133,19 +163,21 @@ body { background: #FFF none;
             <br/>
          <!--发票信息-->
      <div class="ncsc-order-details" style="width:100%">
-      <div class="title"><?php echo $lang['store_show_order_info'];?></div>
+      <div class="title">发票信息：</div>
       <div class="content">
         <dl>
-          <dt>发票信息：</dt>
+          <dt style="width: 10%"></dt>
           <dd>
-            <?php foreach ((array)$output['order_info']['extend_order_common']['invoice_info'] as $key => $value){?>
-            <span><?php echo $key;?> :<strong><?php echo $value;?></strong></span>
-            <?php } ?>
+              <table>
+                  <?php if(!empty($output['order_info']['extend_order_common']['invoice_info']) && is_array($output['order_info']['extend_order_common']['invoice_info'])){?>
+                  <?php foreach ($output['order_info']['extend_order_common']['invoice_info'] as $key=>$val){?>
+                      <tr>
+                          <td align="right"><?php echo $key;?>：</td>
+                          <td align="left"><strong><?php echo $val;?></strong></td>
+                      </tr>
+                  <?php }}?>
+              </table>
           </dd>
-        </dl>
-        <dl>
-          <dt>买家留言：</dt>
-          <dd><?php echo $output['order_info']['extend_order_common']['order_message']; ?></dd>
         </dl>
       </div>
     </div>

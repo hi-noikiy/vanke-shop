@@ -47,13 +47,8 @@ class store_order_detailedControl extends BaseSellerControl {
 			}
 		}
 		Tpl::output('store_info',$store_info);
-                //项目名称
-            
-            $model=Model();
-            $buyer_name=$model->query('SELECT sap_employeeinfo.butxt,sap_employeeinfo.ktext,sap_employeeinfo.sname,sap_employeeinfo.Telnr,sap_employeeinfo.pktxt '
-                    . 'FROM sap_employeeinfo where sap_employeeinfo.pernr="'.$order_info['buyer_name'].'"');
-        
-            Tpl::output('buyer_name',$buyer_name[0]);
+        //项目名称
+        Tpl::output('buyer_name',$this->getOrderProject($order_info['buyer_id'],$order_info['project_code']));
 		//订单商品
 		$model_order = Model('order');
 		$condition = array();
@@ -63,7 +58,7 @@ class store_order_detailedControl extends BaseSellerControl {
 		$goods_all_num = 0;
 		$goods_total_price = 0;
 		if (!empty($order_info['extend_order_goods'])){
-			$goods_count = count($order_goods_list);
+			$goods_count = count($order_info['extend_order_goods']);
 			$i = 1;
 			foreach ($order_info['extend_order_goods'] as $k => $v){
 				$v['goods_name'] = str_cut($v['goods_name'],100);
@@ -74,14 +69,43 @@ class store_order_detailedControl extends BaseSellerControl {
 				$i++;
 			}
 		}
-		//优惠金额
-		$promotion_amount = $goods_total_price - $order_info['goods_amount'];
-		//运费
-		$order_info['shipping_fee'] = $order_info['shipping_fee'];
-		Tpl::output('promotion_amount',$promotion_amount);
+		Tpl::output('order_money',$order_info['order_amount']);
 		Tpl::output('goods_all_num',$goods_all_num);
 		Tpl::output('goods_total_price',ncPriceFormat($goods_total_price));
+        Tpl::output('shipping_fee',$order_info['shipping_fee']);
 		Tpl::output('goods_list',$goods_new_list);
 		Tpl::showpage('store_order.detailed',"null_layout");
 	}
+
+
+	//获取订单项目名称
+    private function getOrderProject($buy_id,$project_code){
+        if($this->is_https()){
+            $dbName = "vs_purchase2";
+        }else{
+            $dbName = "vs_purchase_t2";
+        }
+        $sql = "SELECT * FROM ".$dbName.".vanke_pj_code where project_code = '".$project_code."' limit 1";
+        $project = Model()->query($sql);
+        $buy_info = Model()->table('member')->field('member_truename,member_mobile,belong_city_id')->where("member_id = '".$buy_id."'")->find();
+        $city_info = Model()->table('city_centre')->field('city_name')->where("id = '".$buy_info['belong_city_id']."'")->find();
+        $data = array(
+            'project_name'  =>$project[0]['project_name'],
+            'buy_name'      =>$buy_info['member_truename'],
+            'buy_tel'       =>$buy_info['member_mobile'],
+            'project_city'  =>$city_info['city_name'],
+        );
+        return $data;
+    }
+
+    private function is_https(){
+        if ( !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+            return true;
+        } elseif ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
+            return true;
+        } elseif ( !empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
+            return true;
+        }
+        return false;
+    }
 }

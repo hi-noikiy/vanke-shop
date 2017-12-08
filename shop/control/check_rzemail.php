@@ -27,20 +27,19 @@ class check_rzemailControl extends BaseHomeControl {
 	   list($member_id,$member_email) = explode(' ', $uid);
            
 	   if (!is_numeric($member_id)) {
-	       showMessage('验证失败',SHOP_SITE_URL,'html','error');
+	       showMessage('验证失败1',SHOP_SITE_URL,'html','error');
 	   }
            $model = Model();
            $email_where['member_id'] = $member_id;
 	   $email = $model->table('supplier')->where($email_where)->field('contacts_email')->find();
            
 	   if ($member_email != $email['contacts_email']) {
-	       showMessage('验证失败',SHOP_SITE_URL,'html','error');
+	       showMessage('验证失败2',SHOP_SITE_URL,'html','error');
 	   }
            
 	   $member_common_info = $model_member->getMemberCommonInfo(array('member_id'=>$member_id));
-           
 	   if (md5($member_common_info['auth_code']) != $_GET['hash'] || TIMESTAMP - $member_common_info['send_acode_time'] > 24*3600) {
-	       showMessage('验证失败',SHOP_SITE_URL,'html','error');
+	       showMessage('验证失败3',SHOP_SITE_URL,'html','error');
 	   }
 
            //执行更新操作
@@ -65,7 +64,10 @@ class check_rzemailControl extends BaseHomeControl {
            $email_array['member_email_bind']=1;
            $email_array['member_email']=$member_email;
            $model_member->table('member')->where(array('member_id'=>$member_id))->update($email_array);
-	   showMessage('邮箱验证成功','index.php?act=store_joinin&op=index');
+
+        $log_where = "member_id = '".$member_id."' and type = '2' and state = '1' and code = '1'";
+            Model()->table('email_log')->where($log_where)->update(array('state'=>'2','u_time'=>time()));
+	   showMessage('邮箱验证成功','index.php?act=supplier_join');
 
 	}
 }

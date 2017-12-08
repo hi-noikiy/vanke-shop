@@ -109,7 +109,7 @@
         form.on('select(province)', function(data){
             $.ajax({
                 type: "get",
-                url: "/shop/index.php?act=buy&op=getCityList", // type =2表示查询市
+                url: "/shop/index.php?act=member_address&op=getCityList", // type =2表示查询市
                 data: {"parent_id": data.value, "type": "2"},
                 dataType: "json",
                 success: function(list) {
@@ -128,7 +128,7 @@
         form.on('select(city)', function(data){
             $.ajax({
                 type: "get",
-                url: "/shop/index.php?act=buy&op=getCityList", // type =2表示查询市
+                url: "/shop/index.php?act=member_address&op=getCityList", // type =2表示查询市
                 data: {"parent_id": data.value, "type": "3"},
                 dataType: "json",
                 success: function(list) {
@@ -147,7 +147,7 @@
             $.ajax({
                 type:"POST",
                 //提交的网址
-                url:"/shop/index.php?act=buy&op=newAddress",
+                url:"/shop/index.php?act=member_address&op=newAddress",
                 data:data.field,
                 datatype: "json",
                 success:function(result){
@@ -187,7 +187,7 @@
         var province = '<?php echo $output['address']['province'];?>';
         $.ajax({
             type: "get",
-            url: "/shop/index.php?act=buy&op=getCityList", // type=1表示查询省份
+            url: "/shop/index.php?act=member_address&op=getCityList", // type=1表示查询省份
             data: {"parent_id": "0", "type": "1"},
             dataType: "json",
             success: function(data) {
@@ -209,7 +209,7 @@
         var city = '<?php echo $output['address']['city_id'];?>';
         $.ajax({
             type: "get",
-            url: "/shop/index.php?act=buy&op=getCityList", // type =2表示查询市
+            url: "/shop/index.php?act=member_address&op=getCityList", // type =2表示查询市
             data: {"parent_id": province, "type": "2"},
             dataType: "json",
             success: function(list) {
@@ -234,7 +234,7 @@
         var county = '<?php echo $output['address']['area_id'];?>';
         $.ajax({
             type: "get",
-            url: "/shop/index.php?act=buy&op=getCityList", // type =2表示查询市
+            url: "/shop/index.php?act=member_address&op=getCityList", // type =2表示查询市
             data: {"parent_id": city, "type": "3"},
             dataType: "json",
             success: function(list) {

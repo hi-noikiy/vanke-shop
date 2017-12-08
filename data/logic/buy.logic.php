@@ -183,6 +183,19 @@ class buyLogic {
 
         //输出用户所有收货地址
         $result['address_list'] = Model('address')->getAddressList(array('member_id'=>$member_id),"is_default desc");
+        $result['invoice_list'] = Model()->table('invoice')->where("member_id = '".$member_id."'")->select();
+        $invoice_list = array();
+        if(!empty($result['invoice_list']) && is_array($result['invoice_list'])){
+            foreach ($result['invoice_list'] as $val){
+                $invoice_list[] = array(
+                    'inv_id'        => $val['inv_id'],
+                    'inv_state'     => $val['inv_state'],
+                    'inv_title'     => $val['inv_state']=='1' ? $val['inv_title']:$val['inv_company'],
+                    'inv_content'   => $val['inv_state']=='1' ? $val['inv_content']:$val['inv_code']."&nbsp;&nbsp;".$val['inv_rec_name'],
+                );
+            }
+        }
+        $result['invoice_list'] = $invoice_list;
 
         //输出有货到付款时，在线支付和货到付款及每种支付下商品数量和详细列表
         $pay_goods_list = $this->_logic_buy_1->getOfflineGoodsPay($goods_list);
@@ -664,6 +677,7 @@ class buyLogic {
             //添加采购员项目ID
             $member_data = Model()->table('member')->where("member_id = '".$member_id."'")->find();
             $order['project_code'] = $member_data['project_id'];
+            $order['city_centre'] = $member_data['belong_city_id'];
 			//如果支持方式为空时，默认为货到付款
 			if( $order['payment_code']=="")
 			{

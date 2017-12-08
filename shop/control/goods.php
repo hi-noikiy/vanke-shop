@@ -46,7 +46,6 @@ class goodsControl extends BaseGoodsControl {
         Tpl::output('goods_image', $goods_detail['goods_image']);
         Tpl::output('mansong_info', $goods_detail['mansong_info']);
         Tpl::output('gift_array', $goods_detail['gift_array']);
-
         // 生成缓存的键值
         $hash_key = $goods_info['goods_id'];
         $_cache = rcache($hash_key, 'product');
@@ -61,64 +60,7 @@ class goodsControl extends BaseGoodsControl {
         }
         $goods_info = array_merge($goods_info, $_cache);
 
-        $inform_switch = true;
-        // 检测商品是否下架,检查是否为店主本人
-        if ($goods_info['goods_state'] != 1 || $goods_info['goods_verify'] != 1 || $goods_info['store_id'] == $_SESSION['store_id']) {
-            $inform_switch = false;
-        }
-        Tpl::output('inform_switch',$inform_switch );
-
-        // 如果使用售卖区域
-        if ($goods_info['transport_id'] > 0) {
-            // 取得三种运送方式默认运费
-            $model_transport = Model('transport');
-            $transport = $model_transport->getExtendList(array('transport_id' => $goods_info['transport_id'], 'is_default' => 1));
-            if (!empty($transport) && is_array($transport)) {
-                foreach ($transport as $v) {
-                    $goods_info[$v['type'] . "_price"] = $v['sprice'];
-                }
-            }
-        }
         Tpl::output('goods', $goods_info);
-		
-		// 抢购商品是否开始
-		$IsHaveBuy=0;
-		if(!empty($_SESSION['member_id']))
-		{
-		   $buyer_id=$_SESSION['member_id'];
-		   $promotion_type=$goods_info["promotion_type"];
-		   if($promotion_type=='groupbuy')
-		   {   
-		    //检测是否限购数量
-			$upper_limit=$goods_info["upper_limit"];
-			if($upper_limit>0)
-			{
-				//查询些会员的订单中，是否已买过了
-				$model_order= Model('order');
-				 //取商品列表
-                $order_goods_list = $model_order->getOrderGoodsList(array('goods_id'=>$goods_id,'buyer_id'=>$buyer_id,'goods_type'=>2));
-				if($order_goods_list)
-				{   
-				    //取得上次购买的活动编号(防一个商品参加多次团购活动的问题)
-				    $promotions_id=$order_goods_list[0]["promotions_id"];
-					//用此编号取数据，检测是否这次活动的订单商品。
-					 $model_groupbuy = Model('groupbuy');
-					 $groupbuy_info = $model_groupbuy->getGroupbuyInfo(array('groupbuy_id' => $promotions_id));
-					 if($groupbuy_info)
-					 {
-						$IsHaveBuy=1;
-					 }
-					 else
-					 {
-						$IsHaveBuy=0;
-					 }
-				}
-			}
-		  }
-		}
-		Tpl::output('IsHaveBuy',$IsHaveBuy);
-		//end
-
         $model_plate = Model('store_plate');
         // 顶部关联版式
         if ($goods_info['plateid_top'] > 0) {
@@ -131,56 +73,14 @@ class goodsControl extends BaseGoodsControl {
             Tpl::output('plate_bottom', $plate_bottom);
         }
         Tpl::output('store_id', $goods_info['store_id']);
-        
-        //查询当前商品的城市id
-        $model = Model();
-        $city_id = $model->table('goods,store')->join('left')->on('goods.store_id=store.store_id')->field('store.store_city_id')->where('goods_id='.$goods_id)->find();
-        $city_array = explode(',', $city_id['store_city_id']);
-        $member_city_caigou = explode(',', $_SESSION['city_id']);
-        foreach($member_city_caigou as $rows){
-            foreach($city_array as $c){
-                if($rows == $c){
-                    $city_is = 1;
-                    break;
-                }
-            }
-        }  
 
-        //判断其他业务员是否可以购买  04
-        $buy_qs = '';
-        if($_SESSION['identity'] == MEMBER_IDENTITY_FIVE){
-            foreach($city_array as $c_mother){
-                if($c_mother == 1){
-                    $buy_qs = 1;
-                    break;
-                }
-            }
-        }
-        if($city_is != 1){
-            $city_is = 2;
-        }
-        Tpl::output('buy_qs',$buy_qs);
-        Tpl::output('city',$city_is);
-        
         //推荐商品
         $goods_commend_list = $model_goods->getGoodsCommendList($goods_info['store_id'], 5);
         Tpl::output('goods_commend',$goods_commend_list);
 
-
-        // 当前位置导航
-        $nav_link_list = Model('goods_class')->getGoodsClassNav($goods_info['gc_id'], 0);
-        $nav_link_list[] = array('title' => $goods_info['goods_name']);
-        Tpl::output('nav_link_list', $nav_link_list);
-
         //评价信息
         $goods_evaluate_info = Model('evaluate_goods')->getEvaluateGoodsInfoByGoodsID($goods_id);
         Tpl::output('goods_evaluate_info', $goods_evaluate_info);
-
-        $seo_param = array();
-        $seo_param['name'] = $goods_info['goods_name'];
-        $seo_param['key'] = $goods_info['goods_keywords'];
-        $seo_param['description'] = $goods_info['goods_description'];
-        Model('seo')->type('product')->param($seo_param)->show();
         
         //销售区域
         $sales_area = $this->getGoodSalesArea($goods_id);
@@ -189,12 +89,6 @@ class goodsControl extends BaseGoodsControl {
         //购买权限
         $authority = $this->getPurchasingAuthority($goods_id,$_SESSION['member_id']);
         Tpl::output('authority', $authority);
-
-        //传入人员身份
-        $model_member= Model('member');
-        $member_list=$model_member->where(array("member_id"=>$_SESSION['member_id']))->field("role_id")->find();
-        $_SESSION["role_id"]=$member_list['role_id']; 
-//         Tpl::output('role_id', $member_list['role_id']);      
         Tpl::showpage('goods');
     }
     /**
@@ -216,35 +110,31 @@ class goodsControl extends BaseGoodsControl {
         if(!empty($member_id)){
             //判定用户是否登录
             $member_info = $model->table('member')->field("city_id,belong_city_id,role_id")->where(array("member_id"=>$member_id))->find();
-            $good_info = $model->table('goods')->field("sales_area")->where(array("goods_id"=>$good_id))->find();
-            if($member_info['role_id'] == '01'){
-                //判定是否为采购员身份位万科采购员
-                if(!empty($good_info['sales_area'])){
-                    //存在商品销售区域
-                    $good_sales_area = explode(',',$good_info['sales_area']);
-                    $member_city = explode(',',$member_info['city_id']);
-                    if(!empty($member_city) && is_array($member_city) && is_array($good_sales_area)){
-                        foreach ($member_city as $member_val){
-                            if(in_array($member_val, $good_sales_area)){
-                                $authority = '1';
-                                break;
-                            }
-                        }
-                    }
+            $good_info = $model->table('goods')->field("store_id,sales_area")->where(array("goods_id"=>$good_id))->find();
+            if(!empty($good_info['sales_area'])){
+                $good_sales_area = explode(',',$good_info['sales_area']);
+            }else{
+                //获取当前商户是否存在未认证事业本部 city_center_list
+                $sup_info = $model->table('supplier')->field("first_city_id,city_center_list")->where(array("store_id"=>$good_info['store_id']))->find();
+                $sup_city = explode(',',$sup_info['city_center_list']);
+                if(in_array('1',$sup_city)){
+                    $good_sales_area = array('1');
                 }else{
-                    //如果为空则默认为事业本部
-                    $authority = '1';
+                    $good_sales_area = array($sup_info['first_city_id']);
                 }
             }
-            if($member_info['role_id'] == '04'){
-                //判定是否为采购员身份位第三方采购员
-                if(!empty($good_info['sales_area'])){
-                    if(in_array('1', $good_sales_area)){
+            if($member_info['role_id'] == '01'){
+                $member_city = explode(',',$member_info['city_id']);
+            }else{
+                $member_city = array('1');
+            }
+
+            if(!empty($member_city) && is_array($member_city) && is_array($good_sales_area)){
+                foreach ($member_city as $member_val){
+                    if(in_array($member_val, $good_sales_area)){
                         $authority = '1';
+                        break;
                     }
-                }else{
-                    //如果为空则默认为事业本部
-                    $authority = '1';
                 }
             }
         }
@@ -260,8 +150,7 @@ class goodsControl extends BaseGoodsControl {
     protected function getGoodSalesArea($good_id){
         $model = Model();
         $city_name = array();
-        $city_info_center = $model->table('city_centre')->field("city_name")->where(array("id"=>1))->find();
-        $good_info = $model->table('goods')->field("sales_area")->where(array("goods_id"=>$good_id))->find();
+        $good_info = $model->table('goods')->field("store_id,sales_area")->where(array("goods_id"=>$good_id))->find();
         if(!empty($good_info['sales_area'])){
             $city_center_id = explode(',',$good_info['sales_area']);
             if(!empty($city_center_id) && is_array($city_center_id)){
@@ -269,10 +158,16 @@ class goodsControl extends BaseGoodsControl {
                     $city_info = $model->table('city_centre')->field("city_name")->where(array("id"=>$val))->find();
                     $city_name[] = $city_info["city_name"];
                 }
-            }else{
-                $city_name[] = $city_info_center["city_name"];
             }
         }else{
+            //获取当前商户是否存在未认证事业本部 city_center_list
+            $sup_info = $model->table('supplier')->field("first_city_id,city_center_list")->where(array("store_id"=>$good_info['store_id']))->find();
+            $sup_city = explode(',',$sup_info['city_center_list']);
+            if(in_array('1',$sup_city)){
+                $city_info_center = $model->table('city_centre')->field("city_name")->where(array("id"=>1))->find();
+            }else{
+                $city_info_center = $model->table('city_centre')->field("city_name")->where(array("id"=>$sup_info['first_city_id']))->find();
+            }
             $city_name[] = $city_info_center["city_name"];
         }
         return implode(',',$city_name);

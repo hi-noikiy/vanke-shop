@@ -57,7 +57,7 @@ class store_order_printControl extends BaseSellerControl {
 		$goods_all_num = 0;
 		$goods_total_price = 0;
 		if (!empty($order_info['extend_order_goods'])){
-			$goods_count = count($order_goods_list);
+			$goods_count = count($order_info['extend_order_goods']);
 			$i = 1;
 			foreach ($order_info['extend_order_goods'] as $k => $v){
 				$v['goods_name'] = str_cut($v['goods_name'],100);
@@ -68,14 +68,11 @@ class store_order_printControl extends BaseSellerControl {
 				$i++;
 			}
 		}
-		//优惠金额
-		$promotion_amount = $goods_total_price - $order_info['goods_amount'];
-		//运费
-		$order_info['shipping_fee'] = $order_info['shipping_fee'];
-		Tpl::output('promotion_amount',$promotion_amount);
-		Tpl::output('goods_all_num',$goods_all_num);
-		Tpl::output('goods_total_price',ncPriceFormat($goods_total_price));
-		Tpl::output('goods_list',$goods_new_list);
+        Tpl::output('order_money',$order_info['order_amount']);
+        Tpl::output('goods_all_num',$goods_all_num);
+        Tpl::output('goods_total_price',ncPriceFormat($goods_total_price));
+        Tpl::output('shipping_fee',$order_info['shipping_fee']);
+        Tpl::output('goods_list',$goods_new_list);
 		Tpl::showpage('store_order.print',"null_layout");
 	}
 }

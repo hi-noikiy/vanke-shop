@@ -198,4 +198,140 @@ class member_addressControl extends BaseMemberControl{
 		Tpl::output('member_menu',$menu_array);
 		Tpl::output('menu_key',$menu_key);
 	}
+
+
+
+
+    /**
+     * 设置默认收货地址
+     * @Author  : Aletta
+     * @Time    : 2017-11-22 PM 14:25
+     */
+    public function defaultAddressOp(){
+        $where = "address_id = '".$_POST['id']."' and member_id = '".$_SESSION['member_id']."'";
+        $addData = Model()->table('address')->where($where)->find();
+        if(!empty($addData)){
+            //获取之前的默认地址数据
+            $oldData = Model()->table('address')->where("is_default = '1' and member_id = '".$_SESSION['member_id']."'")->find();
+            if(!empty($oldData)){
+                Model()->table('address')->where("address_id = '".$oldData['address_id']."'")->update(array('is_default'=>0));
+            }
+            $rest = Model()->table('address')->where("address_id = '".$addData['address_id']."'")->update(array('is_default'=>1));
+            echo $rest ? "1":"-1";
+            exit;
+        }
+    }
+
+
+    /**
+     * 获取城市数据信息
+     * @Author  : Aletta
+     * @Time    : 2017-11-23 PM 14:02
+     */
+    public function getCityListOp(){
+        $type = isset($_GET["type"]) ? $_GET["type"] : "1";
+        $parent_id = isset($_GET["parent_id"]) ? $_GET["parent_id"] : "0";
+        $where = "area_parent_id = '".$parent_id."' and area_deep = '".$type."'";
+        $list = Model()->table("area")->where($where)->select();
+        $provinces_json = json_encode($list);
+        exit($provinces_json);
+    }
+
+    /**
+     * 新增收货地址数据
+     * @Author  : Aletta
+     * @Time    : 2017-11-23 PM 14:02
+     */
+    public function newAddressOp(){
+        $rest_data = array("code" => '-1', "msg" => "非法请求", 'data'=>'');
+        $data = $_POST;
+        if(!empty($data) && is_array($data) && !empty($_SESSION['member_id'])){
+            $tel_phone = empty($data['area_code']) ? "":$data['area_code']."-";
+            $tel_phone.= empty($data['tell_num']) ? "":$data['tell_num'];
+            $tel_phone.= empty($data['extension']) ? "":"-".$data['extension'];
+            //获取城市数据
+            $province = Model()->table("area")->where("area_id = '".$data['province']."'")->find();
+            $city = Model()->table("area")->where("area_id = '".$data['city']."'")->find();
+            $county = Model()->table("area")->where("area_id = '".$data['county']."'")->find();
+
+            $area_info = empty($province['area_name']) ? "":$province['area_name']."  ";
+            $area_info.= empty($city['area_name']) ? "":$city['area_name'];
+            $area_info.= empty($county['area_name']) ? "":"  ".$county['area_name'];
+
+            $list = array(
+                'true_name' =>$data['send_name'],
+                'area_id'   =>$data['county'],
+                'city_id'   =>$data['city'],
+                'area_info' =>$area_info,
+                'address'   =>$data['address'],
+                'tel_phone' =>$tel_phone,
+                'mob_phone' =>$data['phone'],
+            );
+            //add
+            if(empty($data['addId']) && empty($data['showId'])){
+                $list['member_id'] = $_SESSION['member_id'];
+                $rest = Model()->table('address')->insert($list);
+                if($rest){
+                    $list['address_id'] = $rest;
+                    $rest_data['code'] = '1';
+                    $rest_data['msg'] = "success";
+                    $rest_data['data'] = $list;
+                }else{
+                    $rest_data['code'] = '-1';
+                    $rest_data['msg'] = "添加失败";
+                }
+            }
+            //updata
+            if(!empty($data['addId']) && !empty($data['showId'])){
+                $address = Model()->table('address')->where("address_id = '".$data['addId']."' and member_id = '".$_SESSION['member_id']."'")->find();
+                if(!empty($address)){
+                    $rest = Model()->table('address')->where("address_id = '".$data['addId']."' and member_id = '".$_SESSION['member_id']."'")->update($list);
+                    if($rest){
+                        $list['address_id'] = $address['address_id'];
+                        $rest_data['code'] = $data['addId'] == $data['showId'] ? '2':'1';
+                        $rest_data['msg'] = "success";
+                        $rest_data['data'] = $list;
+                    }else{
+                        $rest_data['code'] = '-1';
+                        $rest_data['msg'] = "修改失败";
+                    }
+                }
+            }
+        }
+        echo json_encode($rest_data);
+    }
+
+
+
+    /**
+     * 删除收货地址
+     * @Author  : Aletta
+     * @Time    : 2017-11-24 PM 09:25
+     */
+    public function delAddressOp(){
+        $rest = array(
+            'code'  =>'-1',
+            'msg'   =>'地址信息有误，请重新操作或联系管理员',
+            'data'  =>'',
+        );
+        $where = "address_id = '".$_POST['id']."' and member_id = '".$_SESSION['member_id']."'";
+        $addData = Model()->table('address')->where($where)->find();
+        if(!empty($addData)){
+            $res = Model()->table('address')->where($where)->delete();
+            if($res){
+                if($_POST['id'] == $_POST['sid']){
+                    $show_data = Model()->table('address')->where("member_id = '".$_SESSION['member_id']."'")->order("is_default desc")->find();
+                    $rest['data'] = $show_data;
+                    $rest['code'] = empty($show_data) ? "2":"3";
+                }else{
+                    $rest['code'] = "1";
+                }
+                $rest['msg'] = "success";
+            }else{
+                $rest['code'] = "-1";
+                $rest['msg'] = "删除失败，请重新操作";
+            }
+        }
+        echo json_encode($rest);
+    }
 }

@@ -96,10 +96,10 @@
           <ul  class="tabs-nav" style="width:100%; margin: 0 auto;">
             <li style="margin: 34px auto 0;width:100%"><div id="ZZE_LOGIN" class="tabs-content" style=" text-align:center;">
                 <div class="img_div">
-                    <i style="vertical-align: middle;"><a href="<?php echo urlShop('store_joinin', 'step0');?>" >
+                    <i style="vertical-align: middle;"><a href="/shop/index.php?act=supplier_join" >
                     <img src="<?php echo SHOP_TEMPLATES_URL;?>/images/icon01.png" class="icon_b"></a></i><br>
                 </div>  
-                <a href="<?php echo urlShop('store_joinin', 'step0');?>">我是供应商<i></i></a>
+                <a href="/shop/index.php?act=supplier_join">我是供应商<i></i></a>
             </div> 
             </li>
          </ul>

@@ -259,7 +259,7 @@ a {
         $.ajax({
             type:"POST",
             //提交的网址
-            url:"/shop/index.php?act=buy&op=defaultAddress",
+            url:"/shop/index.php?act=member_address&op=defaultAddress",
             data:{id: id},
             datatype: "json",
             success:function(result){
@@ -314,7 +314,7 @@ a {
                 offset: 20,
                 shade: [0.8, '#393D49'],
                 area: ['820px', '600px'],
-                content: '/shop/index.php?act=buy&op=Address',
+                content: '/shop/index.php?act=buy&op=addRessItem',
             });
         });
     });
@@ -335,7 +335,7 @@ a {
                 offset: 20,
                 shade: [0.8, '#393D49'],
                 area: ['820px', '600px'],
-                content: '/shop/index.php?act=buy&op=Address&id='+id+'&sid='+show_id,
+                content: '/shop/index.php?act=buy&op=addRessItem&id='+id+'&sid='+show_id,
             });
         });
     });
@@ -348,7 +348,7 @@ a {
         $.ajax({
             type:"POST",
             //提交的网址
-            url:"/shop/index.php?act=buy&op=delAddress",
+            url:"/shop/index.php?act=member_address&op=delAddress",
             data:{id: id, sid:show_id},
             datatype: "json",
             success:function(result){
@@ -464,7 +464,7 @@ a {
 //异步显示每个店铺运费 city_id计算运费area_id计算是否支持货到付款
 function showShippingPrice(city_id,area_id) {
 	$('#buy_city_id').val('');
-    $.post(SITEURL + '/index.php?act=buy&op=change_addr', {'freight_hash':'<?php echo $output['freight_hash'];?>',city_id:city_id,'area_id':area_id}, function(data){
+    $.post(SITEURL + '/index.php?act=member_address&op=change_addr', {'freight_hash':'<?php echo $output['freight_hash'];?>',city_id:city_id,'area_id':area_id}, function(data){
     	if(data.state == 'success') {
     	    $('#buy_city_id').val(city_id);
     	    $('#allow_offpay').val(data.allow_offpay);

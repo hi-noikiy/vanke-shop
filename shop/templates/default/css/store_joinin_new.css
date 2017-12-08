@@ -6,21 +6,7 @@ body { background: #FFF; margin: 0; padding: 0;}
 /* =====================
  * 表单元素格式化及伪类效果
  * ===================== */
-input[type="text"], input[type="password"], input.text, input.password { font: 12px/18px Arial; color: #777; background-color: #FFF; vertical-align: top; display: inline-block; height: 18px; padding: 3px 1px; border: solid 1px #CCC; outline: 0 none;}
-input[type="text"]:focus, input[type="password"]:focus, input.text:focus, input.password:focus, textarea:focus { color: #333; border-color: #75B9F0; box-shadow: 0 0 0 2px rgba(82, 168, 236, 0.15); outline: 0 none;}
-input[type="text"].error, input[type="password"].error, textarea.error { border-color: #ED6C4F; box-shadow: 0 0 0 2px rgba(232, 71, 35, 0.15); outline: 0 none;}
-textarea, .textarea { font: 12px/20px Arial; color: #777; background-color: #FFF; vertical-align: top; display: inline-block; height: 60px; padding: 4px; border: solid 1px #CCC; outline: 0 none;}
-input.error, input:hover.error, input:focus.error, textarea.error, textarea.error:hover, textarea.error:focus { background-color: #FFBFBF; border: dotted 1px #D90000;}
 
-
-input[type="file"] {  background-color: #FFF; vertical-align: middle; display: inline-block; width: 206px;}
-input[type="button"] { line-height: 22px; color: #555; background-color: #FEFFFF; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFFFF', endColorstr='#F7FCFF'); background-image: -webkit-gradient( linear, left top, left bottom, from(#FEFFFF), to(#F7FCFF)) ; background-image: -moz-linear-gradient(top, #FEFFFF, #F7FCFF); vertical-align: middle; display: inline-block; height: 22px; padding: 0 4px; border: 1px solid; border-color: #DBE9EB #BCD7DA #BCD7DA #DBE9EB; cursor: pointer; box-shadow: 1px 1px 0 rgba(153,153,153,0.15);}
-input[type="button"] { *display: inline;}
-select, .select { color: #777; background-color: #FFF; height: 26px; vertical-align: middle; *display: inline; padding: 2px; border: solid 1px #CCC; *zoom:1;}
-select option, .select option { line-height: 20px; display: block; height: 20px; padding: 2px;}
-input[type="checkbox"] { vertical-align: middle; margin-right: 5px;}
-label.error { color: #333; line-height: 18px; background: #FFEEEE  url(../images/joinin_pic.png) no-repeat -395px -135px; vertical-align: middle; display: inline-block; height: 18px; padding: 1px 5px 1px 20px; margin-left: 4px; border: solid 1px #FCC;}
-label.error { *display: inline;}
 
 /*顶部内容样式*/
 .header { width: 1000px; height: 96px; margin: 0 auto;}
@@ -110,92 +96,10 @@ label.error { *display: inline;}
 
 /*页内整体布局*/
 .main { width: 1000px; padding: 0; margin: 0 auto 10px auto; overflow: hidden;}
-/*左侧边栏菜单*/
-.sidebar { width: 206px; float: left; border: solid 1px #D7D7D7;}
-.sidebar .title { background-color: #F5F5F5; height: 36px; border-top: solid 1px #D7D7D7; margin-top: -1px;}
-.sidebar .title h3 { font: 600 14px/20px "microsoft yahei"; color: #333333; height: 20px; padding: 8px 10px;}
-.sidebar .content { width: 190px; margin: 0 auto;}
-.sidebar .content dl { overflow: hidden;}
-.sidebar .content dt { line-height: 20px; font-weight: 600; color: #555; height: 20px; padding: 10px 0 9px 0; border-bottom: solid 1px #F5F5F5; cursor: default; }
-.sidebar .content dt.current { color: #FFF; background-color: #27A9E3;}
-.sidebar .content dt i { background: url(../images/joinin_pic.png) no-repeat; vertical-align: middle; display: inline-block; *display: inline/*IE7*/; width: 11px; height: 11px; margin-right: 10px; margin-left: 6px; *zoom: 1/*IE7*/;}
-.sidebar .content dt i.hide { background-position: -300px 0}
-.sidebar .content dt i.show { background-position: -280px 0}
-.sidebar .content dt.current i.hide { background-position: -300px -15px;}
-.sidebar .content dt.current i.show { background-position: -280px -15px;}
-.sidebar .content dd { margin-bottom: 10px;}
-.sidebar .content ul { width: 100%; padding: 6px 0; }
-.sidebar .content ul li { padding: 6px 0;}
-.sidebar .content ul li a { color: #999;}
-.sidebar .content ul li i { background: url(../images/joinin_pic.png) no-repeat -320px 0; vertical-align: middle; display: inline-block; width: 3px; height: 5px; margin-right: 10px; margin-left: 14px;}
-.sidebar .content ul li.current { color: #FFF; background-color: #27A9E3;}
-/*右侧内容部分*/
-.right-layout { width: 778px; min-height: 500px; float: right; border: solid 1px #D7D7D7;}
-/*申请流程*/
-.joinin-step ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; width: 616px; height: 46px; margin: 40px auto 20px auto;}
-.joinin-step ul li { font-size: 12px; background: url(../images/joinin_pic.png) no-repeat 0 -130px; vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline; width: 120px; height: 16px; position: relative; z-index: 1; *zoom: 1;}
-.joinin-step ul li.step1 { background-position: -52px -130px; width: 68px;}
-.joinin-step ul li.step6 { width: 68px;}
-.joinin-step ul li.current { background-position: -120px -130px;}
-.joinin-step ul li.step1.current { background-position: -172px -130px;}
-.joinin-step ul li span { color: #999; text-align: center; width: 120px; height: 20px; margin-left: -60px; position: absolute; z-index: 1; bottom: -30px; left: 50%;}
-.joinin-step ul li.step1 span { margin-left: -86px;}
-.joinin-step ul li.step6 span { margin-left: -36px;}
-/*提示文字*/
-.alert { color: #C09853; background-color: #FCF8E3; padding: 8px 35px 8px 14px; margin: 10px auto; border: 1px solid #FBEED5; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);}
-.alert a { color: #927036; text-decoration: underline;}
-.alert h4 { font-size: 16px; font-weight: bold; line-height: 1.5em; margin-bottom: 2px;}
-.alert ul { margin-bottom: 10px}
-.alert li { margin: 4px 0;}
-.alert li em { font-weight: 600; color: #F30; margin: 0 2px;}
-.alert i { font-size: 14px; margin-right: 4px; vertical-align: middle;}
-/*申请详情提交*/
-.joinin-concrete { padding: 19px; border-top: dotted 1px #EEE;}
-.joinin-concrete .title { height: 20px; text-align: center; padding: 20px 0;}
-.joinin-concrete .title h3 { font: 600 16px/20px "microsoft yahei"; color: #666;}
+
 /*入驻协议*/
 .apply-agreement-content { height: 300px; padding: 10px; border: solid 1px #EEE; overflow: auto;}
 .apple-agreement { text-align: center; height: 20px; line-height: 20px; margin: 20px 0;}
-/*申请表格*/
-.joinin-concrete table.all { line-height: 22px; color: #555; width: 100%; margin-top: 20px;}
-.joinin-concrete table.all thead th { font: 600 14px/22px "microsoft yahei"; color: #333; height: 22px; padding: 8px 4px; }
-.joinin-concrete table.all thead th em { color: #F00; margin-left: 12px;}
-
-.joinin-concrete table.all tbody th { vertical-align: top; text-align: right; width: 150px; height: 22px; padding: 8px 4px;}
-.joinin-concrete table.all tbody th i { font-size: 0; background: url(../images/joinin_pic.png) no-repeat -310px -130px; vertical-align: middle; display: inline-block; *display: inline/*IE7*/; width: 7px; height: 7px; margin-right: 6px; overflow: hidden; *zoom: 1;}
-.joinin-concrete table.all tbody td { vertical-align: top; text-align: left; height: 20px; padding: 8px 4px;}
-.joinin-concrete table.all tbody td span { *display: none/*IE7*/; color: #777; clear: both; margin-top: 10px;}
-.joinin-concrete table.all tbody td span.block { display: block;}
-.joinin-concrete table.all tbody td p.emphasis { color: #F30;}
-
-.joinin-concrete tabel.all tfoot td { line-height: 20px; height: 20px; padding: 0;}
-
-.joinin-concrete table.type { width: 600px; margin: 0 auto; border: solid 1px #DDD;}
-.joinin-concrete table.type thead th { color: #777; text-align: center; background-color: #F7F7F7; width: 25%;}
-.joinin-concrete table.type tbody td { text-align: center; border-style: solid; border-width: 1px 1px 0 0; border-color: #DDD #DDD transparent transparent; }
-.joinin-concrete table.type tbody td a { color: #F30;}
-
-
-
-.joinin-concrete .explain { font: 16px/32px "microsoft yahei"; color: #777; text-align: center; margin: 120px 0 100px 0}
-.joinin-concrete .explain i { background: url(../images/joinin_pic.png) no-repeat -350px 0; vertical-align: middle; display: inline-block; width: 32px; height: 30px; margin-right: 8px;}
-
-/*底部及按钮*/
-.joinin-concrete .bottom { text-align: center; height: 30px; padding: 20px 0 10px 0; border-top: solid 1px #EEE;}
-.joinin-concrete .btn { font: normal 12px/20px "microsoft yahei"; color: #777; background-color: #F5F5F5; text-align: center; vertical-align: middle; display: inline-block; height: 20px; padding: 4px 12px; border: solid 1px; border-color: #DCDCDC #DCDCDC #B3B3B3 #DCDCDC; cursor: pointer;}
-.joinin-concrete .btn:hover { text-decoration: none; color: #333; background-color: #E6E6E6; border-color: #CFCFCF #CFCFCF #B3B3B3 #CFCFCF;}
-
-
-
-
-
-.joinin-info { width: 980px; margin: 10px auto 0 auto; overflow: hidden;}
-.joinin-info .tabs-nav { font-size: 0; *word-spacing:-1px/*IE6、7*/; background-color: #F5F5F5; width: 984px; border-bottom: solid 2px #0286D8;}
-.joinin-info .tabs-nav li { font: 14px/20px "microsoft yahei"; color: #333; vertical-align: middle; letter-spacing: normal; word-spacing: normal; text-align: center; display: inline-block; *display: inline; width: 242px; padding: 10px 0; border-right: solid 4px #FFF; *zoom: 1;}
-.joinin-info .tabs-nav li.tabs-selected { background-color: #0286D8;}
-.joinin-info .tabs-nav li.tabs-selected h3 { color: #FFF; font-weight: 600;}
-.joinin-info .tabs-panel { margin: 15px 0;}
-.joinin-info .tabs-hide { display: none;}
 
 
 

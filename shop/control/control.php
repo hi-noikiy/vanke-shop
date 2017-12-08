@@ -88,7 +88,7 @@ class Control{
             if($_SESSION['identity'] == MEMBER_IDENTITY_ONE || empty($_SESSION['identity'])){
                 if(stripos(DEBUG_SYS_ACTNAME, ','.$_GET["act"].',') >= 0 && stripos(DEBUG_SYS_ACTNAME, ','.$_GET["act"].',') != false){
                 }else{
-                    if($_GET['scr'] != 'cache' && $_GET['op'] != 'json_area' && $_GET['op'] != 'josn_classinfo'){
+                    if($_GET['scr'] != 'cache' && $_GET['op'] != 'json_area' && $_GET['op'] != 'josn_classinfo' && $_GET['act'] != 'supplier_join'){
                         redirect(SHOP_SITE_URL.DS.'index.php?act=getmemberstatus&op=index');exit;
                     }
                 }
@@ -404,6 +404,30 @@ class HomeControl extends Control {
         Language::read('common,home_layout');
 
         Tpl::setDir('home');
+
+        Tpl::setLayout('null_layout');
+        if ($_GET['column'] && strtoupper(CHARSET) == 'GBK'){
+            $_GET = Language::getGBK($_GET);
+        }
+        if(!C('site_status')) halt(C('closed_reason'));
+        // 自动登录
+        $this->auto_login();
+    }
+
+}
+
+/********************************** 前台control父类 **********************************************/
+
+class SupplierControl extends Control {
+
+    public function __construct(){
+        //输出头部的公用信息
+        $this->showLayout();
+        //输出会员信息
+        $this->getMemberAndGradeInfo(false);
+        Language::read('common,home_layout');
+
+        Tpl::setDir('supplier');
 
         Tpl::setLayout('null_layout');
         if ($_GET['column'] && strtoupper(CHARSET) == 'GBK'){
