@@ -10,6 +10,7 @@ class member_messageControl extends BaseMemberControl {
     public function __construct() {
         parent::__construct();
 		//读取语言包
+        Tpl::setLayout('supplier_member_layout');
 		Language::read('member_home_message');
     }
 	/**

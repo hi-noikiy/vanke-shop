@@ -1,5 +1,6 @@
 <?php
 header("Content-type: text/html; charset=utf-8");
+set_time_limit(0);
 class zgy_testControl extends BaseHomeControl {
     private $times;
 
@@ -16,13 +17,89 @@ class zgy_testControl extends BaseHomeControl {
         $this->end_time = strtotime(date('Y-m-d',time())) - 1;
     }
 
-    public function indexOp(){
-        $uid = "v0035866";$sap="00163144";
-        $key = $this->getRandomString(9);
-        $user_str = $uid."|".$sap."|".time();
-        $uinfo = $this->encrypt($user_str, 'E', $key);
-        var_dump('shop/index.php?act=connect_wk&uid='.urlencode($uinfo).'&code='.$key);
-        //$aa = explode('|',$this->encrypt(urldecode($string), 'D', 'vanke'));
+    public function settlementOp(){
+        $time_a = new Timer();
+        $time_a->start();
+        $sql = "select id,member_id,bank_account_name,bank_account_number,bank_name,bank_code,bank_address,bank_licence_electronic,is_settlement_account,";
+        $sql.= "settlement_bank_account_name,settlement_bank_account_number,settlement_bank_name,settlement_bank_code,settlement_bank_address from `sc_supplier`";
+        $suplier = Model()->query($sql);
+        $num = $num_y =$num_n = 0;
+        echo "开始时间：".date('Y-m-d H:i:s',time())."</br>";
+        foreach ($suplier as $val){
+            if($val['is_settlement_account'] == '1'){
+                if(!empty($val['bank_account_name']) && !empty($val['bank_account_number'])){
+                    $data = array(
+                        'member_id'=>$val['member_id'],
+                        'supplier_id'=>$val['id'],
+                        'settlement_name'=>$val['bank_account_name'],
+                        'settlement_number'=>$val['bank_account_number'],
+                        'bank_name'=>'',
+                        'bank_branch_name'=>$val['bank_name'],
+                        'bank_branch_code'=>$val['bank_code'],
+                        'bank_address'=>$val['bank_address'],
+                    );
+                    Model()->table("supplier_settlement_bank")->insert($data);
+                    $num_y++;
+                }else{
+                    $num_n++;
+                }
+            }else{
+                if(!empty($val['settlement_bank_account_name']) && !empty($val['settlement_bank_account_number'])){
+                    $data = array(
+                        'member_id'=>$val['member_id'],
+                        'supplier_id'=>$val['id'],
+                        'settlement_name'=>$val['settlement_bank_account_name'],
+                        'settlement_number'=>$val['settlement_bank_account_number'],
+                        'bank_name'=>'',
+                        'bank_branch_name'=>$val['settlement_bank_name'],
+                        'bank_branch_code'=>$val['settlement_bank_code'],
+                        'bank_address'=>$val['settlement_bank_address'],
+                    );
+                    Model()->table("supplier_settlement_bank")->insert($data);
+                    $num_y++;
+                }else{
+                    $num_n++;
+                }
+            }
+            $num++;
+        }
+        $time_a->stop();
+        echo "共计：".$num."（Y:".$num_y."，N:".$num_n."）</br>";
+        echo "结束时间：".date('Y-m-d H:i:s',time())."</br>";
+        echo "耗时：".$time_a->spent()."</br>";
+    }
+
+    public function accountOp(){
+        $time_a = new Timer();
+        $time_a->start();
+        $suplier = Model()->query("select id,member_id,bank_account_name,bank_account_number,bank_name,bank_code,bank_address,bank_licence_electronic,is_settlement_account from `sc_supplier`");
+        $num = $num_y =$num_n = 0;
+        echo "开始时间：".date('Y-m-d H:i:s',time())."</br>";
+        foreach ($suplier as $val){
+            if(!empty($val['bank_account_name']) && !empty($val['bank_account_number'])){
+                $data = array(
+                    'member_id'=>$val['member_id'],
+                    'supplier_id'=>$val['id'],
+                    'account_name'=>$val['bank_account_name'],
+                    'account_number'=>$val['bank_account_number'],
+                    'bank_name'=>'',
+                    'bank_branch_name'=>$val['bank_name'],
+                    'bank_branch_code'=>$val['bank_code'],
+                    'bank_address'=>$val['bank_address'],
+                    'bank_licence_electronic'=>$val['bank_licence_electronic'],
+                    'is_settlement'=>$val['is_settlement_account'],
+                );
+                Model()->table("supplier_account_bank")->insert($data);
+                $num_y++;
+            }else{
+                $num_n++;
+            }
+            $num++;
+        }
+        $time_a->stop();
+        echo "共计：".$num."（Y:".$num_y."，N:".$num_n."）</br>";
+        echo "结束时间：".date('Y-m-d H:i:s',time())."</br>";
+        echo "耗时：".$time_a->spent()."</br>";
     }
 
     function getRandomString($len, $chars=null){

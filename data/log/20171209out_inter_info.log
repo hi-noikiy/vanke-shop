@@ -1,0 +1,117 @@
+[2017-12-09 02:47:45] /shop/index.php?act=index&op=ajaxGetInfo&_=1512758865512 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 02:47:45] /shop/index.php?act=index&op=ajaxGetInfo&_=1512758865512 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 02:47:45] /shop/index.php?act=index&op=ajaxGetInfo&_=1512758865512 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】启东中邦上海城12月非合同采购-计划线下采购订单申请","message_type":"0"},{"message":"【询价公告】启东中邦上海城12月非合同采购-计划线下采购订单申请","message_type":"0"},{"message":"【询价公告】南通公园里12月非合同采购-计划线下采购订单申请","message_type":"0"},{"message":"【询价公告】南通公园里12月非合同采购-计划线下采购订单申请（标识）","message_type":"0"},{"message":"【询价公告】【请查看邮件附件】南通濠河传奇佳园12月非合同采购-计划线下采购订单申请","message_type":"0"}]}
+
+
+
+[2017-12-09 12:24:27] /shop/index.php?act=index&op=ajaxGetInfo&_=1512793467626 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 12:24:27] /shop/index.php?act=index&op=ajaxGetInfo&_=1512793467626 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 12:24:27] /shop/index.php?act=index&op=ajaxGetInfo&_=1512793467626 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】太四12月","message_type":"0"},{"message":"【询价公告】太仓中南耳机","message_type":"0"},{"message":"【询价公告】天域11月","message_type":"0"},{"message":"【询价公告】青年公社二期11月","message_type":"0"},{"message":"【询价公告】太仓中南闸杆","message_type":"0"}]}
+
+
+
+[2017-12-09 13:13:16] /shop/index.php?act=index&op=ajaxGetInfo&_=1512796396088 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 13:13:16] /shop/index.php?act=index&op=ajaxGetInfo&_=1512796396088 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 13:13:16] /shop/index.php?act=index&op=ajaxGetInfo&_=1512796396088 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】太四12月","message_type":"0"},{"message":"【询价公告】太仓中南耳机","message_type":"0"},{"message":"【询价公告】天域11月","message_type":"0"},{"message":"【询价公告】青年公社二期11月","message_type":"0"},{"message":"【询价公告】太仓中南闸杆","message_type":"0"}]}
+
+
+
+[2017-12-09 14:44:05] /shop/templates/default/css/index.php?act=index&op=ajaxGetInfo&_=1512801845733 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 14:44:05] /shop/templates/default/css/index.php?act=index&op=ajaxGetInfo&_=1512801845733 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 14:44:05] /shop/templates/default/css/index.php?act=index&op=ajaxGetInfo&_=1512801845733 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 17:32:47] /index.php?act=index&op=ajaxGetInfo&_=1512811967831 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 17:32:47] /index.php?act=index&op=ajaxGetInfo&_=1512811967831 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 17:32:47] /index.php?act=index&op=ajaxGetInfo&_=1512811967831 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 18:54:37] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816877778 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 18:54:37] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816877778 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 18:54:37] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816877778 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 18:55:32] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816931990 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 18:55:32] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816931990 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 18:55:32] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816931990 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 18:56:26] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816986468 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 18:56:26] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816986468 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 18:56:26] /shop/index.php?act=index&op=ajaxGetInfo&_=1512816986468 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 18:56:45] /shop/index.php?act=index&op=ajaxGetInfo&_=1512817004836 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 18:56:45] /shop/index.php?act=index&op=ajaxGetInfo&_=1512817004836 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 18:56:45] /shop/index.php?act=index&op=ajaxGetInfo&_=1512817004836 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 18:58:25] /shop/index.php?act=index&op=ajaxGetInfo&_=1512817105635 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 18:58:25] /shop/index.php?act=index&op=ajaxGetInfo&_=1512817105635 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 18:58:25] /shop/index.php?act=index&op=ajaxGetInfo&_=1512817105635 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 19:17:21] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818241234 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 19:17:21] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818241234 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 19:17:21] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818241234 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 19:18:06] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818286856 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 19:18:06] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818286856 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 19:18:07] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818286856 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-09 19:19:02] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818342231 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-09 19:19:02] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818342231 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-09 19:19:02] /shop/index.php?act=index&op=ajaxGetInfo&_=1512818342231 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+

@@ -19,6 +19,7 @@ class member_unlineControl extends BaseMemberControl {
      *
      */
     public function indexOp() {
+        Tpl::setLayout('supplier_member_layout');
         $model_order = Model('order');
         //搜索
         $condition = array();

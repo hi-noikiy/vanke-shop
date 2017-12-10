@@ -27,6 +27,8 @@ class member_informationControl extends BaseMemberControl {
 		Language::read('member_home_member');
 		$lang	= Language::getLangContent();
 
+        Tpl::setLayout('supplier_member_layout');
+
 		$model_member	= Model('member');
 
 		if (chksubmit()){
@@ -74,7 +76,7 @@ class member_informationControl extends BaseMemberControl {
 		 * 读取语言包
 		 */
 		Language::read('member_home_member');
-
+        Tpl::setLayout('supplier_member_layout');
 		// 实例化模型
 		$model = Model();
 
@@ -195,6 +197,7 @@ class member_informationControl extends BaseMemberControl {
 	 * @return
 	 */
 	public function avatarOp() {
+        Tpl::setLayout('supplier_member_layout');
 		Language::read('member_home_member,cut');
 		$member_info = Model('member')->getMemberInfoByID($_SESSION['member_id'],'member_avatar');
 		Tpl::output('member_avatar',$member_info['member_avatar']);

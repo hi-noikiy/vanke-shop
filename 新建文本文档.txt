@@ -1,0 +1,35 @@
+13952403563  43606
+
+ALTER TABLE `sc_supplier_information` ADD COLUMN `account_bank` INT(11) NOT NULL COMMENT '绑定开户行' AFTER `city_contacts_phone`,ADD COLUMN `settlement_bank` INT(11) NOT NULL COMMENT '绑定结算行' AFTER `account_bank`;
+
+ALTER TABLE `sc_supplier_settlement_bank` ADD INDEX `member_id` (`member_id`);
+
+ALTER TABLE `sc_supplier_account_bank` ADD INDEX `member_id` (`member_id`);
+
+ALTER TABLE `sc_supplier_information` ADD INDEX `member_id` (`member_id`),ADD INDEX `account_bank` (`account_bank`),ADD INDEX `settlement_bank` (`settlement_bank`);
+
+ALTER TABLE `sc_supplier_account_bank` CHANGE COLUMN `city_code` `city_code` VARCHAR(50) NOT NULL COMMENT '绑定城市公司' AFTER `is_settlement`,DROP COLUMN `is_push`,DROP COLUMN `is_state`;
+
+ALTER TABLE `sc_supplier_settlement_bank` CHANGE COLUMN `city_code` `city_code` VARCHAR(50) NOT NULL COMMENT '绑定城市公司' AFTER `bank_branch_code`,DROP COLUMN `is_push`,DROP COLUMN `is_state`;
+
+
+ALTER TABLE `sc_supplier_information`
+	ADD COLUMN `contacts_name_old` VARCHAR(50) NOT NULL COMMENT '城市联系人姓名历史数据' AFTER `city_contacts_name`,
+	ADD COLUMN `contacts_phone_old` VARCHAR(20) NOT NULL COMMENT '认证城市联系人电话历史数据' AFTER `city_contacts_phone`,
+	ADD COLUMN `contacts_msg` VARCHAR(50) NOT NULL COMMENT '城市联系人审核原因' AFTER `contacts_phone_old`,
+	CHANGE COLUMN `state_type` `state_type` TINYINT(5) NOT NULL DEFAULT '1' COMMENT '状态（1:审核中，2:通过，3:驳回）' AFTER `contacts_msg`,
+	ADD COLUMN `account_bank_old` INT(11) NOT NULL COMMENT '绑定开户行历史数据' AFTER `account_bank`,
+	ADD COLUMN `account_type` TINYINT(5) NOT NULL DEFAULT '1' COMMENT '绑定开户行状态（1:审核中，2:通过，3:驳回）' AFTER `account_bank_old`,
+	ADD COLUMN `account_msg` VARCHAR(50) NOT NULL COMMENT '绑定开户行审核原因' AFTER `account_type`,
+	ADD COLUMN `settlement_bank_old` INT(11) NOT NULL COMMENT '绑定结算行历史数据' AFTER `settlement_bank`,
+	ADD COLUMN `settlement_type` TINYINT(5) UNSIGNED NOT NULL DEFAULT '1' COMMENT '绑定结算行状态（1:审核中，2:通过，3:驳回）' AFTER `settlement_bank_old`,
+	ADD COLUMN `settlement_msg` VARCHAR(50) NOT NULL COMMENT '绑定结算行审核原因' AFTER `settlement_type`;
+
+ALTER TABLE `sc_supplier_information`
+	CHANGE COLUMN `account_type` `account_type` TINYINT(5) NOT NULL DEFAULT '4' COMMENT '绑定开户行状态（1:审核中，2:通过，3:驳回）' AFTER `account_bank_old`,
+	CHANGE COLUMN `settlement_type` `settlement_type` TINYINT(5) NOT NULL DEFAULT '4' COMMENT '绑定结算行状态（1:审核中，2:通过，3:驳回）' AFTER `settlement_bank_old`;
+
+
+
+
+

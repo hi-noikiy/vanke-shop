@@ -1,0 +1,27 @@
+[2017-12-10 01:24:11] /shop/index.php?act=login&op=login ( act=login&op=login ) 
+ERR: Db Error: Unknown column 'company_name' in 'field list'
+SELECT company_name FROM `sc_store_joinin` WHERE member_id=1 LIMIT 1  
+[2017-12-10 01:24:12] /shop/index.php?act=seller_login&op=login_user&name=15602916888&pw=e10adc3949ba59abbe56e057f20f883e&post_return=ismemberlogin ( act=seller_login&op=login_user ) 
+ERR: Db Error: Column 'log_seller_id' cannot be null
+INSERT  INTO `sc_seller_log` (log_content,log_time,log_seller_id,log_seller_name,log_store_id,log_seller_ip,log_url,log_state) VALUES ('登录成功','1512840252',NULL,NULL,NULL,'127.0.0.1','seller_login&login_user','1')
+[2017-12-10 01:39:22] /shop/index.php?act=supplier_member&op=join_store ( act=supplier_member&op=join_store ) 
+ERR: Db Error: FUNCTION wk_caigou.len does not exist
+SELECT * FROM `sc_store_joinin` WHERE member_id = '1' ORDER BY len(sc_id) desc LIMIT 1000  
+[2017-12-10 03:03:14] /shop/index.php?act=zgy_test&op=index ( act=zgy_test&op=index ) 
+ERR: Db Error: Table 'wk_caigou.sc_suplier' doesn't exist
+SELECT member_id,bank_account_name,bank_account_number,bank_name,bank_code,bank_address,bank_licence_electronic,is_settlement_account FROM `sc_suplier` LIMIT 30  
+[2017-12-10 03:08:17] /shop/index.php?act=zgy_test&op=index ( act=zgy_test&op=index ) 
+ERR: Db Error: Table 'wk_caigou.sc_suplier' doesn't exist
+SELECT id,member_id,bank_account_name,bank_account_number,bank_name,bank_code,bank_address,bank_licence_electronic,is_settlement_account FROM `sc_suplier` LIMIT 30  
+[2017-12-10 03:09:06] /shop/index.php?act=zgy_test&op=index ( act=zgy_test&op=index ) 
+ERR: Db Error: Table 'wk_caigou.sc_suplier' doesn't exist
+SELECT id,member_id,bank_account_name,bank_account_number,bank_name,bank_code,bank_address,bank_licence_electronic,is_settlement_account FROM `sc_suplier` LIMIT 30  
+[2017-12-10 03:09:17] /shop/index.php?act=zgy_test&op=index ( act=zgy_test&op=index ) 
+ERR: Db Error: Table 'wk_caigou.sc_suplier' doesn't exist
+SELECT id,member_id,bank_account_name,bank_account_number,bank_name,bank_code,bank_address,bank_licence_electronic,is_settlement_account FROM `sc_suplier` LIMIT 30  
+[2017-12-10 11:29:40] /shop/index.php?act=login&op=login ( act=login&op=login ) 
+ERR: Db Error: Unknown column 'company_name' in 'field list'
+SELECT company_name FROM `sc_store_joinin` WHERE member_id=1 LIMIT 1  
+[2017-12-10 11:29:40] /shop/index.php?act=seller_login&op=login_user&name=15602916888&pw=e10adc3949ba59abbe56e057f20f883e&post_return=ismemberlogin ( act=seller_login&op=login_user ) 
+ERR: Db Error: Column 'log_seller_id' cannot be null
+INSERT  INTO `sc_seller_log` (log_content,log_time,log_seller_id,log_seller_name,log_store_id,log_seller_ip,log_url,log_state) VALUES ('登录成功','1512876580',NULL,NULL,NULL,'127.0.0.1','seller_login&login_user','1')

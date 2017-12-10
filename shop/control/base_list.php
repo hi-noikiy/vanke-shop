@@ -35,4 +35,36 @@ class base_listControl extends Control {
         $provinces_json = json_encode($list);
         exit($provinces_json);
     }
+
+
+    /**
+     * 获取供应商开户银行数据信息
+     */
+    public function getAccountBankOp(){
+        if(!empty($_SESSION['member_id']) && !empty($_GET["id"])){
+            $list = Model()->table("supplier_account_bank")->where("member_id = '".$_SESSION['member_id']."' and id = '".$_GET["id"]."'")->find();
+            if(!empty($list)){
+                $bank_json = json_encode(array('code'=>'1','list'=>$list));
+            }else{
+                $bank_json = json_encode(array('code'=>'-1','list'=>''));
+            }
+        }else{
+            $bank_json = json_encode(array('code'=>'-1','list'=>''));
+        }
+        exit($bank_json);
+    }
+
+    public function getSettlementBankOp(){
+        if(!empty($_SESSION['member_id']) && !empty($_GET["id"])){
+            $list = Model()->table("supplier_settlement_bank")->where("member_id = '".$_SESSION['member_id']."' and id = '".$_GET["id"]."'")->find();
+            if(!empty($list)){
+                $bank_json = json_encode(array('code'=>'1','list'=>$list));
+            }else{
+                $bank_json = json_encode(array('code'=>'-1','list'=>''));
+            }
+        }else{
+            $bank_json = json_encode(array('code'=>'-1','list'=>''));
+        }
+        exit($bank_json);
+    }
 }

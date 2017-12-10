@@ -1,0 +1,45 @@
+[2017-12-10 01:24:15] /shop/index.php?act=index&op=ajaxGetInfo&_=1512840254883 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-10 01:24:15] /shop/index.php?act=index&op=ajaxGetInfo&_=1512840254883 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-10 01:24:15] /shop/index.php?act=index&op=ajaxGetInfo&_=1512840254883 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-10 11:29:42] /shop/index.php?act=index&op=ajaxGetInfo&_=1512876582387 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-10 11:29:42] /shop/index.php?act=index&op=ajaxGetInfo&_=1512876582387 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-10 11:29:43] /shop/index.php?act=index&op=ajaxGetInfo&_=1512876582387 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-10 17:19:14] /index.php?act=index&op=ajaxGetInfo&_=1512897554647 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrieveTenderInquery
+[2017-12-10 17:19:14] /index.php?act=index&op=ajaxGetInfo&_=1512897554647 ( act=index&op=ajaxgetinfo ) 
+INFO: 向远程服务器发送的json数据：{}
+[2017-12-10 17:19:14] /index.php?act=index&op=ajaxGetInfo&_=1512897554647 ( act=index&op=ajaxgetinfo ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"0","resultMsg":"success","resultData":[{"message":"【招标公告】青岛万科城、蓝山、凯景广场绿化养护招标","message_type":"1"},{"message":"【招标公告】紫城御都保洁外包招投标","message_type":"1"},{"message":"【招标公告】生态城项目保洁外包招标","message_type":"1"},{"message":"【招标公告】案场保洁招标","message_type":"1"},{"message":"【招标公告】合肥物业2017-2018五金维修类物资采购招标","message_type":"1"},{"message":"【询价公告】魅力昆12月","message_type":"0"},{"message":"【询价公告】提报人跟项目不匹配","message_type":"0"},{"message":"【询价公告】湖左岸12月","message_type":"0"},{"message":"【询价公告】玲东花园12月","message_type":"0"},{"message":"【询价公告】白塘11月","message_type":"0"}]}
+
+
+
+[2017-12-10 17:26:58] /shop/index.php?act=member_unline&op=index ( act=member_unline&op=index ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrievePurchaseOrder
+[2017-12-10 17:26:58] /shop/index.php?act=member_unline&op=index ( act=member_unline&op=index ) 
+INFO: 向远程服务器发送的json数据：{"orderStatus":"14","orderDateFrom":"","orderDateTo":"","orderNo":"","supplyCode":"91440300670005724B","rowNoFrom":1,"pageSize":10}
+[2017-12-10 17:27:01] /shop/index.php?act=member_unline&op=index ( act=member_unline&op=index ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"-1","resultMsg":"没有这个线下订单数据","resultData":"null"}
+
+
+
+[2017-12-10 17:27:46] /shop/index.php?act=member_unline&op=index ( act=member_unline&op=index ) 
+INFO: 远程服务器的url：http://120.77.89.93:8080/impac/restapi/retrieve/retrievePurchaseOrder
+[2017-12-10 17:27:46] /shop/index.php?act=member_unline&op=index ( act=member_unline&op=index ) 
+INFO: 向远程服务器发送的json数据：{"orderStatus":"14","orderDateFrom":"","orderDateTo":"","orderNo":"","supplyCode":"91440300670005724B","rowNoFrom":1,"pageSize":10}
+[2017-12-10 17:27:49] /shop/index.php?act=member_unline&op=index ( act=member_unline&op=index ) 
+INFO: 远程服务器返回的json数据：{"resultCode":"-1","resultMsg":"没有这个线下订单数据","resultData":"null"}
+
+
+

@@ -495,6 +495,25 @@ class BaseBuyControl extends Control {
     }
 }
 
+/********************************** 供应商control父类 **********************************************/
+class SupplierMemberControl extends Control {
+    public function __construct(){
+        if(!C('site_status')) halt(C('closed_reason'));
+
+        Language::read('common,member_layout');
+
+        if ($_GET['column'] && strtoupper(CHARSET) == 'GBK'){
+            $_GET = Language::getGBK($_GET);
+        }
+        //会员验证
+        $this->checkLogin();
+        //输出头部的公用信息
+        $this->showLayout();
+        Tpl::setDir('supplier');
+        Tpl::setLayout('supplier_member_layout');
+    }
+}
+
 /********************************** 会员control父类 **********************************************/
 
 class BaseMemberControl extends Control {

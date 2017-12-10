@@ -42,13 +42,14 @@ class supplier_joinControl extends SupplierControl {
         $this->joinLog = $this->model->table('store_joinin')->where("member_id = '".$this->member_id."'")->find();
         Tpl::output('join_type',$this->joinLog['joinin_state']);
         if($_GET['op'] == 'index'){
+            var_dump($_GET['op']);
             $step = !empty($_GET['step']) ? $_GET['step']:'agreement';
             //获取当前用户的状态
             if($this->memberData['role_id'] == $this->ptURoleId && !empty($this->supplierData)){
                 //根据认证状态进行判定
                 if($this->supplierData['supplier_state'] == '1'){
                     if(method_exists(__CLASS__,$step)){
-                        if( $this->joinLog['joinin_state'] == STORE_JOIN_STATE_NEW || $this->joinLog['joinin_state'] == STORE_JOIN_STATE_CALLBACK){
+                        if( empty($this->joinLog) || $this->joinLog['joinin_state'] == STORE_JOIN_STATE_NEW || $this->joinLog['joinin_state'] == STORE_JOIN_STATE_CALLBACK){
                             self::$step();
                         }
                         if( $this->joinLog['joinin_state']== STORE_JOIN_STATE_EMAIL){
@@ -61,6 +62,7 @@ class supplier_joinControl extends SupplierControl {
     }
 
     public function indexOp(){
+        echo "123";
         Tpl::showpage('join_index');
     }
 
@@ -209,6 +211,19 @@ class supplier_joinControl extends SupplierControl {
                         );
                         $this->model->table('store_joinin')->insert($join_param);
                     }
+                    //联系人数据插入
+                    $contacts_data = $this->model->table('supplier_information')->where("member_id = '".$this->member_id."' and join_city = '".$_POST['city_center']."'")->find();
+                    $contacts_up = array(
+                        'join_city'             =>intval($_POST['city_center']),
+                        'city_contacts_name'    =>$_POST['contacts_name'],
+                        'city_contacts_phone'   =>$_POST['contacts_phone'],
+                    );
+                    if(!empty($contacts_data)){
+                        $this->model->table('supplier_information')->where("id = '".$contacts_data['id']."'")->update($contacts_up);
+                    }else{
+                        $contacts_up['member_id'] = $this->memberData['member_id'];
+                        $this->model->table('supplier_information')->insert($join_param);
+                    }
                     $log_where = "member_id = '".$this->memberData['member_id']."' and type != '2' and state = '1'";
                     $email_log = $this->model->table('email_log')->where($log_where)->find();
                     if(!empty($email_log)){
@@ -269,6 +284,7 @@ class supplier_joinControl extends SupplierControl {
             list($step,$times) = explode('|',$this->encrypt($_POST['step_str'], 'D', $_POST['step_key']));
             if(!empty($step)){
                 $this->model->beginTransaction();
+                $information = array();
                 $where =  "supplier_id = '".$this->supplierData['id']."' and member_id = '".$this->memberData['member_id']."'";
                 $accountList = $this->model->table('supplier_account_bank')->where($where)->find();
                 $accountData = array(
@@ -285,8 +301,11 @@ class supplier_joinControl extends SupplierControl {
                     $accountData['member_id'] = $this->memberData['member_id'];
                     $accountData['supplier_id'] = $this->supplierData['id'];
                     $rest_account = $this->model->table('supplier_account_bank')->insert($accountData);
+                    //绑定开户行
+                    $information['account_bank'] = $rest_account;
                 }else{
                     $rest_account = $this->model->table('supplier_account_bank')->where($where)->update($accountData);
+                    $information['account_bank'] = $accountList['id'];
                 }
 
                 //结算账户信息数据
@@ -305,12 +324,14 @@ class supplier_joinControl extends SupplierControl {
                     'bank_address'      =>$city_string,
                 );
 
-                if(empty($accountList)){
+                if(empty($settlementList)){
                     $settlementData['member_id'] = $this->memberData['member_id'];
                     $settlementData['supplier_id'] = $this->supplierData['id'];
                     $rest_settlement = $this->model->table('supplier_settlement_bank')->insert($settlementData);
+                    $information['settlement_bank'] = $rest_settlement;
                 }else{
                     $rest_settlement = $this->model->table('supplier_settlement_bank')->where($where)->update($settlementData);
+                    $information['settlement_bank'] = $settlementList['id'];
                 }
 
                 //提交数据
@@ -318,6 +339,10 @@ class supplier_joinControl extends SupplierControl {
                     //跟新认证记录数据的信息,更新为邮箱未认证
                     $join_where = "member_id = '".$this->memberData['member_id']."'";
                     $this->model->table('store_joinin')->where($join_where)->update(array('joinin_state'=>STORE_JOIN_STATE_EMAIL));
+                    //跟新绑定银行数据
+                    if(!empty($information)){
+                        $this->model->table('supplier_information')->where("member_id = '".$this->member_id."' and join_city = '".$this->joinLog['city_center']."'")->update($information);
+                    }
                     $this->model->commit();
                     $restData['code'] = "1";
                 }else{

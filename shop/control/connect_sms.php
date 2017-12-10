@@ -30,7 +30,7 @@ class connect_smsControl extends BaseHomeControl{
         $model_member = Model('member');
         $phone = $_POST['register_phone'];
         $captcha = $_POST['register_captcha'];
-        if (chksubmit() && strlen($phone) == 11 && strlen($captcha) == 6){
+        if (chksubmit() && strlen($phone) == 13 && strlen($captcha) == 6){
             if(C('sms_register') != 1) {
                 showDialog('系统没有开启手机注册功能','','error');
             }
@@ -224,6 +224,15 @@ class connect_smsControl extends BaseHomeControl{
         $state = '验证失败';
         $phone = $_GET['phone'];
         $captcha = $_GET['sms_captcha'];
+/*        $model_member = Model('member');
+        $member = array();
+        $member['member_name'] = $phone;
+        $member['member_passwd'] = '123456';
+        $member['member_mobile'] = $phone;
+        $member['member_email'] = '';
+        $member['member_mobile_bind'] = 1;
+        $result = $model_member->addMember($member);
+        var_dump($result);*/
         if (strlen($phone) == 11 && strlen($captcha) == 6){
             $state = 'true';
             $condition = array();

@@ -1,0 +1,18 @@
+[2017-12-09 02:47:15] /shop/index.php?act=login&op=login ( act=login&op=login ) 
+ERR: Db Error: Unknown column 'company_name' in 'field list'
+SELECT company_name FROM `sc_store_joinin` WHERE member_id=81497 LIMIT 1  
+[2017-12-09 02:47:43] /shop/index.php?act=login&op=login ( act=login&op=login ) 
+ERR: Db Error: Unknown column 'company_name' in 'field list'
+SELECT company_name FROM `sc_store_joinin` WHERE member_id=1 LIMIT 1  
+[2017-12-09 02:47:43] /shop/index.php?act=seller_login&op=login_user&name=15602916888&pw=e10adc3949ba59abbe56e057f20f883e&post_return=ismemberlogin ( act=seller_login&op=login_user ) 
+ERR: Db Error: Column 'log_seller_id' cannot be null
+INSERT  INTO `sc_seller_log` (log_content,log_time,log_seller_id,log_seller_name,log_store_id,log_seller_ip,log_url,log_state) VALUES ('登录成功','1512758863',NULL,NULL,NULL,'127.0.0.1','seller_login&login_user','1')
+[2017-12-09 13:13:14] /shop/index.php?act=login&op=login ( act=login&op=login ) 
+ERR: Db Error: Unknown column 'company_name' in 'field list'
+SELECT company_name FROM `sc_store_joinin` WHERE member_id=1 LIMIT 1  
+[2017-12-09 13:13:14] /shop/index.php?act=seller_login&op=login_user&name=15602916888&pw=e10adc3949ba59abbe56e057f20f883e&post_return=ismemberlogin ( act=seller_login&op=login_user ) 
+ERR: Db Error: Column 'log_seller_id' cannot be null
+INSERT  INTO `sc_seller_log` (log_content,log_time,log_seller_id,log_seller_name,log_store_id,log_seller_ip,log_url,log_state) VALUES ('登录成功','1512796394',NULL,NULL,NULL,'127.0.0.1','seller_login&login_user','1')
+[2017-12-09 16:31:22] /shop/index.php?act=supplier_member&op=join_log ( act=supplier_member&op=join_log ) 
+ERR: Db Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE store_joinin.member_id = '1' and store_joinin.city_center = '1' LIMIT 1' at line 1
+SELECT store_joinin.member_id,store_joinin.joinin_state,store_joinin.city_center,city_contacts_name,city_contacts_phone,city_name FROM `sc_store_joinin` AS `store_joinin` LEFT JOIN `sc_supplier_information` AS `supplier_information` ON store_joinin.member_id = supplier_information.member_id and store_joinin.city_center = supplier_information.join_city LEFT JOIN `sc_city_centre` AS `city_centre` ON  WHERE store_joinin.member_id = '1' and store_joinin.city_center = '1' LIMIT 1  
