@@ -34,33 +34,52 @@
             <?php foreach ($output['all_list'] as $list){?>
                 <div class="layui-form-item list-item">
                     <label class="layui-form-label" style="width: 140px;text-align:center;padding:9px 0px;"><?php echo $list['city_name'];?></label>
-                    <?php if(!empty($list['settlement_bank_info'])){?>
-                    <label class="layui-form-label" style="width: 220px;text-align:center;padding:9px 0px;"><?php echo $list['settlement_bank_info']['settlement_number'];?></label>
-                    <label class="layui-form-label" style="width: 170px;text-align:center;padding:9px 0px;"><?php echo $list['settlement_bank_info']['bank_name'];?></label>
-                    <label class="layui-form-label" style="width: 270px;text-align:center;padding:9px 0px;"><?php echo $list['settlement_bank_info']['bank_branch_name'];?></label>
+                    <?php if($list['settlement_type'] == '4'){?>
+                        <?php if($list['joinin_state'] == '44'){?>
+                            <label class="layui-form-label" style="width: 660px;text-align:center;padding:9px 0px;">该城市公司尚未绑定结算银行信息</label>
+                        <?php }else{?>
+                            <label class="layui-form-label" style="width: 660px;text-align:center;padding:9px 0px;">该城市公司正在审核中</label>
+                        <?php }?>
+                    <?php }else if($list['settlement_type'] == '1'){?>
+                        <label class="layui-form-label" style="width: 660px;text-align:center;padding:9px 0px;">结算银行信息审核中</label>
                     <?php }else{?>
-                        <label class="layui-form-label" style="width: 660px;text-align:center;padding:9px 0px;">该城市公司尚未绑定结算银行信息</label>
+                        <?php $settlement_bank_info = unserialize($list['settlement'])?>
+                        <label class="layui-form-label" style="width: 220px;text-align:center;padding:9px 0px;"><?php echo $settlement_bank_info['settlement_number'];?></label>
+                        <label class="layui-form-label" style="width: 170px;text-align:center;padding:9px 0px;"><?php echo $settlement_bank_info['bank_name'];?></label>
+                        <label class="layui-form-label" style="width: 270px;text-align:center;padding:9px 0px;"><?php echo $settlement_bank_info['bank_branch_name'];?></label>
                     <?php }?>
                     <label class="layui-form-label" style="width: 170px;text-align:center;padding:9px 0px;">
-                        <a href="javascript:void(0);" class="look-up" style="color:#27A9E3;text-decoration:none;cursor: pointer;">查看</a>
-                        |
-                        <a href="javascript:void(0);" class="binding" style="color:#27A9E3;text-decoration:none;cursor: pointer;">绑定</a>
-                        |
-                        <a href="javascript:void(0);" class="modify" style="color:#27A9E3;text-decoration:none;cursor: pointer;">修改</a>
+                        <?php if($list['joinin_state'] == '44'){?>
+                        <?php if($list['settlement_type'] != '4'){?>
+                            <a href="javascript:void(0);" data-city="<?php echo $list['join_city'];?>" class="look-up" style="color:#27A9E3;text-decoration:none;cursor: pointer;">查看</a>
+                            <?php if($list['settlement_type'] == '2' || $list['settlement_type'] == '3' ){?>
+                                |
+                                <a href="javascript:void(0);" data-city="<?php echo $list['join_city'];?>" class="modify" style="color:#27A9E3;text-decoration:none;cursor: pointer;">修改</a>
+                            <?php }?>
+                        <?php }else{?>
+                            <a href="javascript:void(0);" data-city="<?php echo $list['join_city'];?>" class="binding" style="color:#27A9E3;text-decoration:none;cursor: pointer;">绑定</a>
+                        <?php }}?>
                     </label>
                 </div>
-        <?php }}?>
+            <?php }}?>
     </div>
 </div>
 <link rel="stylesheet" href="<?php echo RESOURCE_SITE_URL;?>/js/supplier/supplier_index.css" media="all">
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/layui.js"></script>
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script>
     $(".look-up").click(function(){
-        alert('1');
+        var city = $(this).attr('data-city');
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=supplier_member&op=lookBank&city='+city+'&type=settlement';
+        open_window(member,'开户银行信息',url,'860','600');
     });
 
     $(".binding").click(function(){
-        alert('222');
+        var city = $(this).attr('data-city');
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=supplier_member&op=binding&city='+city+'&type=settlement';
+        open_window(member,'开户银行信息',url,'860','600');
     });
 
     $(".modify").click(function(){

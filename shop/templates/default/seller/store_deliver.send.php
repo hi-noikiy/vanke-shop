@@ -129,20 +129,12 @@
 <link rel="stylesheet" type="text/css" href="<?php echo RESOURCE_SITE_URL;?>/js/jquery-ui/themes/ui-lightness/jquery.ui.css"  />
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/layui.js"></script>
 <link rel="stylesheet" href="<?php echo RESOURCE_SITE_URL;?>/js/layui/css/layui.css" media="all">
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script type="text/javascript">
     function select_list(){
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                title: '确认发货信息',
-                shade: false,
-                maxmin: false, //开启最大化最小化按钮
-                resize: false,
-                area: ['1080px', '580px'],
-                content: 'index.php?act=store_deliver&op=send_address_select&order_id=<?php echo intval($_GET['order_id']);?>'
-            });
-        });
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = 'index.php?act=store_deliver&op=send_address_select&order_id=<?php echo intval($_GET['order_id']);?>';
+        open_window(member,'确认发货信息',url,'1080','580');
     }
 
     function edit_data(address_id,address_name,address_phone,address_city,address_value){

@@ -218,6 +218,7 @@ a {
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/jquery-3.2.1.min.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/layui.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/form.js"></script>
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script type="text/javascript">
     $("ul[name='consignee-list']").on("mouseover", "li", function() {
         $(this).find(".op-btns").show();
@@ -303,20 +304,9 @@ a {
     }
 
     $("#new-address").click(function(){
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                title: '新增收货人地址信息',
-                maxmin: false, //开启最大化最小化按钮
-                resize: false,
-                fixed: true,
-                offset: 20,
-                shade: [0.8, '#393D49'],
-                area: ['820px', '600px'],
-                content: '/shop/index.php?act=buy&op=addRessItem',
-            });
-        });
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=buy&op=addRessItem';
+        open_window(member,'新增收货人地址信息',url,'820','600');
     });
 
 
@@ -324,20 +314,9 @@ a {
     $("ul[name='consignee-list']").on("click", ".edit-consignee", function() {
         var id = $(this).parent().parent().attr("adcode");
         var show_id = $("#consignee_index").attr("adcode");
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                title: '修改收货人地址信息',
-                maxmin: false, //开启最大化最小化按钮
-                resize: false,
-                fixed: true,
-                offset: 20,
-                shade: [0.8, '#393D49'],
-                area: ['820px', '600px'],
-                content: '/shop/index.php?act=buy&op=addRessItem&id='+id+'&sid='+show_id,
-            });
-        });
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=buy&op=addRessItem&id='+id+'&sid='+show_id;
+        open_window(member,'修改收货人地址信息',url,'820','600');
     });
 
 

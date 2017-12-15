@@ -1,5 +1,5 @@
 <?php ?>
-
+<link href="<?php echo SHOP_TEMPLATES_URL;?>/css/member.css" rel="stylesheet" type="text/css">
 <div class="wrap">
   <div class="tabmenu">
     <?php include template('layout/submenu');?>

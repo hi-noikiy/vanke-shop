@@ -81,7 +81,7 @@ class orderFactory {
             'payment_code'  =>$this->payCode,//付款方式
             'order_lei'     =>2,
             'order_state'   =>ORDER_STATUS_SEND_ONE,
-            'order_amount'  =>number_format($money['freight']+$money['money'],4),//订单总价
+            'order_amount'  =>number_format($money['freight']+$money['money'],4,".",""),//订单总价
             'shipping_fee'  =>$money['freight'],//运费
             'goods_amount'  =>$money['money'],//商品总价
             'order_from'    =>$this->_orderFrom,//订单来源
@@ -112,7 +112,7 @@ class orderFactory {
                             'goods_price'   =>$cartDdata['goods_price'],
                             'goods_num'     =>$cartDdata['goods_num'],
                             'goods_image'   =>$cartDdata['goods_image'],
-                            'goods_pay_price'=>number_format($cartDdata['goods_num']*$cartDdata['goods_price'],4),
+                            'goods_pay_price'=>number_format($cartDdata['goods_num']*$cartDdata['goods_price'],4,".",""),
                             'gc_id'         =>$goodData['gc_id_3'],
                         );
                         //调整库存销量等数据
@@ -131,7 +131,7 @@ class orderFactory {
                             'goods_price'   =>$goodData['goods_price'],
                             'goods_num'     =>$nums,
                             'goods_image'   =>$goodData['goods_image'],
-                            'goods_pay_price'=>number_format($nums*$goodData['goods_price'],4),
+                            'goods_pay_price'=>number_format($nums*$goodData['goods_price'],4,".",""),
                             'gc_id'         =>$goodData['gc_id_3'],
                         );
                         //调整库存销量等数据
@@ -165,7 +165,7 @@ class orderFactory {
             $goodSumCart = Model()->table("cart")->field("sum(goods_price*goods_num) as goodNum")->where($where)->find();
             $goodSum = $goodSumCart['goodNum'];
         }else{
-            list($good_id,$buy_nums) = explode("|",$cartList[0]);
+            list($good_id,$buy_nums) = explode("|",current($cartList));
             $goodData = Model()->table('goods')->field('goods_price')->where("goods_id = '".$good_id."'")->find();
             $goodSum = $goodData['goods_price']*$buy_nums;
         }
@@ -175,7 +175,7 @@ class orderFactory {
                 $freight+=$freights;
             }
         }
-        return array('money'=>number_format($goodSum,4),'freight'=>number_format($freight,4));
+        return array('money'=>number_format($goodSum,4,".",""),'freight'=>number_format($freight,4,".",""));
     }
 
     //清理购物车数据

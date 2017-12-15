@@ -19,6 +19,7 @@ class member_securityControl extends BaseMemberControl {
      * 安全列表
      */
     public function indexOp() {
+        Tpl::setLayout('supplier_member_layout');
 		self::profile_menu('index','index');
 		$member_info = $this->member_info;
 		$member_info['security_level'] = Model('member')->getMemberSecurityLevel($member_info);
@@ -86,7 +87,7 @@ class member_securityControl extends BaseMemberControl {
      * 统一身份验证入口
      */
     public function authOp() {
-
+        Tpl::setLayout('supplier_member_layout');
         $model_member = Model('member');
 
         if (chksubmit(false,true)) {

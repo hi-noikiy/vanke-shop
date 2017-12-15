@@ -62,7 +62,7 @@
 <script type="text/javascript" src="<?php echo RESOURCE_SITE_URL;?>/js/select/js/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="<?php echo RESOURCE_SITE_URL;?>/js/select/js/selectpick.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/form.js"></script>
-
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script>
     layui.use('table', function(){
         var table = layui.table;
@@ -126,19 +126,15 @@
     }
 
     function bidTender(title,end_time,tender_id,city) {
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                title: '我要投标',
-                maxmin: false, //开启最大化最小化按钮
-                resize: false,
-                fixed: true,
-                shade: [0.8, '#393D49'],
-                area: ['650px', '600px'],
-                content: '/shop/index.php?act=tender&op=tenderMaterial&title='+encodeURI(title)+'&time='+end_time+'&tender_id='+tender_id+'&city='+city,
-            });
-        });
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=tender&op=tenderMaterial&title='+encodeURI(title)+'&time='+end_time+'&tender_id='+tender_id+'&city='+city;
+        open_window(member,'我要投标',url,'650','600');
+    }
+
+    function seeTender(title,end_time,tender_id,city) {
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=tender&op=showTenderMaterial&title='+encodeURI(title)+'&time='+end_time+'&tender_id='+tender_id+'&city='+city;
+        open_window(member,'标的详情',url,'650','600');
     }
 
 
@@ -179,8 +175,15 @@
 
 </script>
 <script type="text/html" id="titleTpl">
+    {{#  if(d.checkFlag == 0){ }}
+        <a href="javascript:void(0);" onclick="seeTender('{{d.tenderName}}','{{d.validThruDate}}','{{d.tenderId}}','{{d.city_name}}')" class="layui-table-link" style="text-decoration:none;">
+            <p style="text-align: left;overflow:hidden;line-height:25px;width:425px;height: 20px;text-overflow: ellipsis; white-space: nowrap;"
+               title="{{d.tenderName}}">{{d.tenderName}}</p>
+    </a>
+    {{#  } else { }}
         <p style="text-align: left;overflow:hidden;line-height:25px;width:425px;height: 20px;text-overflow: ellipsis; white-space: nowrap;"
            title="{{d.tenderName}}">{{d.tenderName}}</p>
+    {{#  } }}
 </script>
 <script type="text/html" id="czTpl">
     {{#  if(d.buttonFlag == 1){ }}

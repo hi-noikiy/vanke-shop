@@ -36,9 +36,7 @@
                     <label class="layui-form-label" style="width: 240px;text-align:center;padding:9px 0px;"><?php echo $list['city_contacts_name'];?></label>
                     <label class="layui-form-label" style="width: 240px;text-align:center;padding:9px 0px;"><?php echo $list['city_contacts_phone'];?></label>
                     <label class="layui-form-label" style="width: 240px;text-align:center;padding:9px 0px;">
-                        <a href="javascript:void(0);" class="look-up" style="color:#27A9E3;text-decoration:none;cursor: pointer;">查看</a>
-                        |
-                        <a href="javascript:void(0);" class="modify" style="color:#27A9E3;text-decoration:none;cursor: pointer;">修改</a>
+                        <a href="javascript:void(0);" class="modify" data-city="<?php echo $list['city_center']?>" style="color:#27A9E3;text-decoration:none;cursor: pointer;">修改</a>
                     </label>
                 </div>
         <?php }}?>
@@ -46,13 +44,14 @@
 </div>
 <link rel="stylesheet" href="<?php echo RESOURCE_SITE_URL;?>/js/supplier/supplier_index.css" media="all">
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/layui.js"></script>
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script>
-    $(".look-up").click(function(){
-        alert('1');
-    });
 
     $(".modify").click(function(){
-        alert('2');
+        var city = $(this).attr('data-city');
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=supplier_member&op=newContacts&city='+city;
+        open_window(member,'修改联系人银行信息',url,'860','600');
     });
 
 </script>

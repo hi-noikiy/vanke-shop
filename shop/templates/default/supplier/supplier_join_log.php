@@ -73,15 +73,6 @@
                     <!--城市公司联系人信息-->
                     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                         <legend>城市公司联系人信息</legend>
-                        <?php /*if( $output['first_list']['joinin_state'] == STORE_JOIN_STATE_RZSUCCESS){*/?><!--
-                            <div class="layui-btn-group" style="margin-top: -25px;float: right;">
-                                <?php /*if(empty($output['first_list']['city_contacts_name']) && empty($output['first_list']['city_contacts_phone'])){*/?>
-                                    <a class="layui-btn" style="height: 25px;line-height: 25px;text-decoration:none"><i class="layui-icon"></i>增加</a>
-                                <?php /*}else{*/?>
-                                    <a class="layui-btn" style="height: 25px;line-height: 25px;text-decoration:none"><i class="layui-icon"></i>修改</a>
-                                <?php /*}*/?>
-                            </div>
-                        --><?php /*}*/?>
                     </fieldset>
                     <?php if(empty($output['first_list']['city_contacts_name']) && empty($output['first_list']['city_contacts_phone'])){?>
                         <div class="layui-form-item">
@@ -103,10 +94,15 @@
                     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                         <legend>城市公司开户银行信息</legend>
                     </fieldset>
-                    <?php if(empty($output['first_list']['account_bank_info'])){?>
+                    <?php if($output['first_list']['account_type'] == '4'){?>
                         <div class="layui-form-item">
                             <label class="layui-form-label" style="width: 130px;"></label>
                             <div class="layui-form-mid layui-word-aux">尚未绑定开户银行信息，请先绑定</div>
+                        </div>
+                    <?php }else if($output['first_list']['account_type'] == '1'){?>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 130px;"></label>
+                            <div class="layui-form-mid layui-word-aux">开户银行信息正在审核中，请耐心等待</div>
                         </div>
                     <?php }else{?>
 
@@ -118,14 +114,18 @@
                     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                         <legend>城市公司结算银行信息</legend>
                     </fieldset>
-                    <?php if(empty($output['first_list']['settlement_bank_info'])){?>
+                    <?php if($output['first_list']['settlement_type'] == '4') {?>
                         <div class="layui-form-item">
                             <label class="layui-form-label" style="width: 130px;"></label>
                             <div class="layui-form-mid layui-word-aux">尚未绑定结算银行信息，请先绑定</div>
                         </div>
+                    <?php }else if($output['first_list']['settlement_type'] == '1'){?>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 130px;"></label>
+                            <div class="layui-form-mid layui-word-aux">开户银行信息正在审核中，请耐心等待</div>
+                        </div>
                     <?php }else{?>
-                        <a class="layui-btn" style="height: 25px;line-height: 25px;text-decoration:none"><i class="layui-icon"></i>修改绑定银行</a>
-                        <a class="layui-btn" style="height: 25px;line-height: 25px;"><i class="layui-icon"></i>解除绑定银行</a>
+
                     <?php }?>
                     <!--end-->
                 </div>
@@ -209,32 +209,38 @@
                             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                                 <legend>城市公司开户银行信息</legend>
                             </fieldset>
-                            <?php if(empty($val['account_bank_info'])){?>
+                            <?php if($val['account_type'] == '4'){?>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;"></label>
                                     <div class="layui-form-mid layui-word-aux">尚未绑定开户银行信息，请先绑定</div>
                                 </div>
+                            <?php }else if($val['account_type'] == '1'){?>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 130px;"></label>
+                                    <div class="layui-form-mid layui-word-aux">开户银行信息正在审核中，请耐心等待</div>
+                                </div>
                             <?php }else{?>
+                                <?php $account_bank_info = json_decode($val['account'], true)?>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;">银行开户名：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['account_bank_info']['account_name'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $account_bank_info['account_name'];?></div>
 
                                     <label class="layui-form-label" style="width: 130px;">公司银行账号：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['account_bank_info']['account_number'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $account_bank_info['account_number'];?></div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;">开户银行名称：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['account_bank_info']['bank_name'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $account_bank_info['bank_name'];?></div>
 
                                     <label class="layui-form-label" style="width: 130px;">开户银行支行名称：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['account_bank_info']['bank_branch_name'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $account_bank_info['bank_branch_name'];?></div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;">支行联行号：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['account_bank_info']['bank_branch_code'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $account_bank_info['bank_branch_code'];?></div>
 
                                     <label class="layui-form-label" style="width: 130px;">开户行所在地：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['account_bank_info']['bank_address'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $account_bank_info['bank_address'];?></div>
                                 </div>
                             <?php }?>
                             <!--end-->
@@ -244,32 +250,38 @@
                             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                                 <legend>城市公司结算银行信息</legend>
                             </fieldset>
-                            <?php if(empty($val['settlement_bank_info'])){?>
+                            <?php if($val['settlement_type'] == '4') {?>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;"></label>
                                     <div class="layui-form-mid layui-word-aux">尚未绑定结算银行信息，请先绑定</div>
                                 </div>
+                            <?php }else if($val['settlement_type'] == '1'){?>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 130px;"></label>
+                                    <div class="layui-form-mid layui-word-aux">开户银行信息正在审核中，请耐心等待</div>
+                                </div>
                             <?php }else{?>
+                                <?php $settlement_bank_info = json_decode($val['settlement'], true)?>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;">结算银行开户名：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['settlement_bank_info']['settlement_name'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $settlement_bank_info['settlement_name'];?></div>
 
                                     <label class="layui-form-label" style="width: 130px;">结算银行账号：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['settlement_bank_info']['settlement_number'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $settlement_bank_info['settlement_number'];?></div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;">结算银行名称：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['settlement_bank_info']['bank_name'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $settlement_bank_info['bank_name'];?></div>
 
                                     <label class="layui-form-label" style="width: 130px;">结算银行支行名称：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['settlement_bank_info']['bank_branch_name'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $settlement_bank_info['bank_branch_name'];?></div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 130px;">结算支行联行号：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['settlement_bank_info']['bank_branch_code'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $settlement_bank_info['bank_branch_code'];?></div>
 
                                     <label class="layui-form-label" style="width: 130px;">结算行所在地：</label>
-                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $val['settlement_bank_info']['bank_address'];?></div>
+                                    <div class="layui-form-mid layui-word-aux" style="width: 200px;"><?php echo $settlement_bank_info['bank_address'];?></div>
                                 </div>
                             <?php }?>
                             <!--end-->

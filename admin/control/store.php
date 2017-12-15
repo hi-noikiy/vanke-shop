@@ -2581,7 +2581,7 @@ class storeControl extends SystemControl{
         }else{
             $where = "(end_time-unix_timestamp(now())) < (3600*24*30) and concat(city_center_list,',') like '%".intval($admin_info['cityid'])."%'";
         }
-        $where.= " and level != '3'";
+        $where.= " and level != '3' and ( (end_time-unix_timestamp(now())) div (24*3600)) > 0";
         $field = "id,member_name,company_name,contacts_phone,contacts_email,FROM_UNIXTIME(end_time, '%Y-%m-%d') as js_time,( (end_time-unix_timestamp(now())) div (24*3600)) as days";
         $list_num = $model->table('supplier')->where($where)->count();
         $list = array(
@@ -2591,6 +2591,7 @@ class storeControl extends SystemControl{
             'data'  => $model->table('supplier')->field($field)->where($where)->order('days asc')->limit($limit)->select(),
         );
         echo json_encode($list);
+        
     }
 
 }

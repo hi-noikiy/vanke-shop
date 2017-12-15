@@ -208,9 +208,15 @@
                         if(result.code == '1'){
                             window.location.href="/shop/index.php?act=supplier_member&op=join_log";
                         }else{
-                            layer.alert('提交保存数据失败！请联系管理员', {closeBtn: 0,title: '温馨提示',}, function(index){
-                                layer.close(index);
-                            });
+                            if(result.msg == ''){
+                                layer.alert('提交保存数据失败！请联系管理员', {closeBtn: 0,title: '温馨提示',}, function(index){
+                                    layer.close(index);
+                                });
+                            }else{
+                                layer.alert(result.msg, {closeBtn: 0,title: '温馨提示',}, function(index){
+                                    layer.close(index);
+                                });
+                            }
                         }
                     }
                 });

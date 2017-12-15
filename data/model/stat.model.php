@@ -151,7 +151,7 @@ class statModel extends Model{
     	}
     	$field = "SUM(order_amount),stat_order.store_name,COUNT(stat_order.order_sn),stat_order.store_id,store.member_name";
     	$on = "stat_order.store_id = store.store_id";
-    	$where = "order_add_time >= $start_time and order_add_time < $end_time and stat_order.order_state != 0 and stat_order.order_state != 10 and stat_order.order_state != 20";
+    	$where = "order_add_time >= $start_time and order_add_time < $end_time";
     	switch ($type){
     		case 'ob':
     			return $this->field($field)->table('stat_order,store')->join('left')->on($on)->where($where)->group("store_id")->select();

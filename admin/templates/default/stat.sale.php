@@ -53,18 +53,21 @@
                 </select>
                 <select name="searchmonth_month" class="querySelect">
                 	<?php foreach ($output['month_arr'] as $k=>$v){?>
-              		<option value="<?php echo $k;?>" <?php echo $output['search_arr']['month']['current_month'] == $k?'selected':'';?>><?php echo $v; ?></option>
+              		<option value="<?php echo $k;?>" <?php if ($_GET['search_time_month']){echo $_GET['search_time_month'] == $k?'selected':'';}else{echo $output['search_arr']['month']['current_month'] == $k?'selected':'';}?>><?php echo $v; ?></option>
               		<?php } ?>
                 </select>
               </td>
               <td>
               	<select name="order_type" id="order_type" class="querySelect">
                   <option value="" <?php echo $_REQUEST['order_type']==''?'selected':''; ?>>请选择</option>
-                  <option value="<?php echo ORDER_STATE_NEW; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATE_NEW?'selected':''; ?>>待付款</option>
-                  <option value="<?php echo ORDER_STATE_PAY; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATE_PAY?'selected':''; ?>>待发货</option>
-                  <option value="<?php echo ORDER_STATE_SEND; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATE_SEND?'selected':''; ?>>待收货</option>
-                  <option value="<?php echo ORDER_STATE_SUCCESS; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATE_SUCCESS?'selected':''; ?>>交易完成</option>
-                  <option value="<?php echo ORDER_STATE_CANCEL; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATE_CANCEL?'selected':''; ?>>已取消</option>
+                  <option value="<?php echo ORDER_STATUS_SEND_ONE; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_SEND_ONE?'selected':''; ?>>待审核</option>
+                  <option value="<?php echo ORDER_STATUS_SEND_TWO; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_SEND_TWO?'selected':''; ?>>审核中</option>                  
+                  <option value="<?php echo ORDER_STATUS_SUCCESS; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_SUCCESS?'selected':''; ?>>待付款</option>
+                  <option value="<?php echo ORDER_DELIVER_GOODS; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_DELIVER_GOODS?'selected':''; ?>>待发货</option>
+                  <option value="<?php echo ORDER_STATUS_SEND_HET; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_SEND_HET?'selected':''; ?>>待收货</option>
+                  <option value="<?php echo ORDER_STATUS_CUS_RECEIVED; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_CUS_RECEIVED?'selected':''; ?>>交易完成</option>
+                  <option value="<?php echo ORDER_STATUS_ERROR; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_ERROR?'selected':''; ?>>已取消</option>
+               	  <option value="<?php echo ORDER_STATUS_OUT; ?>" <?php echo $_REQUEST['order_type']!='' && $_REQUEST['order_type']==ORDER_STATUS_OUT?'selected':''; ?>>已拒绝</option>              		
                 </select></td>
          	  <td>店铺名称<input class="txt-long" type="text" name="store_name" id="store_name" value="<?php echo $_GET['store_name'];?>" /></td>
               <td><a href="javascript:void(0);" id="ncsubmit" class="btn-search tooltip" title="<?php echo $lang['nc_query'];?>">&nbsp;</a></td>

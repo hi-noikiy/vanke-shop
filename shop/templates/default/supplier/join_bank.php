@@ -180,8 +180,9 @@
                 </div>
             </div>
 
+
             <!--结算银行账号-->
-            <div <?php if($output['account_bank']['is_settlement'] == '1' || empty($output['account_bank']['is_settlement'])){?>style="display: none"<?php }?> >
+            <div id="settlement-item" <?php if($output['account_bank']['is_settlement'] == '1' || empty($output['account_bank']['is_settlement'])){?>style="display: none"<?php }?> >
                 <fieldset name="settlement-list"  class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>结算银行账号</legend>
                 </fieldset>
@@ -283,6 +284,7 @@
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/jquery-3.2.1.min.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/layui.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/form.js"></script>
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script>
     layui.use(['form', 'layedit', 'laydate', 'upload', 'table'], function(){
         var form = layui.form,
@@ -299,87 +301,31 @@
 
         //监听下拉选择事件
         form.on('select(account_province)', function(data){
-            $.ajax({
-                type: "get",
-                url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                data: {"parent_id": data.value, "type": "2"},
-                dataType: "json",
-                success: function(list) {
-                    $("#account_city").html("<option value=''>请选择市</option>");
-                    $.each(list, function(i, item) {
-                        $("#account_city").append("<option value='" + item.area_id + "'>" + item.area_name + "</option>");
-                    });
-                    $("#account_county").html("<option value=''>请选择区／县</option>");
-                    form.render('select');
-                }
-            });
+            get_city(data.value,"account_city",'');
         });
 
         form.on('select(account_city)', function(data){
-            $.ajax({
-                type: "get",
-                url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                data: {"parent_id": data.value, "type": "3"},
-                dataType: "json",
-                success: function(list) {
-                    $("#account_county").html("<option value=''>请选择区／县</option>");
-                    $.each(list, function(i, item) {
-                        $("#account_county").append("<option value='" + item.area_id + "'>" + item.area_name + "</option>");
-                    });
-                    form.render('select');
-                }
-            });
+            get_county(data.value,"account_county",'');
         });
 
         form.on('select(settlement_province)', function(data){
-            $.ajax({
-                type: "get",
-                url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                data: {"parent_id": data.value, "type": "2"},
-                dataType: "json",
-                success: function(list) {
-                    $("#settlement_city").html("<option value=''>请选择市</option>");
-                    $.each(list, function(i, item) {
-                        $("#settlement_city").append("<option value='" + item.area_id + "'>" + item.area_name + "</option>");
-                    });
-                    $("#settlement_county").html("<option value=''>请选择区／县</option>");
-                    form.render('select');
-                }
-            });
+            get_city(data.value,"settlement_city",'');
         });
 
         form.on('select(settlement_city)', function(data){
-            $.ajax({
-                type: "get",
-                url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                data: {"parent_id": data.value, "type": "3"},
-                dataType: "json",
-                success: function(list) {
-                    $("#settlement_county").html("<option value=''>请选择区／县</option>");
-                    $.each(list, function(i, item) {
-                        $("#settlement_county").append("<option value='" + item.area_id + "'>" + item.area_name + "</option>");
-                    });
-                    form.render('select');
-                }
-            });
+            get_county(data.value,"settlement_county",'');
         });
 
         form.on('checkbox(is_settlement)', function(data){
             if(data.elem.checked){
+                $("#settlement-item").hide();
                 $("div[name='settlement-list']").each(function(){
-                    $(this).hide();
                     $(this).find(".settlement-ipt").attr('lay-verify','');
                 });
-                $("fieldset[name='settlement-list']").each(function(){
-                    $(this).hide();
-                });
             }else{
+                $("#settlement-item").show();
                 $("div[name='settlement-list']").each(function(){
-                    $(this).show();
                     $(this).find(".settlement-ipt").attr('lay-verify','required');
-                });
-                $("fieldset[name='settlement-list']").each(function(){
-                    $(this).show();
                 });
             }
         });
@@ -441,144 +387,33 @@
         var account_province = '<?php echo $output['account_bank']['account_province'];?>';
         var account_city = '<?php echo $output['account_bank']['account_city'];?>';
         var account_county = '<?php echo $output['account_bank']['account_county'];?>';
-        $.ajax({
-            type: "get",
-            url: "/shop/index.php?act=base_list&op=cityList", // type=1表示查询省份
-            data: {"parent_id": "0", "type": "1"},
-            dataType: "json",
-            success: function(data) {
-                $("#account_province").html("<option value=''>请选择省份</option>");
-                $.each(data, function(i, item) {
-                    if(item.area_id == account_province){
-                        $("#account_province").append("<option value='" + item.area_id + "' selected >" + item.area_name + "</option>");
-                    }else{
-                        $("#account_province").append("<option value='" + item.area_id + "'>" + item.area_name + "</option>");
-                    }
-                });
-                layui.use(['form'], function(){
-                    var form = layui.form;
-                    form.render('select');
-                });
-            }
-        });
+
+        get_province("account_province",account_province);
 
         var settlement_province = '<?php echo $output['settlement_bank']['settlement_province'];?>';
         var settlement_city = '<?php echo $output['settlement_bank']['settlement_city'];?>';
         var settlement_county = '<?php echo $output['settlement_bank']['settlement_county'];?>';
-        $.ajax({
-            type: "get",
-            url: "/shop/index.php?act=base_list&op=cityList", // type=1表示查询省份
-            data: {"parent_id": "0", "type": "1"},
-            dataType: "json",
-            success: function(data) {
-                $("#settlement_province").html("<option value=''>请选择省份</option>");
-                $.each(data, function(i, item) {
-                    if(item.area_id == settlement_province){
-                        $("#settlement_province").append("<option value='" + item.area_id + "' selected >" + item.area_name + "</option>");
-                    }else{
-                        $("#settlement_province").append("<option value='" + item.area_id + "'>" + item.area_name + "</option>");
-                    }
-                });
-                layui.use(['form'], function(){
-                    var form = layui.form;
-                    form.render('select');
-                });
-            }
-        });
+
+        get_province("settlement_province",settlement_province);
+
 
         <?php if($output['account_bank']['is_settlement'] == '2'){?>
 
             <?php if(!empty($output['account_bank']['account_province'])){?>
-                $.ajax({
-                    type: "get",
-                    url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                    data: {"parent_id": account_province, "type": "2"},
-                    dataType: "json",
-                    success: function(list) {
-                        $("#account_city").html("<option value=''>请选择市</option>");
-                        $.each(list, function(i, item) {
-                            if(item.area_id == account_city){
-                                $("#account_city").append("<option value='" + item.area_id + "' selected >" + item.area_name + "</option>");
-                            }else{
-                                $("#account_city").append("<option value='" + item.area_id + "' >" + item.area_name + "</option>");
-                            }
-                        });
-                        layui.use(['form'], function(){
-                            var form = layui.form;
-                            form.render('select');
-                        });
-                    }
-                });
+                get_city(account_province,"account_city",account_city);
             <?php }?>
 
 
             <?php if(!empty($output['account_bank']['account_city'])){?>
-                $.ajax({
-                    type: "get",
-                    url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                    data: {"parent_id": account_city, "type": "3"},
-                    dataType: "json",
-                    success: function(list) {
-                        $("#account_county").html("<option value=''>请选择县</option>");
-                        $.each(list, function(i, item) {
-                            if(item.area_id == account_county){
-                                $("#account_county").append("<option value='" + item.area_id + "' selected >" + item.area_name + "</option>");
-                            }else{
-                                $("#account_county").append("<option value='" + item.area_id + "' >" + item.area_name + "</option>");
-                            }
-                        });
-                        layui.use(['form'], function(){
-                            var form = layui.form;
-                            form.render('select');
-                        });
-                    }
-                });
+                get_county(account_city,"account_county",account_county);
             <?php }?>
 
             <?php if(!empty($output['settlement_bank']['settlement_province'])){?>
-                $.ajax({
-                    type: "get",
-                    url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                    data: {"parent_id": settlement_province, "type": "2"},
-                    dataType: "json",
-                    success: function(list) {
-                        $("#settlement_city").html("<option value=''>请选择市</option>");
-                        $.each(list, function(i, item) {
-                            if(item.area_id == settlement_city){
-                                $("#settlement_city").append("<option value='" + item.area_id + "' selected >" + item.area_name + "</option>");
-                            }else{
-                                $("#settlement_city").append("<option value='" + item.area_id + "' >" + item.area_name + "</option>");
-                            }
-                        });
-                        layui.use(['form'], function(){
-                            var form = layui.form;
-                            form.render('select');
-                        });
-                    }
-                });
+                get_city(settlement_province,"settlement_city",settlement_city);
             <?php }?>
 
             <?php if(!empty($output['settlement_bank']['settlement_city'])){?>
-                $.ajax({
-                    type: "get",
-                    url: "/shop/index.php?act=base_list&op=cityList", // type =2表示查询市
-                    data: {"parent_id": settlement_city, "type": "3"},
-                    dataType: "json",
-                    success: function(list) {
-                        $("#settlement_county").html("<option value=''>请选择县</option>");
-                        $.each(list, function(i, item) {
-                            if(item.area_id == settlement_county){
-                                $("#settlement_county").append("<option value='" + item.area_id + "' selected >" + item.area_name + "</option>");
-                            }else{
-                                $("#settlement_county").append("<option value='" + item.area_id + "' >" + item.area_name + "</option>");
-                            }
-                        });
-                        layui.use(['form'], function(){
-                            var form = layui.form;
-                            form.render('select');
-                        });
-                    }
-                });
+                get_county(settlement_city,"settlement_county",settlement_county);
             <?php }?>
 
         <?php }?>

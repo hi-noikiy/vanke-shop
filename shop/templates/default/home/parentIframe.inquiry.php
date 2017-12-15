@@ -63,7 +63,7 @@
 <!-- 下拉JS样式加载 -->
 <script type="text/javascript" src="<?php echo RESOURCE_SITE_URL;?>/js/select/js/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="<?php echo RESOURCE_SITE_URL;?>/js/select/js/selectpick.js"></script>
-
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script>
     layui.use(['form', 'layedit', 'laydate', 'table'], function(){
         var table = layui.table,
@@ -78,15 +78,15 @@
             height: 472,
             skin:'line',
             cols:  [[ //标题栏
-                {field: 'title', title: '询价标题', width: 457, templet: '#titleTpl'},
+                {field: 'title', title: '询价标题', width: 357, templet: '#titleTpl'},
                 {field: 'state', title: '状态', width: 100},
                 {field: 'type', title: '询价类型', width: 110},
-                {field: 'city', title: '城市公司', width: 170},
-                {field:'time', title: '报价截止日期', width: 190},
-                {field:'operation', title: '操作', width: 110, templet: '#czTpl'},
+                {field: 'city', title: '城市公司', width: 240},
+                {field:'time', title: '报价截止日期', width: 200},
+                {field:'operation', title: '操作', width: 130, templet: '#czTpl'},
             ]],
             page: true,
-            limits: [10],
+            limits: [10,20,30,50,80,100],
             limit: 10,
             where: {
                 name: '<?php echo empty($_GET['inquiry_name']) ? '':$_GET['inquiry_name'];?>',
@@ -144,20 +144,9 @@
         }else{
             var title_str = '修改报价';
         }
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                title: title_str,
-                maxmin: false, //开启最大化最小化按钮
-                resize: false,
-                fixed: true,
-                offset: 20,
-                shade: [0.8, '#393D49'],
-                area: ['1270px', '700px'],
-                content: '/shop/index.php?act=inquiry&op=inquiryInfo&id='+id+'&type='+type+'&quote=',
-            });
-        });
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=inquiry&op=inquiryInfo&id='+id+'&type='+type+'&quote='+quote;
+        open_window(member,title_str,url,'1270','610');
     }
 
 

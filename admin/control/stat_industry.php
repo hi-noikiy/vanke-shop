@@ -88,26 +88,29 @@ class stat_industryControl extends SystemControl{
 	                $gc_childarr[$v['gc_id']] = $v;
 	            }
 	        }
-	    }
+	    }	     
 	    if($gc_childarr){
     	    $model = Model('stat');
     	    $stat_list = array();
 	        //构造横轴数据
+	       // var_dump((array)$this->gc_arr);
     		foreach($gc_childarr as $k=>$v){
     			$stat_list[$k]['gc_name'] = $v['gc_name'];
     			$stat_list[$k]['y'] = 0;
     		}
     		$where = array();
-    		$where['order_isvalid'] = 1;//计入统计的有效订单
+    		
     	    $searchtime_arr_tmp = explode('|',$this->search_arr['t']);
     		foreach ((array)$searchtime_arr_tmp as $k=>$v){
     		    $searchtime_arr[] = intval($v);
     		}
     		$where['order_add_time'] = array('between',$searchtime_arr);
     		if ($this->choose_gcid > 0){
-    		    $where['gc_parentid_'.($gc_childdepth-1)] = $this->choose_gcid;
+    		   // $where['gc_parentid_'.($gc_childdepth-1)] = $this->choose_gcid;
+    		    $where['sc_id'] = $this->choose_gcid;
+    		    
     		}
-	        $field = 'gc_parentid_'.$gc_childdepth.' as statgc_id';
+	        $field = 'gc_parentid_'.$gc_childdepth.' as statgc_id,sc_id';
     		switch ($_GET['stattype']){
     		   case 'ordernum':
     		       $caption = '下单量';
@@ -122,12 +125,11 @@ class stat_industryControl extends SystemControl{
     		   default:
     		       $_GET['stattype'] = 'orderamount';
     		       $caption = '下单金额';
-    		       $field .= ',SUM(goods_pay_price) as orderamount';
+    		       $field .= ',SUM(goods_num*goods_pay_price) as orderamount';
     		       $orderby = 'orderamount desc';
     		       break;
     		}
     		$orderby .= ',statgc_id asc';
-
     		$goods_list = $model->statByStatordergoods($where, $field, 0, 0, $orderby, 'statgc_id');
 	        foreach ((array)$goods_list as $k=>$v){
 	            $statgc_id = intval($v['statgc_id']);
@@ -363,16 +365,15 @@ class stat_industryControl extends SystemControl{
 	        if ($this->choose_gcid > 0){
     		    $where['gc_parentid_'.($gc_childdepth-1)] = $this->choose_gcid;
     		}
-            $field = 'gc_parentid_'.$gc_childdepth.' as statgc_id,COUNT(DISTINCT goods_id) as ordergcount,SUM(goods_num) as ordergnum,SUM(goods_pay_price) as orderamount';
+            
+    		$field = 'gc_parentid_'.$gc_childdepth.' as statgc_id,COUNT(DISTINCT goods_id) as ordergcount,SUM(goods_num) as ordergnum,SUM(goods_pay_price) as orderamount,AVG(goods_price) as priceavg';
     		$ordergoods_list_tmp = $model->statByStatordergoods($where, $field, 0, 0, '', 'statgc_id');
     		foreach ((array)$ordergoods_list_tmp as $k=>$v){
     		    $ordergoods_list[$v['statgc_id']] = $v;
     		}
-
     		//查询商品信息
     		$field = 'gc_id_'.$gc_childdepth.' as statgc_id,COUNT(*) as goodscount,AVG(goods_price) as priceavg';
-    		$goods_list_tmp = $model->statByGoods(array('is_virtual'=>0), $field, 0, 0, '', 'statgc_id');
-
+    		$goods_list_tmp = $model->statByGoods(array(), $field, 0, 0, '', 'statgc_id');
     		foreach ((array)$goods_list_tmp as $k=>$v){
     		    $goods_list[$v['statgc_id']] = $v;
     		}
@@ -386,7 +387,7 @@ class stat_industryControl extends SystemControl{
     		    $tmp['ordergnum'] = ($t = $ordergoods_list[$v['gc_id']]['ordergnum'])?$t:0;
     		    $tmp['orderamount'] = ($t = $ordergoods_list[$v['gc_id']]['orderamount'])?$t:0;
     		    $tmp['goodscount'] = ($t = $goods_list[$v['gc_id']]['goodscount'])?$t:0;
-    		    $tmp['priceavg'] = ncPriceFormat(($t = $goods_list[$v['gc_id']]['priceavg'])?$t:0);
+    		    $tmp['priceavg'] = ncPriceFormat(($t = $ordergoods_list[$v['gc_id']]['priceavg'])?$t:0);
     		    $tmp['unordergcount'] = intval($goods_list[$v['gc_id']]['goodscount']) - intval($ordergoods_list[$v['gc_id']]['ordergcount']);//计算无销量商品数
     		    $statlist_tmp[]= $tmp;
     		}
@@ -437,6 +438,7 @@ class stat_industryControl extends SystemControl{
         			    $excel_data[$k+1][] = array('data'=>$v[$h_v['key']]);
         			}
     			}
+    		
     			$excel_data = $excel_obj->charset($excel_data,CHARSET);
     			$excel_obj->addArray($excel_data);
     		    $excel_obj->addWorksheet($excel_obj->charset('行业概况总览',CHARSET));

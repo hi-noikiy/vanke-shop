@@ -125,7 +125,7 @@ class buyFactory {
                 'spce'          =>$spceStr,
             ),
         );
-        $goodSum = number_format($goodData['goods_price']*$num,4);
+        $goodSum = number_format($goodData['goods_price']*$num,4,".","");
         $freight = 0.0000;
         if( $store['store_free_price'] > 0 ){
             if($goodSum < $store['store_free_price']){
@@ -137,8 +137,8 @@ class buyFactory {
             'store_name'=>$store['store_name'],
             'goodList'  =>$list,
             'goodMoney' =>$goodSum,
-            'freight'   =>number_format($freight,4),
-            'allMoney'  =>number_format($goodSum+$freight,4),
+            'freight'   =>number_format($freight,4,".",""),
+            'allMoney'  =>number_format($goodSum+$freight,4,".",""),
         );
     }
 
@@ -177,8 +177,8 @@ class buyFactory {
             'store_name'=>$store['store_name'],
             'goodList'  =>$newList,
             'goodMoney' =>$goodSum['goodNum'],
-            'freight'   =>number_format($freight,4),
-            'allMoney'  =>number_format($goodSum['goodNum']+$freight,4),
+            'freight'   =>number_format($freight,4,".",""),
+            'allMoney'  =>number_format($goodSum['goodNum']+$freight,4,".",""),
         );
     }
 

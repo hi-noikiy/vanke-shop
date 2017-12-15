@@ -146,68 +146,8 @@ function purRuleCheck(purId){
 <div class="home-focus-layout"> <?php echo $output['web_html']['index_pic'];?>
   <div class="right-sidebar">
     <div class="proclamation"  >
-        <div  class="portrait">
-            <?php if ($_SESSION['member_id']==""){?>
-            <a href="<?php echo $output['idm_url'];?>oauth2.0/authorize?client_id=AUTH_CG&redirect_uri=<?php echo $output['item_url'];?>shop/api.php?act=IDM&response_type=code">
-                <img src="<?php echo SHOP_TEMPLATES_URL;?>/images/touxiang.gif" style="width:60px; height:60px">
-            </a>
-            <a class="emp-login" href="<?php echo $output['idm_url'];?>oauth2.0/authorize?client_id=AUTH_CG&redirect_uri=<?php echo $output['item_url'];?>shop/api.php?act=IDM&response_type=code">万科物业员工登录</a>
-            <?php  }else{?>
-                <img src="<?php echo SHOP_TEMPLATES_URL;?>/images/touxiang.gif" style="width:60px; height:60px">
-                <p>您好，欢迎来到万科物业采购平台</p>
-            <?php  } ?>
-        </div>
-      <ul class="btnCome" id="purTab">
-          <li class="btnleft"><?php echo $lang['buyer_entrance'];?></li>
-          <li class="btnright"><?php echo $lang['supplier_portal'];?></li>
-      </ul>
-      <div id="content">
-          <ul class="tabs-nav" style="display: block;" >
-              <?php if ($_SESSION['member_id']==""){?>
-              <!-- 未登录状态 先进行隐藏显示暂未开放 -->
-<!--              <li class="tabs-selected" style="left: 14%;">
-                  <h3><a href="<?php echo urlShop('login','register');?>" ><?php echo $lang['index_register'];?></a></h3>
-              </li>
-              <li class="tabs-selected" style="left: 17%;">
-                  <h3><a href="<?php echo  urlShop('login','index');?>"><?php echo $lang['index_login'];?></a></h3>
-              </li>-->
-              <li class="tabs-selected" style="left: 14%;">
-              <h5>暂未开放此项功能</h5>
 
-              <?php  }else{?>
-              <!-- 登录状态 -->
-              <?php if($_SESSION['identity']==MEMBER_IDENTITY_TWO){?>
-              <li class="tabs-selected" style="left: 14%;">
-                  <h3><a href="<?php echo YMA_IFRAME_URL_HEAD ?>/impac/loginFromUrl.do?shopCd=<?php echo Embedpage::getPurShopCdByDES();?>&userCd=<?php echo Embedpage::getPurUserCdByDES( $output['member_info']['pernr_id']);?>&validateFlg=true">采购后台</a></h3>
-              </li>
-              <?php }?>
-              <li class="tabs-selected" style="left: 17%;">
-                  <h3><a href="<?php echo  urlShop('member','home');?>">用户中心</a></h3>
-              </li>
-              <?php  } ?>
-          </ul>
-        <ul class="tabs-nav" style="display: none;" >
-          <?php if ($output['member_info']['level_name']) {
-            echo '<li class="tabs-selected" style="left: 14%;">
-					<h3><a href="'. urlShop('show_join','index') .'">认证'. $lang['index_come_in'].'</a></h3>
-				</li>';
-            echo '<li class="tabs-selected" style="left: 17%;">
-				<h3><a href="' . urlShop('member','home').'">用户中心</a></h3>
-			</li>';
-          }else{
-            echo'<li class="tabs-selected">
-		<h3><a href="'. urlShop('login', 'register',array('ref_url'=> urlencode($output['ref_url']) )).'">'. $lang['index_register'].'</a></h3>
-	</li>';
-            echo'<li class="tabs-selected" >
-	<h3><a href="'. urlShop('show_join','index').'">'. $lang['index_come_in'].'</a></h3>
-</li>';
-            echo'<li class="tabs-selected">
-<h3><a href="'. urlShop('login','index').'">'. $lang['index_login'].'</a></h3>
-</li>';}?>
-        </ul>
-
-      </div>
-      <ul class="btnCome" id="purTab02">
+      <ul class="btnCome" id="purTab02" style="margin-top: 20px;">
         <li class="btnleft"><?php echo $lang['tender_inquiry'];?></li>
         <li class="btnright"><?php echo $lang['procurement_system'];?></li>
       </ul>

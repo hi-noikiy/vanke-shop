@@ -82,6 +82,7 @@
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/jquery-3.2.1.min.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/layui.js"></script>
 <script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/form.js"></script>
+<script src="<?php echo RESOURCE_SITE_URL;?>/js/layui/city_select.js"></script>
 <script type="text/javascript">
     $("ul[name='invoice-item-list']").on("mouseover", "li", function() {
         $(this).find(".invoice-btns").show();
@@ -114,20 +115,9 @@
     });
 
     $("#new-inv").click(function(){
-        layui.use('layer', function(){
-            var layer = layui.layer;
-            layer.open({
-                type: 2,
-                title: '新增收货人地址信息',
-                maxmin: false, //开启最大化最小化按钮
-                resize: false,
-                fixed: true,
-                offset: 20,
-                shade: [0.8, '#393D49'],
-                area: ['820px', '700px'],
-                content: '/shop/index.php?act=buy&op=addInv',
-            });
-        });
+        var member = "<?php echo $_SESSION['member_id']?>";
+        var url = '/shop/index.php?act=buy&op=addInv';
+        open_window(member,'新增收货人地址信息',url,'820','700');
     });
 
 

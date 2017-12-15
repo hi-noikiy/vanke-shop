@@ -23,14 +23,12 @@
 </style>
 <div style="margin:0 auto;width:1250px;margin-top: 10px;">
 <form class="layui-form" action="" style="margin-left: 20px">
-    <div class="layui-form-item">
-        <div class="layui-inline" style="margin-left: 100px;">
+    <div class="layui-form-item" style="margin:0;padding:0;">
+        <div class="layui-inline" style="margin-left: 100px;" >
             <label class="layui-form-label">报价金额：</label>
             <div class="layui-input-inline">
                 <div class="layui-form-mid layui-word-aux">
-                    <?php echo $output['list']['quoted_price'];?>
-                    <?php echo $output['list']['currency']?>
-                    <input type="hidden" id="quoted_price" name="quoted_price" value="<?php echo $output['list']['quoted_price'];?>" >
+                    <?php echo $output['list']['quoted_price'];?>&nbsp;&nbsp;元
                 </div>
             </div>
         </div>
@@ -43,14 +41,13 @@
         <div class="layui-inline" style="margin-left:-30px;">
             <label class="layui-form-label" style="width:110px"><span class="layui-badge-dot"></span>预计交货时间：</label>
             <div class="layui-input-inline">
-                <input type="text" id="predict_time" name="predict_time" style="float: left;height:30px;width:180px"
-                       lay-verify="required" value="<?php echo $output['list']['predict_time'];?>">
+                <input type="text" id="predict_time" name="predict_time" style="float: left;height:30px;width:180px" lay-verify="required" value="<?php echo $output['list']['predict_time'];?>">
                 <i class="layui-icon" style="font-size: 30px;float: left;margin-left: -30px;margin-top: -1px;">&#xe637;</i>
             </div>
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="margin:0;padding:0;">
         <label class="layui-form-label" style="margin-left: 100px;"><span class="layui-badge-dot"></span>有效时间：</label>
         <div class="layui-input-inline">
             <input type="text" id="valid_statr" name="valid_statr" style="float: left;height:30px;width:180px"
@@ -77,14 +74,14 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="margin:0;padding:0;">
         <label class="layui-form-label" style="margin-left: 100px;">备注：</label>
         <div class="layui-input-block">
             <input name="identity" placeholder="" autocomplete="off"
                    value="<?php echo $output['list']['mark'];?>" style="width:865px" class="layui-input" type="text">
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item" style="margin:0;padding:0;">
         <label class="layui-form-label" style="margin-left: 100px;">报价文件：</label>
         <div class="layui-input-inline" style="width:865px">
             <div id="show-path" class="layui-form-mid layui-word-aux" style="width:865px;<?php if(!empty($output['list']['path_url'])){?>display: none<?php }?>">
@@ -104,7 +101,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-elem-quote" style="padding:0px;float: left;height: 30px;border-left:0px solid #5cb85c;color: #999 !important;text-align:center;line-height:30px">
+            <div class="layui-elem-quote" style="padding:0px;margin:0;float: left;height: 30px;border-left:0px solid #5cb85c;color: #999 !important;text-align:center;line-height:20px">
                 &nbsp;&nbsp;&nbsp;温馨提示：上传文件后缀名必须为.zip或者.rar或者.7z，如有多个报价文件，请将多个文件放在一个文件夹中压缩后在上传！
             </div>
             <input type="hidden" id="up_path" name="up_path" value="<?php echo $output['list']['path_url'];?>" >
@@ -155,11 +152,11 @@
             elem: '#valid_end'
         });
 
-
+     
         table.render({ //其它参数在此省略13925127998 &#xe61c;templet: '#titleTpl' layout:['prev','next'],
             elem:'#list',
-            url: '/shop/index.php?act=inquiry&op=getList&id=<?php echo $output['list']['inquiry_id'];?>',
-            height: 394,
+            url: '/shop/index.php?act=inquiry&op=getList&id=<?php echo $output['list']['inquiry_id'];?>&count=<?php echo $output['send_data']['totalcount'];?>&type=<?php echo $output['send_data']['operation'];?>&quote=<?php echo $output['send_data']['quoteId'];?>',
+            height: 280,
             width:1174,
             cols:  [[ //标题栏
                 {field: 'key', title: 'ID', width: 50},
@@ -169,11 +166,11 @@
                 {field:'nums', title: '数量', width: 100},
                 {field:'umit', title: '单位', width: 100},
                 {field:'price', title: '单价(点击修改)', width: 130, event: 'setSign', style:'cursor: pointer;'},
-                {field:'total', title: '总金额', width: 140},
+                {field:'total', title: '总金额', width: 160},
             ]],
             page: true,
-            limits: [10,20,30,50],
-            limit: 20,
+            limits: [10,20,30,50,80,100],
+            limit: 10,
             where: {
                 name: '<?php echo empty($_GET['inquiry_name']) ? '':$_GET['inquiry_name'];?>',
                 start: '<?php echo empty($_GET['start']) ? '':$_GET['start'];?>',
@@ -234,7 +231,7 @@
                         $.ajax({
                             type:"POST",
                             //提交的网址
-                            url:"/shop/index.php?act=inquiry&op=inquiryQuotationPrice",
+                            url:"/shop/index.php?act=inquiry&op=inquiryQuotationPrice&quoteRequestId=<?php echo $output['send_data']['quoteRequestId'];?>",
                             data:{price: toDecimal2(value),id:data.id},
                             datatype: "json",
                             success:function(result){
@@ -259,7 +256,7 @@
             $.ajax({
                 type:"POST",
                 //提交的网址
-                url:"/shop/index.php?act=inquiry&op=inquiryData",
+                url:"/shop/index.php?act=inquiry&op=inquiryData&count=<?php echo $output['send_data']['totalcount'];?>",
                 data:data.field,
                 datatype: "json",
                 success:function(result){
@@ -324,7 +321,7 @@
                 $.ajax({
                     type:"POST",
                     //提交的网址
-                    url:"/shop/index.php?act=inquiry&op=delInquiryPath",
+                    url:"/shop/index.php?act=inquiry&op=delInquiryPath&quote=<?php echo $output['send_data']['quoteId'];?>",
                     data:{path: path_url},
                     datatype: "json",
                     success:function(result){
@@ -332,6 +329,8 @@
                             layui.use('layer', function(){
                                 var layer = layui.layer;
                                 layer.alert('删除成功', {closeBtn: 0,title: '温馨提示',}, function(index){
+                                	$('#up_path').val("");
+                                	$('#up_name').val("");
                                     $("#show-path").show();
                                     $("#none-path").hide();
                                     layer.close(layer.index);
@@ -353,14 +352,13 @@
     }
 
     function down_path(){
-        var inquiry_url = $('#up_path').val();
+        var inquiry_url = '/'+$('#up_path').val();
         var $eleForm = $("<form method='get'></form>");
         $eleForm.attr("action",inquiry_url);
         $(document.body).append($eleForm);
         //提交表单，实现下载
         $eleForm.submit();
     }
-
 </script>
 <script type="text/html" id="nameTpl">
     <p style="text-align: left;overflow:hidden;line-height:25px;width:280px;height: 38px;text-overflow: ellipsis; white-space: nowrap;"

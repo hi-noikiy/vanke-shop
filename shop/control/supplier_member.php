@@ -10,18 +10,26 @@ class supplier_memberControl extends SupplierMemberControl{
 
     private $supplierData = array();
 
+    private $memberData = array();
+
+    private $img_path = DS.DIR_UPLOAD.DS.ATTACH_PATH.DS.'store_joinin'.DS;
+
     public function __construct(){
         parent::__construct();
         $this->model = Model();
         $this->ptURoleId = MEMBER_IDENTITY_ONE;
         $this->member_id = $_SESSION['member_id'];
-        $this->memberData = $this->model->table('member')->where("member_id = '".$this->member_id."'")->find();
         $this->supplierData = $this->model->table('supplier')->where("member_id = '".$this->member_id."'")->find();
-        //Tpl::setLayout('store_joinin_layout');
+        $this->memberData = $this->model->table('member')->where("member_id = '".$this->member_id."'")->find();
     }
 
     //供应商首页
     public function indexOp(){
+        $member_data = $this->memberData;
+        if(!empty($member_data['member_avatar'])){
+            $member_data['member_avatar'] = DS.DIR_UPLOAD.DS.ATTACH_PATH.DS.'avatar'.DS.$member_data['member_avatar'];
+        }
+        Tpl::output('member',$member_data);
         Tpl::output('supplier',$this->supplierData);
         Tpl::showpage('supplier_index');
     }
@@ -29,7 +37,7 @@ class supplier_memberControl extends SupplierMemberControl{
     //供应商认证记录
     public function join_logOp(){
         //获取当前城市的首次认证数据信息
-        $field = "store_joinin.member_id,store_joinin.joinin_state,store_joinin.store_state,store_joinin.city_center,city_contacts_name,city_contacts_phone,city_name,account_bank,settlement_bank";
+        $field = "store_joinin.member_id,store_joinin.joinin_state,store_joinin.store_state,store_joinin.city_center,city_contacts_name,city_contacts_phone,city_name,account_type,settlement_type,account,settlement";
         $on = "store_joinin.member_id = supplier_information.member_id and store_joinin.city_center = supplier_information.join_city,";
         $on.="store_joinin.city_center = city_centre.id";
         if($this->supplierData['first_city_id'] > 0){
@@ -37,25 +45,11 @@ class supplier_memberControl extends SupplierMemberControl{
             //获取所有申请记录
             $all_where = "store_joinin.member_id = '".$this->member_id."' and store_joinin.city_center != '".$this->supplierData['first_city_id']."'";
             $all_list = $this->model->table('store_joinin,supplier_information,city_centre')->field($field)->join('left,left')->on($on)->where($all_where)->select();
-            $new_all_list = array();
-            if(!empty($all_list) && is_array($all_list)){
-                foreach ($all_list as $val){
-                    //追加开户银行信息
-                    $val['account_bank_info'] = $val['account_bank'] == '0' ? array():$this->get_account_bank($val['account_bank']);
-                    //追加结算银行信息
-                    $val['settlement_bank_info'] = $val['settlement_bank'] == '0' ? array():$this->get_settlement_bank($val['settlement_bank']);
-                    $new_all_list[] = $val;
-                }
-            }
-            Tpl::output('all_list',$new_all_list);
+            Tpl::output('all_list',$all_list);
         }else{
             $first_where = "store_joinin.member_id = '".$this->member_id."'";
         }
         $first_list = $this->model->table('store_joinin,supplier_information,city_centre')->field($field)->join('left,left')->on($on)->where($first_where)->find();
-        //追加开户银行信息
-        $first_list['account_bank_info'] = $first_list['account_bank'] == '0' ? array():$this->get_account_bank($first_list['account_bank']);
-        //追加结算银行信息
-        $first_list['settlement_bank_info'] = $first_list['settlement_bank'] == '0' ? array():$this->get_settlement_bank($first_list['settlement_bank']);
         Tpl::output('first_list',$first_list);
         Tpl::showpage('supplier_join_log');
     }
@@ -90,7 +84,8 @@ class supplier_memberControl extends SupplierMemberControl{
                     }
                 }
             }
-            if(count($join_list) == '1'){
+            $join_count = $this->model->table('store_joinin')->where("member_id = '".$this->member_id."'")->count();
+            if($join_count == '1'){
                 $store_data = array("store_name"=>'',"suplier_name"=>$this->memberData['member_name']);
             }else{
                 $store_join_first = $this->model->table('store_joinin')->where("member_id = '".$this->member_id."' and city_center = first_city_id")->find();
@@ -145,41 +140,347 @@ class supplier_memberControl extends SupplierMemberControl{
 
     //开户行管理
     public function account_listOp(){
-        $field = "store_joinin.member_id,store_joinin.joinin_state,store_joinin.store_state,store_joinin.city_center,city_name,account_bank,settlement_bank";
-        $on = "store_joinin.member_id = supplier_information.member_id and store_joinin.city_center = supplier_information.join_city,";
-        $on.="store_joinin.city_center = city_centre.id";
-        $all_where = "store_joinin.member_id = '".$this->member_id."'";
-        $all_list = $this->model->table('store_joinin,supplier_information,city_centre')->field($field)->join('left,left')->on($on)->where($all_where)->select();
-        $new_all_list = array();
-        if(!empty($all_list) && is_array($all_list)){
-            foreach ($all_list as $val){
-                //追加开户银行信息
-                $val['account_bank_info'] = $val['account_bank'] == '0' ? array():$this->get_account_bank($val['account_bank']);
-                $new_all_list[] = $val;
+        $field = "member_id,join_city,account_type,account,city_name,";
+        $field.="(select joinin_state from sc_store_joinin as store_joinin where supplier_information.join_city = store_joinin.city_center and store_joinin.member_id = '".$this->member_id."') as joinin_state";
+        $on ="supplier_information.join_city = city_centre.id";
+        $all_where = "supplier_information.member_id = '".$this->member_id."'";
+        $all_list = $this->model->table('supplier_information,city_centre')->field($field)->join('left')->on($on)->where($all_where)->select();
+        Tpl::output('all_list',$all_list);
+        Tpl::showpage('supplier_account_list');
+    }
+
+
+    public function bindingOp(){
+        Tpl::setLayout('null_layout');
+        if(!empty($_GET['city']) && !empty($_GET['type'])){
+            $city_data = $this->model->table('city_centre')->field("id,city_name")->where("id='".$_GET['city']."'")->find();
+            Tpl::output('city', $city_data);
+            if($_GET['type'] == 'account'){
+                //获取开户银行信息
+                $account_bank_list = $this->model->table('supplier_account_bank')->field("id,account_number,bank_name")->where("member_id = '" . $this->member_id . "'")->select();
+                Tpl::output('account_bank_list', $this->remove_duplicate($account_bank_list, 'account_number'));
+                Tpl::showpage('supplier_join_bank_account');
+            }
+            if($_GET['type'] == 'settlement'){
+                //获取结算银行信息
+                $settlement_bank_list = $this->model->table('supplier_settlement_bank')->field("id,settlement_number,bank_name")->where("member_id = '" . $this->member_id . "'")->select();
+                Tpl::output('settlement_bank_list', $this->remove_duplicate($settlement_bank_list, 'settlement_number'));
+                Tpl::showpage('supplier_join_bank_settlement');
             }
         }
-        Tpl::output('all_list',$new_all_list);
-        Tpl::showpage('supplier_account_list');
+    }
+
+
+    //银行绑定
+    public function bingBankOp(){
+        $restData = array('code'=>'-1','msg'=>'');
+        if(!empty($_POST['bank_id']) && !empty($_POST['city']) && !empty($_POST['type'])){
+            $restData['code'] = '1';
+            $where = "member_id = '".$this->member_id."' and join_city = '".$_POST['city']."'";
+            if($_POST['type'] == 'account'){
+                $account_bank_data = $this->get_account_bank($_POST['bank_id']);
+                if(!empty($account_bank_data)) {
+                    if (empty($account_bank_data['account_name'])) $restData = array('code' => '-1', 'msg' => '银行开户名不能为空，请核实');
+                    if (empty($account_bank_data['account_number'])) $restData = array('code' => '-1', 'msg' => '开户银行账号不能为空，请核实');
+                    if (empty($account_bank_data['bank_name'])) $restData = array('code' => '-1', 'msg' => '开户银行名称不能为空，请核实');
+                    if (empty($account_bank_data['bank_branch_name'])) $restData = array('code' => '-1', 'msg' => '开户银行支行名称不能为空，请核实');
+                    if (empty($account_bank_data['bank_address'])) $restData = array('code' => '-1', 'msg' => '开户银行所在地不能为空，请核实');
+                    if($restData['code'] == '1'){
+                        $account_data =array(
+                            'account_name'      =>$account_bank_data['account_name'],
+                            'account_number'    =>$account_bank_data['account_number'],
+                            'bank_name'         =>$account_bank_data['bank_name'],
+                            'bank_branch_name'  =>$account_bank_data['bank_branch_name'],
+                            'bank_branch_code'  =>$account_bank_data['bank_branch_code'],
+                            'bank_address'      =>$account_bank_data['bank_address'],
+                            'bank_licence_electronic'=>$account_bank_data['bank_licence_electronic'],
+                        );
+                        $data = array(
+                            'account'       =>serialize($account_data),
+                            'account_type'  =>1,
+                        );
+                        $rest = $this->model->table('supplier_information')->where($where)->update($data);
+                        $restData['code'] = $rest ? "1":"-1";
+                    }
+                }else{
+                    $restData = array('code'=>'-1','msg'=>'开户银行信息有误，请核实');
+                }
+            }
+            if($_POST['type'] == 'settlement'){
+                $settlement_bank_data = $this->get_settlement_bank($_POST['bank_id']);
+                if(!empty($settlement_bank_data)){
+                    if(empty($settlement_bank_data['settlement_name'])) $restData = array('code'=>'-1','msg'=>'结算银行开户名不能为空，请核实');
+                    if(empty($settlement_bank_data['settlement_number'])) $restData = array('code'=>'-1','msg'=>'结算银行账号不能为空，请核实');
+                    if(empty($settlement_bank_data['bank_name'])) $restData = array('code'=>'-1','msg'=>'结算银行名称不能为空，请核实');
+                    if(empty($settlement_bank_data['bank_branch_name'])) $restData = array('code'=>'-1','msg'=>'结算银行支行名称不能为空，请核实');
+                    if(empty($settlement_bank_data['bank_address'])) $restData = array('code'=>'-1','msg'=>'结算银行所在地不能为空，请核实');
+                    if($restData['code'] == '1'){
+                        $settlement_data =array(
+                            'settlement_name'   =>$settlement_bank_data['settlement_name'],
+                            'settlement_number' =>$settlement_bank_data['settlement_number'],
+                            'bank_name'         =>$settlement_bank_data['bank_name'],
+                            'bank_branch_name'  =>$settlement_bank_data['bank_branch_name'],
+                            'bank_branch_code'  =>$settlement_bank_data['bank_branch_code'],
+                            'bank_address'      =>$settlement_bank_data['bank_address'],
+                        );
+                        $data = array(
+                            'settlement'        =>serialize($settlement_data),
+                            'settlement_type'   =>1,
+                        );
+                        $rest = $this->model->table('supplier_information')->where($where)->update($data);
+                        $restData['code'] = $rest ? "1":"-1";
+                    }
+                }else{
+                    $restData = array('code'=>'-1','msg'=>'结算银行信息有误，请核实');
+                }
+            }
+        }
+        echo json_encode($restData);
     }
 
 
     //结算行管理
     public function settlement_listOp(){
-        $field = "store_joinin.member_id,store_joinin.joinin_state,store_joinin.store_state,store_joinin.city_center,city_name,account_bank,settlement_bank";
-        $on = "store_joinin.member_id = supplier_information.member_id and store_joinin.city_center = supplier_information.join_city,";
-        $on.="store_joinin.city_center = city_centre.id";
-        $all_where = "store_joinin.member_id = '".$this->member_id."'";
-        $all_list = $this->model->table('store_joinin,supplier_information,city_centre')->field($field)->join('left,left')->on($on)->where($all_where)->select();
-        $new_all_list = array();
-        if(!empty($all_list) && is_array($all_list)){
-            foreach ($all_list as $val){
-                //追加结算银行信息
-                $val['settlement_bank_info'] = $val['settlement_bank'] == '0' ? array():$this->get_settlement_bank($val['settlement_bank']);
-                $new_all_list[] = $val;
+        $field = "member_id,join_city,settlement_type,settlement,city_name,";
+        $field.="(select joinin_state from sc_store_joinin as store_joinin where supplier_information.join_city = store_joinin.city_center and store_joinin.member_id = '".$this->member_id."') as joinin_state";
+        $on ="supplier_information.join_city = city_centre.id";
+        $all_where = "supplier_information.member_id = '".$this->member_id."'";
+        $all_list = $this->model->table('supplier_information,city_centre')->field($field)->join('left')->on($on)->where($all_where)->select();
+        Tpl::output('all_list',$all_list);
+        Tpl::showpage('supplier_settlement_list');
+    }
+
+    //查看银行信息
+    public function lookBankOp(){
+        Tpl::setLayout('null_layout');
+        if(!empty($_GET['city']) && !empty($_GET['type'])){
+            $where = "member_id = '".$this->member_id."' and join_city = '".$_GET['city']."'";
+            $list = $all_list = $this->model->table('supplier_information')->where($where)->find();
+            Tpl::output('type',$_GET['type']);
+            Tpl::output('type_name',$_GET['type'] == 'account' ? "开户":"结算");
+            Tpl::output('bank',unserialize($list[$_GET['type']]));
+            Tpl::showpage('supplier_join_bank_show');
+        }
+    }
+
+    //银行信息管理
+    public function bank_listOp(){
+        $where = "member_id = '".$this->member_id."'";
+        $list = array(
+            'account'=>$this->model->table('supplier_account_bank')->where($where)->select(),
+            'settlement'=>$this->model->table('supplier_settlement_bank')->where($where)->select()
+        );
+        Tpl::output('list',$list);
+        Tpl::showpage('supplier_bank_list');
+    }
+
+    //添加联系人页面
+    public function newContactsOp(){
+        Tpl::setLayout('null_layout');
+        if(!empty($_GET['city'])){
+            $where = "member_id = '" . $this->member_id . "' and join_city != '".$_GET['city']."'";
+            $list = $this->model->table('supplier_information')->field("city_contacts_name,city_contacts_phone")->where("member_id = '" . $this->member_id . "' and join_city = '".$_GET['city']."'")->find();
+            Tpl::output('list',$list);
+            //获取所有联系人信息
+            $contacts_list = $this->model->table('supplier_information')->field("city_contacts_name,city_contacts_phone")->where($where)->select();
+            Tpl::output('contacts_list', $this->remove_duplicate($contacts_list, 'city_contacts_name'));
+            Tpl::output('city', $_GET['city']);
+            Tpl::showpage('supplier_new_contacts');
+        }
+    }
+
+
+    //联系人修改保存
+    public function newContactsItemOp(){
+        $restData = array('code'=>'-1','msg'=>'');
+        if(!empty($_POST) && !empty($_POST['city'])){
+            $contactsLog = $this->model->table('supplier_information')->where("member_id = '" . $this->member_id . "' and join_city = '".$_POST['city']."'")->find();
+            $data = array(
+                'city_contacts_name'    =>$_POST['contacts_name'],
+                'contacts_phone_old'    =>$contactsLog['city_contacts_phone'],
+                'city_contacts_phone'   =>$_POST['contacts_phone'],
+                'contacts_name_old'     =>$contactsLog['city_contacts_name'],
+                'state_type'            =>1,
+            );
+            $rest = $this->model->table('supplier_information')->where("member_id = '" . $this->member_id . "' and join_city = '".$_POST['city']."'")->update($data);
+            $restData['code'] = $rest ? "1":"-1";
+        }
+        echo json_encode($restData);
+
+    }
+
+
+    //添加开户银行页面
+    public function newAccountBankOp(){
+        Tpl::setLayout('null_layout');
+        if(!empty($_GET['id'])){
+            $list = $this->get_account_bank($_GET['id']);
+            if(!empty($list['city_code'])){
+                $list['account_province'] = substr ( $list['city_code'] , 0, -4)."0000";
+                $list['account_city'] = substr ( $list['city_code'] , 0, -2)."00";
+                $list['account_county'] = $list['city_code'];
+            }
+            if(!empty($list['bank_licence_electronic'])){
+                $list['account_path'] = $this->img_path . $list['bank_licence_electronic'];
+            }
+            $list['account_number'] = preg_replace('# #','',$list['account_number']);
+            Tpl::output('list',$list);
+        }
+        Tpl::showpage('supplier_new_bank_account');
+    }
+
+
+    //添加结算银行页面
+    public function newSettlementBankOp(){
+        Tpl::setLayout('null_layout');
+        if(!empty($_GET['id'])){
+            $list = $this->get_settlement_bank($_GET['id']);
+            if(!empty($list['city_code'])){
+                $list['settlement_province'] = substr ( $list['city_code'] , 0, -4)."0000";
+                $list['settlement_city'] = substr ( $list['city_code'] , 0, -2)."00";
+                $list['settlement_county'] = $list['city_code'];
+            }
+            $list['settlement_number'] = preg_replace('# #','',$list['settlement_number']);
+            Tpl::output('list',$list);
+        }
+        Tpl::showpage('supplier_new_bank_settlement');
+    }
+
+
+    //开户银行数据提交保存
+    public function newAccountItemOp(){
+        $restData = array('code'=>'-1','msg'=>'');
+        if(!empty($_POST) && !empty($this->member_id)){
+            $this->model->beginTransaction();
+            $account_log = $this->model->table('supplier_account_bank')->where("account_number = '".$_POST['account_number']."'")->find();
+            if(!empty($_POST['is_settlement'])){
+                $settlement_log = $this->model->table('supplier_settlement_bank')->where("settlement_number = '".$_POST['account_number']."'")->find();
+                if(!empty($settlement_log) && ($settlement_log['settlement_number'] != $_POST['account_number'])){
+                    $restData['code'] = "-1";
+                    $restData['msg'] = "结算银行账号已经存在";
+                }
+            }else{
+                if(!empty($account_log) && ($account_log['account_number'] != $_POST['account_number'])){
+                    $restData['code'] = "-1";
+                    $restData['msg'] = "开户银行账号已经存在";
+                }
+            }
+
+            if($restData['code'] == '1'){
+                $city_data = array(
+                    'province'  =>$_POST['account_province'],
+                    'city'      =>$_POST['account_city'],
+                    'county'    =>$_POST['account_county']
+                );
+                $accountData = array(
+                    'account_name'      =>$_POST['account_names'],
+                    'account_number'    =>$_POST['account_number'],
+                    'bank_name'         =>$_POST['account_bank_name'],
+                    'bank_branch_name'  =>$_POST['account_branch_name'],
+                    'bank_branch_code'  =>$_POST['account_branch_code'],
+                    'bank_address'      =>$this->cityData($city_data),
+                    'bank_licence_electronic'=>$_POST['account_new'],
+                    'is_settlement'     =>empty($_POST['is_settlement']) ? "2":"1",
+                    'city_code'         =>$_POST['account_county']
+                );
+
+                $settlementData = array(
+                    'settlement_name'   =>$_POST['account_names'],
+                    'settlement_number' =>$_POST['account_number'],
+                    'bank_name'         =>$_POST['account_bank_name'],
+                    'bank_branch_name'  =>$_POST['account_branch_name'],
+                    'bank_branch_code'  =>$_POST['account_branch_code'],
+                    'bank_address'      =>$this->cityData($city_data),
+                    'city_code'         =>$_POST['account_county']
+                );
+
+                //校验新增还是修改
+                if(!empty($_POST['ac_id'])){
+                    $acLog = $this->model->table('supplier_account_bank')->where("id = '".$_POST['ac_id']."'")->find();
+                    if(!empty($acLog)){
+                        $rest_account = $this->model->table('supplier_account_bank')->where("id = '".$_POST['ac_id']."'")->update($accountData);
+                        if($rest_account && !empty($_POST['is_settlement'])){
+                            $this->model->table('supplier_settlement_bank')->where("id = '".$_POST['ac_id']."'")->update($settlementData);
+                        }
+                    }
+                }else{
+                    $accountData['member_id'] = $this->member_id;
+                    $accountData['supplier_id'] = $this->supplierData['id'];
+                    $rest_account = $this->model->table('supplier_account_bank')->insert($accountData);
+
+                    $settlementData['member_id'] = $this->member_id;
+                    $settlementData['supplier_id'] = $this->supplierData['id'];
+                    if($rest_account && !empty($_POST['is_settlement'])){
+                        $this->model->table('supplier_settlement_bank')->insert($settlementData);
+                    }
+                }
+
+                $rest_account ? $this->model->commit():$this->model->rollback();
+                $restData['code'] = $rest_account ? "1":"-1";
+            }
+
+        }
+        echo json_encode($restData);
+    }
+
+
+    //结算银行数据提交保存
+    public function newSettlementItemOp(){
+        $restData = array('code'=>'-1','msg'=>'');
+        if(!empty($_POST) && !empty($this->member_id)){
+            $settlement_log = $this->model->table('supplier_settlement_bank')->where("settlement_number = '".$_POST['settlement_number']."'")->find();
+            if(!empty($settlement_log) && ($settlement_log['settlement_number'] != $_POST['settlement_number'])){
+                $restData['code'] = "-1";
+                $restData['msg'] = "结算银行账号已经存在";
+            }else{
+                $city_data = array(
+                    'province'  =>$_POST['settlement_province'],
+                    'city'      =>$_POST['settlement_city'],
+                    'county'    =>$_POST['settlement_county']
+                );
+
+                $settlementData = array(
+                    'settlement_name'   =>$_POST['settlement_name'],
+                    'settlement_number' =>$_POST['settlement_number'],
+                    'bank_name'         =>$_POST['settlement_bank_name'],
+                    'bank_branch_name'  =>$_POST['settlement_branch_name'],
+                    'bank_branch_code'  =>$_POST['settlement_branch_code'],
+                    'bank_address'      =>$this->cityData($city_data),
+                    'city_code'         =>$_POST['settlement_county']
+                );
+
+                //校验新增还是修改
+                if(!empty($_POST['ac_id'])){
+                    $acLog = $this->model->table('supplier_settlement_bank')->where("id = '".$_POST['ac_id']."'")->find();
+                    if(!empty($acLog)){
+                        $rest_settlement = $this->model->table('supplier_settlement_bank')->where("id = '".$_POST['ac_id']."'")->update($settlementData);
+                    }
+                }else{
+                    $settlementData['member_id'] = $this->member_id;
+                    $settlementData['supplier_id'] = $this->supplierData['id'];
+                    $rest_settlement = $this->model->table('supplier_settlement_bank')->insert($settlementData);
+                }
+                $restData['code'] = $rest_settlement ? "1":"-1";
             }
         }
-        Tpl::output('all_list',$new_all_list);
-        Tpl::showpage('supplier_settlement_list');
+        echo json_encode($restData);
+    }
+
+    //查看银行信息(银行列表查看)
+    public function lookListBankOp(){
+        Tpl::setLayout('null_layout');
+        if(!empty($_GET['id']) && !empty($_GET['type'])){
+            $where = "id = '".$_GET['id']."'";
+            if( $_GET['type'] == 'account'){
+                $list = $all_list = $this->model->table('supplier_account_bank')->where($where)->find();
+            }else{
+                $list = $all_list = $this->model->table('supplier_settlement_bank')->where($where)->find();
+            }
+            Tpl::output('type',$_GET['type']);
+            Tpl::output('type_name',$_GET['type'] == 'account' ? "开户":"结算");
+            Tpl::output('bank',$list);
+            Tpl::showpage('supplier_join_bank_show');
+        }
     }
 
 
@@ -216,46 +517,83 @@ class supplier_memberControl extends SupplierMemberControl{
     public function city_addOp(){
         $restData = array('code'=>'-1','msg'=>'');
         if(!empty($_POST)){
-            $this->model->beginTransaction();
-            $first_join = $this->model->table('store_joinin')->where("member_id = '".$this->member_id."' and city_center = first_city_id and joinin_state = '".STORE_JOIN_STATE_RZSUCCESS."'")->find();
-            //查询当前记录是否存在（审核拒绝触发）
-            $join_old = $this->model->table('store_joinin')->field("city_center")->where("member_id = '".$this->member_id."' and city_center = '".$_POST['city']."'")->find();
-            if(!empty($join_old)){
-                //更新状态即可
-                $rest =  $this->model->table('store_joinin')->where("member_id = '".$this->member_id."' and city_center = '".$_POST['city']."'")->update(array('joinin_state'=>STORE_JOIN_STATE_RZ,'joinin_message'=>''));
-            }else{
-                //添加  first_city_id
-                $join_data = array(
-                    'member_id'         =>$this->member_id,
-                    'member_name'       =>$this->memberData['member_name'],
-                    'store_class_ids'   =>serialize(array()),
-                    'store_class_names' =>serialize(array()),
-                    'joinin_state'      =>STORE_JOIN_STATE_RZ,
-                    'city_center'       =>$_POST['city'],
-                    'first_city_id'     =>empty($first_join) ? $_POST['city']:$first_join['first_city_id'],
-                );
-                $rest = $this->model->table('store_joinin')->insert($join_data);
-                if($rest){
-                    $information_log = $this->model->table('supplier_information')->where("member_id = '".$this->member_id."' and join_city = '".$_POST['city']."'")->find();
-                    $other_data = array(
-                        'city_contacts_name'    =>$_POST['contacts_name'],
-                        'city_contacts_phone'   =>$_POST['contacts_phone'],
-                        'account_bank'          =>$_POST['account_bank'],
-                        'settlement_bank'       =>$_POST['settlement_bank'],
+            $check_type = $this->checkAddCityData($_POST);
+            if($check_type['code'] == '1'){
+                $this->model->beginTransaction();
+                $first_join = $this->model->table('store_joinin')->where("member_id = '".$this->member_id."' and city_center = first_city_id and joinin_state = '".STORE_JOIN_STATE_RZSUCCESS."'")->find();
+                //查询当前记录是否存在（审核拒绝触发）
+                $join_old = $this->model->table('store_joinin')->field("city_center")->where("member_id = '".$this->member_id."' and city_center = '".$_POST['city']."'")->find();
+                if(!empty($join_old)){
+                    //更新状态即可
+                    $rest =  $this->model->table('store_joinin')->where("member_id = '".$this->member_id."' and city_center = '".$_POST['city']."'")->update(array('joinin_state'=>STORE_JOIN_STATE_RZ,'joinin_message'=>''));
+                }else{
+                    //添加  first_city_id
+                    $join_data = array(
+                        'member_id'         =>$this->member_id,
+                        'member_name'       =>$this->memberData['member_name'],
+                        'store_class_ids'   =>serialize(array()),
+                        'store_class_names' =>serialize(array()),
+                        'joinin_state'      =>STORE_JOIN_STATE_RZ,
+                        'city_center'       =>$_POST['city'],
+                        'first_city_id'     =>empty($first_join) ? $_POST['city']:$first_join['first_city_id'],
                     );
-                    if(!empty($information_log)){
-                        $this->model->table('supplier_information')->where("id = '".$information_log['id']."'")->update($other_data);
-                    }else{
-                        $other_data['member_id'] = $this->member_id;
-                        $other_data['join_city'] = $_POST['city'];
-                        $this->model->table('supplier_information')->insert($other_data);
+                    $rest = $this->model->table('store_joinin')->insert($join_data);
+                    if($rest){
+                        $information_log = $this->model->table('supplier_information')->where("member_id = '".$this->member_id."' and join_city = '".$_POST['city']."'")->find();
+                        $other_data = array(
+                            'city_contacts_name'    =>$_POST['contacts_name'],
+                            'city_contacts_phone'   =>$_POST['contacts_phone'],
+                            'account_type'          =>$_POST['account_bank'],
+                            'account'          =>$_POST['account_bank'],
+                            'settlement_typ'        =>$_POST['settlement_bank'],
+                            'account'          =>$_POST['account_bank'],
+                        );
+                        if(!empty($information_log)){
+                            $this->model->table('supplier_information')->where("id = '".$information_log['id']."'")->update($other_data);
+                        }else{
+                            $other_data['member_id'] = $this->member_id;
+                            $other_data['join_city'] = $_POST['city'];
+                            $this->model->table('supplier_information')->insert($other_data);
+                        }
                     }
                 }
+                $restData['code'] = $rest ? $this->model->commit():$this->model->rollback();
+                $restData['code'] = $rest ? "1":"-1";
+            }else{
+                $restData['code'] = $check_type['code'];
+                $restData['msg'] = $check_type['msg'];
             }
-            $restData['code'] = $rest ? $this->model->commit():$this->model->rollback();
-            $restData['code'] = $rest ? "1":"-1";
         }
         echo json_encode($restData);
+    }
+
+    //检查提交数据是否异常
+    private function checkAddCityData($data = array()){
+        $restData = array('code'=>'1','msg'=>'');
+        //查询检查开户银行信息
+        $account_bank_data = $this->get_account_bank($data['account_bank']);
+        if(!empty($account_bank_data)){
+            if(empty($account_bank_data['account_name'])) $restData = array('code'=>'-1','msg'=>'银行开户名不能为空，请核实');
+            if(empty($account_bank_data['account_number'])) $restData = array('code'=>'-1','msg'=>'开户银行账号不能为空，请核实');
+            if(empty($account_bank_data['bank_name'])) $restData = array('code'=>'-1','msg'=>'开户银行名称不能为空，请核实');
+            if(empty($account_bank_data['bank_branch_name'])) $restData = array('code'=>'-1','msg'=>'开户银行支行名称不能为空，请核实');
+            if(empty($account_bank_data['bank_address'])) $restData = array('code'=>'-1','msg'=>'开户银行所在地不能为空，请核实');
+            if($restData['code'] == '1'){
+                $settlement_bank_data = $this->get_settlement_bank($data['settlement_bank']);
+                if(!empty($settlement_bank_data)){
+                    if(empty($settlement_bank_data['settlement_name'])) $restData = array('code'=>'-1','msg'=>'结算银行开户名不能为空，请核实');
+                    if(empty($settlement_bank_data['settlement_number'])) $restData = array('code'=>'-1','msg'=>'结算银行账号不能为空，请核实');
+                    if(empty($settlement_bank_data['bank_name'])) $restData = array('code'=>'-1','msg'=>'结算银行名称不能为空，请核实');
+                    if(empty($settlement_bank_data['bank_branch_name'])) $restData = array('code'=>'-1','msg'=>'结算银行支行名称不能为空，请核实');
+                    if(empty($settlement_bank_data['bank_address'])) $restData = array('code'=>'-1','msg'=>'结算银行所在地不能为空，请核实');
+                }else{
+                    $restData = array('code'=>'-1','msg'=>'结算银行信息有误，请核实');
+                }
+            }
+        }else{
+            $restData = array('code'=>'-1','msg'=>'开户银行信息有误，请核实');
+        }
+        return $restData;
     }
 
     //去除数组中的重复数据 array_unique($a
@@ -274,30 +612,36 @@ class supplier_memberControl extends SupplierMemberControl{
         return $result;
     }
 
+    //获取认证记录、
+    private function getCityJoin($id){
+        return $this->model->table('store_joinin')->where("city_center = '".$id."' and member_id = '".$this->member_id."'")->find();
+    }
+
 
     //获取绑定银行的信息数据
     private function get_account_bank($id){
-        return $this->model->table('supplier_account_bank')->where("id = '".$id."'")->find();
+        return $this->model->table('supplier_account_bank')->where("id = '".$id."' and member_id = '".$this->member_id."'")->find();
     }
 
     private function get_settlement_bank($id){
-        return $this->model->table('supplier_settlement_bank')->where("id = '".$id."'")->find();
+        return $this->model->table('supplier_settlement_bank')->where("id = '".$id."' and member_id = '".$this->member_id."'")->find();
     }
 
     /**
      * 针对开店申请进行数据处理
      * $data 前端POST提交的数据
      **/
-    private function get_store_join($class_id=array(),$city_id=array(),$store_join){
+    private function get_store_join($class_id=array(),$city_id=array(),$store_join)
+    {
         if (!empty($class_id) && !empty($city_id)) {
             //获取原始数据
-            if(!empty($store_join)){
-                if(!empty($class_id)){
-                    $new_class_id = array_unique(array_merge($class_id,explode(',',$store_join['sc_id'])));
-                }else{
-                    $new_class_id = explode(',',$store_join['sc_id']);
+            if (!empty($store_join)) {
+                if (!empty($class_id)) {
+                    $new_class_id = array_unique(array_merge($class_id, explode(',', $store_join['sc_id'])));
+                } else {
+                    $new_class_id = explode(',', $store_join['sc_id']);
                 }
-            }else{
+            } else {
                 $new_class_id = $class_id;
             }
 
@@ -379,4 +723,21 @@ class supplier_memberControl extends SupplierMemberControl{
             return $param;
         }
     }
+
+
+
+    private function cityData($city = array()){
+        if(is_array($city)){
+            $province = Model()->table("linkage_province")->where("code = '".$city['province']."'")->find();
+            $citys = Model()->table("linkage_city")->where("code = '".$city['city']."'")->find();
+            $county = Model()->table("linkage_county")->where("code = '".$city['county']."'")->find();
+            $data = array(
+                $province['city_name'],$citys['city_name'],$county['city_name'],
+            );
+            return implode(' ',$data);
+        }
+    }
+
+
+
 }

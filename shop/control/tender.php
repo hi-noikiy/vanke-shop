@@ -160,6 +160,17 @@ class tenderControl extends HomeControl {
         }
     }
 
+    //标的详情
+    public function showTenderMaterialOp(){
+        if(!empty($_GET['tender_id'])){
+            Tpl::output('title',$_GET['title']);
+            Tpl::output('end_time',$_GET['time']);
+            Tpl::output('tender_id',$_GET['tender_id']);
+            Tpl::output('city',$_GET['city']);
+            Tpl::showpage('parentIframe.tender.show');
+        }
+    }
+
     //获取标书文件列表
     public function getTenderMaterialOp(){
         if(!empty($_GET['tender_id'])) {

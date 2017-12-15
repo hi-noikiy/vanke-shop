@@ -42,7 +42,6 @@ class supplier_joinControl extends SupplierControl {
         $this->joinLog = $this->model->table('store_joinin')->where("member_id = '".$this->member_id."'")->find();
         Tpl::output('join_type',$this->joinLog['joinin_state']);
         if($_GET['op'] == 'index'){
-            var_dump($_GET['op']);
             $step = !empty($_GET['step']) ? $_GET['step']:'agreement';
             //获取当前用户的状态
             if($this->memberData['role_id'] == $this->ptURoleId && !empty($this->supplierData)){
@@ -62,7 +61,6 @@ class supplier_joinControl extends SupplierControl {
     }
 
     public function indexOp(){
-        echo "123";
         Tpl::showpage('join_index');
     }
 
@@ -77,7 +75,11 @@ class supplier_joinControl extends SupplierControl {
     //公司基本信息
     private function company(){
         if($this->joinLog['joinin_state'] == STORE_JOIN_STATE_CALLBACK) {
-            $companyCity = $this->cityData($this->supplierData['company_address']);
+            $companyCity = array(
+                'province'=>empty($this->supplierData['company_province_id']) ? "":substr ( $this->supplierData['company_province_id'] , 0, -4)."0000",
+                'city'=>empty($this->supplierData['company_province_id']) ? "":substr ( $this->supplierData['company_province_id'] , 0, -2)."00",
+                'county'=>empty($this->supplierData['company_province_id']) ? "":$this->supplierData['company_province_id'],
+            );
             //解析处理电话号码
             $company_phone_data = array();
             if (!empty($this->supplierData['company_phone'])) {
@@ -101,7 +103,11 @@ class supplier_joinControl extends SupplierControl {
     //公司营业信息
     private function business(){
         if($this->joinLog['joinin_state'] == STORE_JOIN_STATE_CALLBACK){
-            $businessCity = $this->cityData($this->supplierData['business_licence_address']);
+            $businessCity = array(
+                'province'=>empty($this->supplierData['business_licence_city_code']) ? "":substr ( $this->supplierData['business_licence_city_code'] , 0, -4)."0000",
+                'city'=>empty($this->supplierData['business_licence_city_code']) ? "":substr ( $this->supplierData['business_licence_city_code'] , 0, -2)."00",
+                'county'=>empty($this->supplierData['business_licence_city_code']) ? "":$this->supplierData['business_licence_city_code'],
+            );
             $path = array(
                 'business'      =>empty($this->supplierData['business_licence_number_electronic']) ? "":$this->img_path.$this->supplierData['business_licence_number_electronic'],
                 'organization'  =>empty($this->supplierData['organization_code_electronic']) ? "":$this->img_path.$this->supplierData['organization_code_electronic'],
@@ -124,18 +130,20 @@ class supplier_joinControl extends SupplierControl {
             //获取用户的银行信息数据
             $where = "supplier_id = '" . $this->supplierData['id'] . "' and member_id = '" . $this->memberData['member_id'] . "'";
             $accountBank = $this->model->table('supplier_account_bank')->where($where)->find();
-            $accountBankCity = $this->cityData($accountBank['bank_address']);
-            $accountBank['account_province'] = $accountBankCity['province'];
-            $accountBank['account_city'] = $accountBankCity['city'];
-            $accountBank['account_county'] = $accountBankCity['county'];
-            $accountBank['account_path'] = $this->img_path . $accountBank['bank_licence_electronic'];
+            if(!empty($accountBank['city_code'])){
+                $accountBank['account_province']= substr ( $accountBank['city_code'] , 0, -4)."0000";
+                $accountBank['account_city']    = substr ( $accountBank['city_code'] , 0, -2)."00";
+                $accountBank['account_county']  = $accountBank['city_code'];
+            }
+            $accountBank['account_path'] = empty($accountBank['bank_licence_electronic']) ? "":$this->img_path . $accountBank['bank_licence_electronic'];
 
             //结算信息
             $settlementBank = $this->model->table('supplier_settlement_bank')->where($where)->find();
-            $settlementBankCity = $this->cityData($settlementBank['bank_address']);
-            $settlementBank['settlement_province'] = $settlementBankCity['province'];
-            $settlementBank['settlement_city'] = $settlementBankCity['city'];
-            $settlementBank['settlement_county'] = $settlementBankCity['county'];
+            if(!empty($settlementBank['city_code'])){
+                $settlementBank['settlement_province']= substr ( $settlementBank['city_code'] , 0, -4)."0000";
+                $settlementBank['settlement_city']    = substr ( $settlementBank['city_code'] , 0, -2)."00";
+                $settlementBank['settlement_county']  = $settlementBank['city_code'];
+            }
             Tpl::output('account_bank', $accountBank);
             Tpl::output('settlement_bank', $settlementBank);
         }
@@ -181,11 +189,16 @@ class supplier_joinControl extends SupplierControl {
                 $tel = !empty($_POST['area_code']) ? $_POST['area_code']."-":"";
                 $tel.= !empty($_POST['tell_num']) ? $_POST['tell_num']:"";
                 $tel.= !empty($_POST['extension']) ? "-".$_POST['extension']:"";
+                $city = array(
+                    'province'  =>$_POST['province'],
+                    'city'      =>$_POST['city'],
+                    'county'    =>$_POST['county'],
+                );
                 $data = array(
                     'member_name'           =>$this->memberData['member_name'],//店主用户名
                     'company_name'          =>$_POST['company_name'],//公司名称
-                    'company_province_id'   =>$_POST['province'],//所在地省ID
-                    'company_address'       =>$this->cityData(array($_POST['province'],$_POST['city'],$_POST['county'])),//公司地址
+                    'company_province_id'   =>$_POST['county'],//所在地省ID
+                    'company_address'       =>$this->cityData($city),//公司地址
                     'company_address_detail'=>$_POST['address'],//公司详细地址
                     'company_phone'         =>$tel,//公司电话
                     'company_employee_count'=>$_POST['employee_count'],//员工总数
@@ -218,11 +231,12 @@ class supplier_joinControl extends SupplierControl {
                         'city_contacts_name'    =>$_POST['contacts_name'],
                         'city_contacts_phone'   =>$_POST['contacts_phone'],
                     );
+                    //处理城市差异数据信息
                     if(!empty($contacts_data)){
                         $this->model->table('supplier_information')->where("id = '".$contacts_data['id']."'")->update($contacts_up);
                     }else{
                         $contacts_up['member_id'] = $this->memberData['member_id'];
-                        $this->model->table('supplier_information')->insert($join_param);
+                        $this->model->table('supplier_information')->insert($contacts_up);
                     }
                     $log_where = "member_id = '".$this->memberData['member_id']."' and type != '2' and state = '1'";
                     $email_log = $this->model->table('email_log')->where($log_where)->find();
@@ -251,7 +265,8 @@ class supplier_joinControl extends SupplierControl {
             if(!empty($step)){
                 $data = array(
                     'business_licence_number'   =>$_POST['licence_number'],//营业执照号
-                    'business_licence_address'  =>$this->cityData(array($_POST['licence_province'],$_POST['licence_city'],$_POST['licence_county'])),//营业执所在地
+                    'business_licence_address'  =>$this->cityData(array('province'=>$_POST['licence_province'],'city'=>$_POST['licence_city'],'county'=>$_POST['licence_county'])),//营业执所在地
+                    'business_licence_city_code'=>$_POST['licence_county'],
                     'business_licence_start'    =>$_POST['licence_start'],//营业执照有效期开始
                     'business_licence_end'      =>$_POST['licence_end'],//营业执照有效期结束
                     'business_sphere'           =>$_POST['licence_sphere'],//法定经营范围
@@ -293,27 +308,28 @@ class supplier_joinControl extends SupplierControl {
                     'bank_name'         =>$_POST['account_bank_name'],
                     'bank_branch_name'  =>$_POST['account_branch_name'],
                     'bank_branch_code'  =>$_POST['account_branch_code'],
-                    'bank_address'      =>$this->cityData(array($_POST['account_province'],$_POST['account_city'],$_POST['account_county'])),
+                    'bank_address'      =>$this->cityData(array('province'=>$_POST['account_province'],'city'=>$_POST['account_city'],'county'=>$_POST['account_county'])),
                     'bank_licence_electronic'=>$_POST['account_new'],
                     'is_settlement'     =>empty($_POST['is_settlement']) ? "2":"1",
+                    'city_code'         =>$_POST['account_county']
                 );
+
                 if(empty($accountList)){
                     $accountData['member_id'] = $this->memberData['member_id'];
                     $accountData['supplier_id'] = $this->supplierData['id'];
                     $rest_account = $this->model->table('supplier_account_bank')->insert($accountData);
-                    //绑定开户行
-                    $information['account_bank'] = $rest_account;
                 }else{
                     $rest_account = $this->model->table('supplier_account_bank')->where($where)->update($accountData);
-                    $information['account_bank'] = $accountList['id'];
                 }
+                //绑定开户行
+                $information['account'] = serialize($accountData);
 
                 //结算账户信息数据
                 $settlementList = $this->model->table('supplier_settlement_bank')->where($where)->find();
                 if(empty($_POST['is_settlement'])){
-                    $city_string = $this->cityData(array($_POST['settlement_province'],$_POST['settlement_city'],$_POST['settlement_county']));
+                    $city_string = $this->cityData(array('province'=>$_POST['settlement_province'],'city'=>$_POST['settlement_city'],'county'=>$_POST['settlement_county']));
                 }else{
-                    $city_string = $this->cityData(array($_POST['account_province'],$_POST['account_city'],$_POST['account_county']));
+                    $city_string = $this->cityData(array('province'=>$_POST['account_province'],'city'=>$_POST['account_city'],'county'=>$_POST['account_county']));
                 }
                 $settlementData = array(
                     'settlement_name'=>empty($_POST['is_settlement']) ? $_POST['settlement_name']:$_POST['account_names'],
@@ -322,17 +338,23 @@ class supplier_joinControl extends SupplierControl {
                     'bank_branch_name'  =>empty($_POST['is_settlement']) ? $_POST['settlement_branch_name']:$_POST['account_branch_name'],
                     'bank_branch_code'  =>empty($_POST['is_settlement']) ? $_POST['settlement_branch_code']:$_POST['account_branch_code'],
                     'bank_address'      =>$city_string,
+                    'city_code'         =>empty($_POST['is_settlement']) ? $_POST['settlement_county']:$_POST['account_county'],
                 );
 
                 if(empty($settlementList)){
                     $settlementData['member_id'] = $this->memberData['member_id'];
                     $settlementData['supplier_id'] = $this->supplierData['id'];
                     $rest_settlement = $this->model->table('supplier_settlement_bank')->insert($settlementData);
-                    $information['settlement_bank'] = $rest_settlement;
                 }else{
                     $rest_settlement = $this->model->table('supplier_settlement_bank')->where($where)->update($settlementData);
-                    $information['settlement_bank'] = $settlementList['id'];
                 }
+
+                //绑定开户行
+                $information['settlement'] = serialize($settlementData);
+
+                $information['state_type'] = 1;
+                $information['account_type'] = 1;
+                $information['settlement_type'] = 1;
 
                 //提交数据
                 if($rest_account && $rest_settlement){
@@ -374,8 +396,10 @@ class supplier_joinControl extends SupplierControl {
     //检查邮箱地址
     public function checkEmailOp(){
         if(!empty($_POST['email'])){
-            $where = "contacts_email = '".$_POST['email']."' and supplier_state in('2','3') and member_id != '".$this->memberData['member_id']."'";
-            $data = $this->model->table('supplier')->where($where)->find();
+            $where = "member_email = '".$_POST['email']."' and member_email_bind = '1' and member_id != '".$this->memberData['member_id']."'";
+            /*$where = "contacts_email = '".$_POST['email']."' and supplier_state in('2','3') and member_id != '".$this->memberData['member_id']."'";
+            $data = $this->model->table('supplier')->where($where)->find();*/
+            $data = $this->model->table('member')->where($where)->find();
             $rest = array(
                 'code'=>empty($data) ? "1":"-1",
             );
@@ -499,28 +523,13 @@ class supplier_joinControl extends SupplierControl {
 
     private function cityData($city = array()){
         if(is_array($city)){
-            $where = "area_id in('".implode("','",$city)."')";
-            $list = Model()->table("area")->where($where)->select();
-            $data = array();
-            if(!empty($list) && is_array($list)){
-                foreach ($list as $val){
-                    $data[] = $val['area_name'];
-                }
-            }
+            $province = Model()->table("linkage_province")->where("code = '".$city['province']."'")->find();
+            $citys = Model()->table("linkage_city")->where("code = '".$city['city']."'")->find();
+            $county = Model()->table("linkage_county")->where("code = '".$city['county']."'")->find();
+            $data = array(
+                $province['city_name'],$citys['city_name'],$county['city_name'],
+            );
             return implode(' ',$data);
-        }else{
-            $data = array('province'=>'','city'=>'','county'=>'');
-            $city_list = explode(' ',$city);
-            if(is_array($city_list)){
-                $where = "area_name in('".implode("','",$city_list)."')";
-                $list = Model()->table("area")->where($where)->select();
-                if(!empty($list) && is_array($list)){
-                    $data['province'] = $list[0]['area_id'];
-                    $data['city'] = $list[1]['area_id'];
-                    $data['county'] = $list[2]['area_id'];
-                }
-                return $data;
-            }
         }
     }
 

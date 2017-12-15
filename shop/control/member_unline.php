@@ -52,7 +52,7 @@ class member_unlineControl extends BaseMemberControl {
         }
         $url = "?act=member_unline&op=index&page={page}";  
         $condition['pageSize'] = 10;
-        $order_group_list = $this->get_unline_order($condition);  
+        $order_group_list = $this->get_unline_order($condition);
        if($order_group_list){
        		$totalNum = $order_group_list['totalNum'];
        		$page = new pages($totalNum, $condition['pageSize'], $condition['rowNoFrom'], $url, 2);
@@ -63,6 +63,53 @@ class member_unlineControl extends BaseMemberControl {
         Tpl::output('page',$_GET['page']);
         Tpl::output('order_pay_list',$order_pay_list);
         Tpl::showpage('member_order.unline');
+    }
+
+    public function indexsOp() {
+        Tpl::setLayout('supplier_member_layout');
+        $model_order = Model('order');
+        //搜索
+        $condition = array();
+        $condition['buyer_id'] = $_SESSION['member_id'];
+        if ($_GET['ordersn'] != '') {
+            $condition['orderNo'] = $_GET['ordersn'];
+
+        }
+        if($_GET['state_type'] > 0){
+            $condition['orderStatus'] = $_GET['state_type'];
+
+        }elseif (empty($_GET['state_type'])){
+            $condition['orderStatus'] = '14';
+        }
+        if($_GET['query_start_date'] != ''){
+            $condition['orderDateFrom'] = $_GET['query_start_date'];
+        }
+        if($_GET['query_end_date'] != ''){
+            $condition['orderDateTo'] = $_GET['query_end_date'];
+        }
+        $member_model = Model();
+        $member_supplycode = $member_model->table('member')->where('member_id='.$_SESSION['member_id'])->field('supply_code')->find();
+        if(!empty($member_supplycode['supply_code'])){
+            $condition['supplyCode'] = $member_supplycode['supply_code'];
+        }
+        if($_GET['page']>0){
+            $condition['rowNoFrom'] = $_GET['page'];
+        }else{
+            $condition['rowNoFrom'] = 1;
+        }
+        $url = "?act=member_unline&op=index&page={page}";
+        $condition['pageSize'] = 10;
+        $order_group_list = $this->get_unline_order($condition);
+        if($order_group_list){
+            $totalNum = $order_group_list['totalNum'];
+            $page = new pages($totalNum, $condition['pageSize'], $condition['rowNoFrom'], $url, 2);
+            Tpl::output('show_page',$page->myde_write());
+            Tpl::output('order_group_list',$order_group_list['purchase_order_json']);
+            Tpl::output('page_num',  ceil($order_group_list['totalNum']/$condition['pageSize']));
+        }
+        Tpl::output('page',$_GET['page']);
+        Tpl::output('order_pay_list',$order_pay_list);
+        Tpl::showpage('member_order.unline（old）');
     }
     
 

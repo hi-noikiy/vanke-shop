@@ -191,8 +191,8 @@ $(function(){
             window.open("<?php echo SHOP_SITE_URL;?>/index.php?act=tender&op=index",'_self');
     });
     $('#inquiry_info').click(function(){
-        window.open("<?php echo SHOP_SITE_URL;?>/index.php?act=parent_iframe&op=index&mtype=inquiry",'_self');
-        //window.open("<?php echo SHOP_SITE_URL;?>/index.php?act=inquiry&op=index",'_self');
+       // window.open("<?php echo SHOP_SITE_URL;?>/index.php?act=parent_iframe&op=index&mtype=inquiry",'_self');
+        window.open("<?php echo SHOP_SITE_URL;?>/index.php?act=inquiry&op=index",'_self');
     });
 });
 </script>
@@ -252,6 +252,17 @@ $(function(){
         </ul>
       </div>
     </div>
+
+    <?php if($_SESSION['role_id'] == MEMBER_IDENTITY_THREE || $_SESSION['role_id'] == MEMBER_IDENTITY_FOUR){?>
+      <div class="head-user-menu">
+          <dl class="my-mall">
+              <dt class="supplier-centre"><span class="ico"></span>商户中心</dt>
+          </dl>
+          <dl class="my-cart">
+              <dt class="store-centre"><span class="ico"></span>店铺中心</dt>
+          </dl>
+      </div>
+    <?php }else{?>
     <div class="head-user-menu">
       <dl class="my-mall">
         <dt><span class="ico"></span>用户中心<i class="arrow"></i></dt>
@@ -322,6 +333,7 @@ $(function(){
         </dd>
       </dl>
     </div>
+    <?php }?>
   </header>
 </div>
 <!-- PublicHeadLayout End -->
@@ -335,9 +347,8 @@ $(function(){
       <li><a href="<?php echo BASE_SITE_URL;?>" <?php if($output['index_sign'] == 'index' && $output['index_sign'] != '0') {echo 'class="current"';} ?>><?php echo $lang['nc_index'];?></a></li>
         <?php if($_SESSION['role_id'] == '03' || $_SESSION['role_id'] == '02'){?>
       <li><a href="javaScript:void(0);" id="tender_info" <?php if($_GET['act'] == 'tender') {echo 'class="current"';} ?>>招标信息</a></li>
-      <!--<li><a href="javaScript:void(0);" id="inquiry_info" <?php /*if($_GET['act'] == 'inquiry' ) {echo 'class="current"';} */?>>询价信息</a></li>-->
-            <li><a href="javaScript:void(0);" id="inquiry_info" <?php if($output['index_sign'] == 'inquiry' && $output['index_sign'] != '0') {echo 'class="current"';} ?>>询价信息</a></li>
-        <?php }?>
+      <li><a href="javaScript:void(0);" id="inquiry_info" <?php if($_GET['act'] == 'inquiry' ) {echo 'class="current"';} ?>>询价信息</a></li>
+              <?php }?>
 <!--隐藏抢购-->
         <!--      --><?php //if (C('groupbuy_allow')){ ?>
 <!--      <li><a href="--><?php //echo urlShop('show_groupbuy', 'index');?><!--" --><?php //if($output['index_sign'] == 'groupbuy' && $output['index_sign'] != '0') {echo 'class="current"';} ?><!--> --><?php //echo $lang['nc_groupbuy'];?><!--</a></li>-->
@@ -397,3 +408,12 @@ $(function(){
     </ul>
   </div>
 </nav>
+<script type="text/javascript">
+    $(".my-mall").on("click", ".supplier-centre", function() {
+        window.location.href="/shop/index.php?act=supplier_member";
+    });
+
+    $(".my-cart").on("click", ".store-centre", function() {
+        window.location.href="/shop/index.php?act=seller_login&op=show_login";
+    });
+</script>

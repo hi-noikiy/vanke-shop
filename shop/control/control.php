@@ -585,7 +585,7 @@ class BaseMemberControl extends Control {
             $nav_link[] = array('title' => '我的商城',  'link' => urlShop('member', 'home'));
             $nav_link[] = array('title' => $nav['name']);
         }
-        Tpl::output('nav_link_list',$nav_link);
+        //Tpl::output('nav_link_list',$nav_link);
     }
 	
 	/**

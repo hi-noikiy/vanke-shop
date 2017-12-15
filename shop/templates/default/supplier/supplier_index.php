@@ -19,10 +19,10 @@
         <div>
             <div class="info-lcol">
                 <div class="layui-inline u-pic" style="float: left">
-                    <img src="//i.jd.com/commons/img/no-img_mid_.jpg" class="layui-circle">
+                    <img src="<?php echo $output['member']['member_avatar']?>" class="layui-circle">
                 </div>
-                <div class="info-m" style="float: left;margin-left: 20px;">
-                    <div class="u-name">
+                <div class="info-m" style="float: left;margin-left: 20px;width:400px">
+                    <div class="u-name" style="font-size: 16px;">
                         <?php echo $output['supplier']['company_name'];?>
                     </div>
                     <div class="u-level">

@@ -12,12 +12,29 @@ class inquiryControl extends HomeControl {
 
     //询报价列表数据接口
     private $InquiryList = '/impac/restapi/getInquiryList';
-
+    
+    private $InquiryLists = 'http://10.39.35.152:8080/xl04_war/restapi/getInquiryList';
+    
+    //获取询报价详情信息接口   
     private $InquiryInfo = '/impac/restapi/initQuoteData';
-
-    //跟新数据
+    
+    private $InquiryInfos = 'http://10.39.35.152:8080/xl04_war/restapi/initQuoteData';
+    
+    //物料详情列表分页接口
+    private $ItemlList = '/impac/restapi/getItemData';
+    
+    private $ItemlLists = 'http://10.39.35.152:8080/xl04_war/restapi/getItemData';
+    
+    //删除上传文件接口
+    private $DeleteFile = '/impac/restapi/delAttachmentInfo';
+    
+    private $DeleteFiles = 'http://10.39.35.152:8080/xl04_war/restapi/delAttachmentInfo';
+      
+    //提交跟新数据
     private $InquiryUp = '/impac/restapi/updateQuoteInfo';
-
+    
+    private $InquiryUps = 'http://10.39.35.152:8080/xl04_war/restapi/updateQuoteInfo';
+           
     //询报价类型
     private $TypeData = array(
         'C005WAITQUOTEANSWER-VS'=> '待报价',
@@ -33,6 +50,9 @@ class inquiryControl extends HomeControl {
 
     //物料数据路径
     private $path;
+    
+    //修改后的物料数据路径
+    private $paths;
 
     public function __construct() {
         parent::__construct();
@@ -83,7 +103,7 @@ class inquiryControl extends HomeControl {
         if($this->role_id == '03' || $this->role_id == '02'){//校验是否属于认证供应商
             $send_data = array(
                 'pageNum'   =>$page,//第几页		默认为第1页
-                'pageSize'  =>'10',//每页显示条数	默认为15条
+                'pageSize'  =>$_GET['nums'],//每页显示条数	默认为15条
                 'title'     =>$inquiry_name,//询价标题	默认为空字符串
                 'startDate' =>$startDate,//报价截止日期Start  默认为空字符串
                 'endDate'   =>$endDate,//报价截止日期End    默认为空字符串
@@ -96,20 +116,14 @@ class inquiryControl extends HomeControl {
             $rest_data = json_decode($return_json,true);
             $new_data = array();
             if(!empty($rest_data['data']) && is_array($rest_data['data'])){
-                foreach ($rest_data['data'] as $vl){
-                    //处理日期
-                    $time_str = substr($vl['desiredAnswerDate'],0,4).'-';
-                    $time_str.= substr($vl['desiredAnswerDate'],4,2).'-';
-                    $time_str.= substr($vl['desiredAnswerDate'],6,2).' ';
-                    $time_str.= substr($vl['desiredAnswerDate'],8,2).':';
-                    $time_str.= substr($vl['desiredAnswerDate'],10,2);
+                foreach ($rest_data['data'] as $vl){              
                     $new_val = array(
                         'title'     =>$vl['quoteRequestNm'],
                         'state'     =>$vl['status'],
                         'state_id'  =>$vl['statusId'],
                         'type'      =>$vl['quoteRequestType'],
                         'city'      =>$vl['requestOrg'],
-                        'time'      =>$time_str,
+                        'time'      =>$vl['desiredAnswerDate'],
                         'inquiry_id'=>$vl['quoteRequestId'],
                         'operation' =>$vl['operation'],
                         'quote_id'  =>$vl['quoteId'],
@@ -139,7 +153,7 @@ class inquiryControl extends HomeControl {
                 $file_obj->createFile($this->path);
             }else{
                 //初始化数据文件
-                $this->inquiryPath(array());
+                $this->inquiryPath(array(),$this->path);
             }
             //获取供应商的相关数据信息
             if($this->role_id == '03' || $this->role_id == '02') {//校验是否属于认证供应商
@@ -157,26 +171,21 @@ class inquiryControl extends HomeControl {
                         'inquiry_id'    =>$_GET['id'],
                         'quoted_price'  =>$rest_data['data']['quoteAmount'], //报价金额
                         'hope_time'     =>empty($rest_data['data']['desiredDeliveryDate']) ? '':substr($rest_data['data']['desiredDeliveryDate'],0,4).'-'.substr($rest_data['data']['desiredDeliveryDate'],4,2).'-'.substr($rest_data['data']['desiredDeliveryDate'],6,2), //期望到货时间
-                        'predict_time'  =>empty($rest_data['data']['deliveryDate']) ? '':substr($rest_data['data']['deliveryDate'],0,4).'-'.substr($rest_data['data']['deliveryDate'],4,2).'-'.substr($rest_data['data']['deliveryDate'],6,2), //预计交货时间
+                        'predict_time'  =>empty($rest_data['data']['deliveryDate']) ? '':$rest_data['data']['deliveryDate'], //预计交货时间
                         'valid_statr'   =>empty($rest_data['data']['expiredTimeFrom']) ? '':substr($rest_data['data']['expiredTimeFrom'],0,4).'-'.substr($rest_data['data']['expiredTimeFrom'],4,2).'-'.substr($rest_data['data']['expiredTimeFrom'],6,2), //有效开始时间
                         'valid_end'     =>empty($rest_data['data']['expiredTimeTo']) ? '':substr($rest_data['data']['expiredTimeTo'],0,4).'-'.substr($rest_data['data']['expiredTimeTo'],4,2).'-'.substr($rest_data['data']['expiredTimeTo'],6,2), //有效结束时间
                         'rate'          =>$rest_data['data']['taxId'], //开票税率
                         'mark'          =>$rest_data['data']['comment'], //备注
-                        'currency'      =>$rest_data['data']['currencyNm'], //单位
                         'quoteRequestId'=>$rest_data['data']['quoteRequestId'],
-                        'path_name'     =>$rest_data['dataThree'][0]['fileName'],
-                        'path_url'      =>$rest_data['dataThree'][0]['uploadPath'],
+                        'path_name'     =>$rest_data['data']['attachmentInfo']['fileName'],
+                        'path_url'      =>substr($rest_data['data']['attachmentInfo']['uploadPath'],1),
                     );
-                    //写入数据
-                    if(!empty($rest_data['data']['jsonResult']) && is_array(json_decode($rest_data['data']['jsonResult'],true))){
-                        //将读取到的数据写入文件，以便后续返回
-                        $list_data = json_decode($rest_data['data']['jsonResult'],true);
-                        $this->inquiryPath($list_data);
-                    }
+                    $send_data['totalcount'] = $rest_data['data']['itemCount'];
                     Tpl::output('quoteId',$rest_data['data']['quoteId']);
                     Tpl::output('type',$_GET['type']);
-                    Tpl::output('sl_list',$rest_data['dataSecond']);
+                    Tpl::output('sl_list',$rest_data['taxList']);
                     Tpl::output('list',$data_info);
+                    Tpl::output('send_data',$send_data);             
                     Tpl::showpage('parentIframe.inquiry.info');
                 }else{
                     echo "请求数据错误";
@@ -191,13 +200,12 @@ class inquiryControl extends HomeControl {
 
     //上传文件操作
     public function upLoadFirldOp(){
-        //"data" . DS . "upload" . DS .
         $firle_data = $this->upload_image('file');
         $data = array(
             "code"  =>'0',
             "msg"   =>'',
             "data"  =>array(
-                "src"=> DS . "data" . DS . "upload" . DS .$firle_data['path'],
+                "src"=>  'data'. DS . "upload" . DS .$firle_data['path'],
                 "name"=>$_FILES['file']['name'],
             ),
         );
@@ -209,66 +217,99 @@ class inquiryControl extends HomeControl {
     public function getListOp(){
         $page = empty($_GET['page']) ? '1':$_GET['page'];
         $nums = empty($_GET['nums']) ? '20':$_GET['nums'];
+        $quoteId = $_GET['quote'] ? $_GET['quote'] : '';
+        $operation	 = $_GET['type']; 
+        $id = $_GET['id'];
+        $conut = $_GET['count'];
         $code = '-1';
         $msg = '请求地址数据错误';
         $new_list = array();
         if(!empty($_GET['id'])){
-            //获取供应商的相关数据信息
-            if($this->role_id == '03' || $this->role_id == '02') {//校验是否属于认证供应商
-                $send_data = array(
-                    'quoteRequestId'=>$_GET['id'],
-                    'supplierCode'  =>$this->supplier_code,
-                );
                 //读取数据文件
-                $list_data = $this->inquiryPath();
-                if(!empty($list_data) && is_array($list_data)){
-                    foreach ($list_data as $key=>$val){
-                        $data = array(
-                            'key'   =>$key+1,
-                            'id'    =>$val['quoteRequestProductId'],//唯一ID
-                            'name'  =>$val['productName'],//名称
-                            'spec'  =>$val['productSpec'],//规格
-                            'brand' =>$val['brand'],//品牌
-                            'nums'  =>number_format($val['quantity'],0),//数量
-                            'umit'  =>$val['unit'],//单位
-                            'price' =>number_format($val['quoteUnitPrice'],4),//单价
-                            'total' =>number_format($val['quantity']*$val['quoteUnitPrice'],4),
-                        );
-                        $new_list[] = $data;
-                    }
-                }
+                if($this->role_id == '03' || $this->role_id == '02') {//校验是否属于认证供应商
+                	$send_data = array(
+                			'quoteRequestId'=>$id,
+                			'supplierCode'  =>$this->supplier_code,
+                			'operation'     =>$operation,
+                			'quoteId'       =>$quoteId,
+                			'pageNum'       =>$page,
+                			'pageSize'      =>$nums
+                	);
+                	$url = $this->getSendUrl().$this->ItemlList;
+                	$return_json = WebServiceUtil::getDataByCurl($url, json_encode($send_data), 1);
+                	$rest_data = json_decode($return_json,true);
+                	if (!empty($rest_data['itemData'])) {
+                		$num = 0;
+                		foreach ($rest_data['itemData'] as $item){
+                			$num ++;
+                			$item_data = array(
+                					'key'   =>$num,
+                					'id'    =>$item['itemId'],//唯一ID
+                					'name'  =>$item['productName'],//名称
+                					'spec'  =>$item['productSpec'],//规格
+                					'brand' =>$item['brand'],//品牌
+                					'nums'  =>number_format($item['quantity'],0),//数量
+                					'umit'  =>$item['unit'],//单位
+                					'price' =>$item['quoteUnitPrice']?$item['quoteUnitPrice']:number_format(0,4),
+                					'total' =>number_format($item['quantity']*$item['quoteUnitPrice'],4)
+                			);
+                			if (!empty($this->inquiryPath()) && $this->inquiryPath()[0]['type'] !== 1) {
+                				foreach ($this->inquiryPath() as $v){
+                					if ($v[$id]['itemId'] && $v[$id]['itemId'] == $item['itemId']){
+                						$item_data['price'] = $v[$id]['quoteUnitPrice'];
+                						$item_data['total'] = number_format($item['quantity']*$v[$id]['quoteUnitPrice'],4);
+                					}                					 
+                				}
+                			}else {
+                				$item_data['price'] = $item['quoteUnitPrice'];
+                				$item_data['total'] = number_format($item['quantity']*$item['quoteUnitPrice'],4);
+                			}            			
+                			$item_datas[] = $item_data; 
+                		}
+                	}
+	        $new_data = array(
+	            'code'  => empty($item_datas) ? '-1':'0',
+	            'msg'   => empty($item_datas) ? '请求地址数据错误':'success',
+	            'count' => $conut,
+	            'data'  => $item_datas,
+	        );
             }
+	        echo json_encode($new_data);
         }
-        $new_data = array(
-            'code'  => empty($new_list) ? '-1':'0',
-            'msg'   => empty($new_list) ? '请求地址数据错误':'success',
-            'count' => count($new_list),
-            'data'  => $this->pageArrayList($nums,$page,$new_list),
-        );
-        echo json_encode($new_data);
     }
 
     //修改单价数据
     public function inquiryQuotationPriceOp(){
         $price = $_POST['price'];
         $id = $_POST['id'];
+        $quoteRequestId = $_GET['quoteRequestId'];
         if(!empty($price) && !empty($id)){
-            //获取老的数据文件
-            $arr_new = $this->inquiryPath();
-            if(!empty($arr_new) && is_array($arr_new)){
-                $new_data = array();
-                foreach ($arr_new as $val){
-                    if($val['quoteRequestProductId'] == $id){
-                        $val['quoteUnitPrice'] = number_format($price,4);
-                        $val['quotePrice'] = number_format($price*str_replace(',', '', $val['quantity']),4);
-                    }
-                    $new_data[] = $val;
-                }
-                //将跟新的数据重新写入文件
-                $this->inquiryPath($new_data);
-                echo '1';
-                exit;
-            }
+	        $new_data = array(
+	        		"$quoteRequestId"=>array(
+	        			  'itemId'=>$id,
+	        			  'quoteUnitPrice'=>$price
+	        		)       		
+	        );
+	        //读取文件如果有数据替换
+	        $file_data = $this->inquiryPath();
+	        if (!empty($this->inquiryPath())){
+	        	foreach ($file_data as $k=>$v){
+	        		if ($v[$quoteRequestId]['itemId'] == $id){
+	        			unset($file_data[$k]);
+	        		}
+	        	}
+	        	if (is_array($file_data)) {
+	        		$this->inquiryPath(array('type'=>1),$type = 'w');
+	        		foreach ($file_data as $vf){
+	        			$this->inquiryPath($vf);
+	        		}
+	        	}
+	        	$arr_new = $this->inquiryPath($new_data);
+	        }else {
+	        	$arr_new = $this->inquiryPath($new_data);        	
+	        }
+	        echo '1';
+	        exit;
         }
     }
 
@@ -276,65 +317,87 @@ class inquiryControl extends HomeControl {
     //提交数据
     public function inquiryDataOp(){
         $post_data = $_POST;
+        $count = $_GET['count']?$_GET['count']:'';
+        $quoteRequestId = $post_data['quoteRequestId'];
         if (!empty($post_data) && is_array($post_data)){
             if($this->role_id == '03' || $this->role_id == '02') {//校验是否属于认证供应商
                 //校验是否存在物料报价数据为0的数据
                 $price_data = $this->inquiryPath();
                 $rest = '1';
+                $num = 0;
+                $data = array();
                 if(!empty($price_data) && is_array($price_data)){
-                    foreach ($price_data as $val){
-                        if($val['quoteUnitPrice'] <= 0){
-                            $rest = '-1';
-                            break;
-                        }
+                     foreach ($price_data as $val){
+                     	if (empty($val[$post_data['quoteRequestId']])) {
+                    			continue;
+                     	}
+                     	$data[] = $val[$quoteRequestId];
+                     	foreach ($val as $key=>$al){
+                     		if ($al['quoteUnitPrice'] <= '0') {
+                     			 $rest = '-1';
+ 								 break;
+                     		}
+                   		}
                     }
                 }
-                if($rest == '1'){
-                    $send_data = array(
-                        'deliveryDate'      =>empty($post_data['predict_time']) ? "":$post_data['predict_time'], //预计交货日期
-                        'expiredTimeFrom'   =>empty($post_data['valid_statr']) ? "":$post_data['valid_statr'], // 有效期间(From)
-                        'expiredTimeTo'     =>empty($post_data['valid_end']) ? "":$post_data['valid_end'], // 有效期间(To)
-                        'jsonResult'        =>$this->inquiryPath(), // 物料列表
-                        'quoteAmount'       =>empty($post_data['quoted_price']) ? "":$post_data['quoted_price'], // 报价金额
-                        'quoteRequestId'    =>empty($post_data['quoteRequestId']) ? "":$post_data['quoteRequestId'], //  询价单号
-                        'taxId'             =>empty($post_data['taxId']) ? "":$post_data['taxId'], //	税率Id
-                        'supplierCode'      =>$this->supplier_code, // 供应商Code
-                        'comment'           =>empty($post_data['identity']) ? "":$post_data['identity'], // 备注
-                        'attachmentInfo'    =>array(
-                            array(
-                                'uploadPath'        =>empty($post_data['up_path']) ? "":$post_data['up_path'],
-                                'fileName'          =>empty($post_data['up_name']) ? "":$post_data['up_name'],
-                            ),
-                        ),
-                        'operation'         =>empty($post_data['operation']) ? "":$post_data['operation'],
-                        'quoteId'           =>empty($post_data['quoteId']) ? "":$post_data['quoteId'],
-                    );
-                    $url = $this->getSendUrl().$this->InquiryUp;
-                    $return_json = WebServiceUtil::getDataByCurl($url, json_encode($send_data), 1);
-                    $rest_data = json_decode($return_json,true);
-                    if($rest_data['resultCode'] == '0'){
-                        echo $rest_data['resultCode'];
-                    }else{
-                        echo "修改数据失败！请重试";
-                    }
-                }else{
-                    echo "请检查价格数据,价格不能存在小于或等于0";
-                }
+                if (empty($post_data['quoteId']) && count($data) != $count) {
+                	echo "请检查价格数据,价格不能存在小于或等于0";
+                }else {
+                	if($rest == '1'){
+                		$send_data = array(
+                				'deliveryDate'      =>empty($post_data['predict_time']) ? "":$post_data['predict_time'], //预计交货日期
+                				'expiredTimeFrom'   =>empty($post_data['valid_statr']) ? "":$post_data['valid_statr'], // 有效期间(From)
+                				'expiredTimeTo'     =>empty($post_data['valid_end']) ? "":$post_data['valid_end'], // 有效期间(To)
+                				'itemData'          =>$data, // 物料列表
+                				'quoteRequestId'    =>empty($post_data['quoteRequestId']) ? "":$post_data['quoteRequestId'], //  询价单号
+                				'taxId'             =>empty($post_data['taxId']) ? "":$post_data['taxId'], //	税率Id
+                				'supplierCode'      =>$this->supplier_code, // 供应商Code
+                				'comment'           =>empty($post_data['identity']) ? "":$post_data['identity'], // 备注
+                				'attachmentInfo'    =>array(
+                						'uploadPath'        =>empty($post_data['up_path']) ? "":DS.$post_data['up_path'],
+                						'fileName'          =>empty($post_data['up_name']) ? "":$post_data['up_name'],
+                				),
+                				'operation'         =>empty($post_data['operation']) ? "":$post_data['operation'],
+                				'quoteId'           =>empty($post_data['quoteId']) ? "":$post_data['quoteId'],
+                		);     
+                		$url = $this->getSendUrl().$this->InquiryUp;
+                		$return_json = WebServiceUtil::getDataByCurl($url, json_encode($send_data), 1);
+                		$rest_data = json_decode($return_json,true);
+                		if($rest_data['resultCode'] == '0'){
+                			//清除文件内容
+                			$this->inquiryPath(array('type'=>1),$type = 'w');
+                			echo $rest_data['resultCode'];
+                		}else{
+                			echo "修改数据失败！请重试";
+                		}
+                	}else{
+                		echo "请检查价格数据,价格不能存在小于或等于0";
+                	}
+                }          
             }
         }
     }
-
     //删除询报价文件
     public function delInquiryPathOp(){
-        $path = $_POST['path'];
-        if(!empty($path) && file_exists(BASE_ROOT_PATH.DS.$path)){
+    	$quoteId = $_GET['quote'];
+    	$is_path = $_POST['up_path'];
+        $path = BASE_ROOT_PATH.DS.$_POST['path'];
+        if(!empty($path) && file_exists($path) && !empty($quoteId)){
             //执行删除操作
-            //FileUtil::unlinkFile('b/d/3.exe');
-            $fileUtil = new FileUtil();
-            if($fileUtil->unlinkFile(BASE_ROOT_PATH.DS.$path)){
-                echo '1';
+        	$url = $this->getSendUrl().$this->DeleteFile;
+        	$return_json = WebServiceUtil::getDataByCurl($url, json_encode(array('quoteId'=>$quoteId)), 1);
+        	$rest_data = json_decode($return_json,true);
+        	//var_dump($rest_data);exit;
+            //FileUtil::unlinkFile('b/d/3.exe');删除文件->$fileUtil = new FileUtil();$fileUtil->unlinkFile($path)
+            if ($rest_data['resultCode'] == 0 || empty($is_path)){
+            	$fileUtil = new FileUtil();
+            	if ($fileUtil->unlinkFile($path)) {
+            		echo '1';
+            	}else{
+            		echo '2';
+            	}
             }else{
-                echo '2';
+            	echo '2';
             }
         }
     }
@@ -346,11 +409,12 @@ class inquiryControl extends HomeControl {
         $upload = new UploadFile();
         $fileUtil = new FileUtil();
         $uploaddir = ATTACH_PATH.DS.'inquiry'.DS. date('Y',time()) . DS . date('m-d',time());
-        if(!file_exists($uploaddir)){
-            $fileUtil->createDir(BASE_DATA_PATH . DS . "upload" . DS . "browser");
+		//shop/inquiry/2017/12-05
+        if(!file_exists(BASE_DATA_PATH . DS . "upload" . DS . $uploaddir)){
+            $fileUtil->createDir(BASE_DATA_PATH . DS . "upload" . DS . $uploaddir);
         }
         $upload->set('default_dir',$uploaddir.DS);
-        $upload->set('allow_type',array('zip','rar','7z'));
+        $upload->set('allow_type',array('zip','rar','7z'));        
         if (!empty($_FILES[$file]['name'])){
             $result = $upload->upfile_all($file);
             if ($result){
@@ -364,32 +428,32 @@ class inquiryControl extends HomeControl {
         );
     }
 
-
-    //数组分页
-    private function pageArrayList($count,$page,$array,$order='0'){
-        $page=(empty($page)) ? '1':$page; #判断当前页面是否为空 如果为空就表示为第一页面
-        $start=($page-1)*$count; #计算每次分页的开始位置
-        if($order==1){
-            $array=array_reverse($array);
-        }
-        $totals=count($array);
-        //$countpage=ceil($totals/$count); #计算总页面数
-        $pagedata=array();
-        $pagedata=array_slice($array,$start,$count);
-        return $pagedata;  #返回查询数据
-    }
-
     //操作文件数据的读写
-    private function inquiryPath($data = array()){
-        if(!empty($data)){
-            $file_old=fopen($this->path,"w");
-            fwrite($file_old,serialize($data));
+    private function inquiryPath($data = array(),$type=''){
+      if(!empty($data)){
+      	if (empty($type)) {
+      		$type = 'a';
+      	}else{
+      		$type = 'w';     		
+      	}
+            $file_old=fopen($this->path,$type);
+            fwrite($file_old,json_encode($data,true).'|');
             fclose($file_old);
         }else{
             $file_new=fopen($this->path,"r");
             $file_read = fread($file_new, filesize($this->path));
             fclose($file_new);
-            return unserialize($file_read);
+            foreach (explode('|', $file_read) as $v){
+            	$json = json_decode($v,true);
+            	if (!empty($v)) {
+            		if (!empty($json['type'])){
+            			continue;
+            		}
+            		$datas[] = $json;
+            	}
+            }
+            return $datas;
         }
     }
+
 }

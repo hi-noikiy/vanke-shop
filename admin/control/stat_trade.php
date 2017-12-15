@@ -88,7 +88,6 @@ class stat_tradeControl extends SystemControl{
 					FROM `sc_store` AS `store` INNER JOIN `sc_stat_order` AS `stat_order` 
 					ON stat_order.store_id = store.store_id
 					WHERE order_add_time >= $start_time AND order_add_time < $end_time 
-					AND stat_order.order_state != 0 AND stat_order.order_state != 10 AND stat_order.order_state != 20
 					GROUP BY store_id";	
 	    	$sql .= " LIMIT " . ($curpage - 1) * $showrow . ",$showrow;";
 	    	$result = $model->query($sql);  
@@ -413,12 +412,12 @@ class stat_tradeControl extends SystemControl{
     	}
 
         $where = array();
-        $where['order_add_time'] = array('between',array($curr_stime,$etime));
+        $where = "order_add_time >= '".$curr_stime."' and order_add_time < '".$etime."'";
 		if(trim($_GET['order_type']) != ''){
-    		$where['order_state'] = trim($_GET['order_type']);
+        	$where.= " and order_state = '".trim($_GET['order_type'])."'";	
     	}
 		if(trim($_GET['store_name']) != ''){
-			$where['store_name'] = array('like','%'.trim($_GET['store_name']).'%');
+			$where.= " and store_name like '%".trim($_GET['store_name'])."%'";				
 		}
 		if ($_GET['exporttype'] == 'excel'){
 		    $order_list = $model->statByStatorder($where, '', 0, 0, 'order_id desc', '');
@@ -498,8 +497,8 @@ class stat_tradeControl extends SystemControl{
 			$this->search_arr['search_type'] = 'day';
 		}
         $where = array();
-		if(trim($_GET['order_state']) != ''){
-    		$where['order_state'] = trim($_GET['order_state']);
+		if(trim($_GET['order_type']) != ''){
+    		$where['order_state'] = trim($_GET['order_type']);
     	}
 		if(trim($_GET['store_name']) != ''){
 			$where['store_name'] = array('like','%'.trim($_GET['store_name']).'%');

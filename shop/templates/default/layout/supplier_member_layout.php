@@ -95,108 +95,103 @@
         clear: both;
         border: 0;
     }
+    .title-str{cursor:pointer;}
+    .site-tree-noicon{}
 </style>
 
-<link href="<?php echo SHOP_TEMPLATES_URL;?>/css/member.css" rel="stylesheet" type="text/css">
 <div class="ncm-container">
-    <div style="width: 210px;float: left">
-        <div class="ncm-l-top" style="margin-bottom: 15px; background-color:#27A9E3;border-radius:5px">
-            <h2><a href="/shop/index.php?act=seller_login&op=show_login">我的店铺中心</a></h2>
-        </div>
-        <div class="ncm-l-top">
-            <h2><a href="/shop/index.php?act=supplier_member">我的商户中心</a></h2>
-        </div>
+    <div style="width: 210px;float: left;min-height: 600px">
         <div class="site-tree">
             <ul class="layui-tree">
 
-                <li><h2>商户信息管理</h2></li>
-                <li class="site-tree-noicon ">
+                <li class="title-str"><h2 data-val="a1">商户信息管理</h2></li>
+                <li class="site-tree-noicon a1">
                     <a href="/shop/index.php?act=member_information&op=member">
                         <cite>资料修改</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a1">
                     <a href="/shop/index.php?act=member_information&op=avatar">
                         <cite>头像设置</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a1">
                     <a href="/shop/index.php?act=login&op=logout">
                         <cite>安全退出</cite>
                     </a>
                 </li>
 
-                <li><h2>认证管理</h2></li>
-                <li class="site-tree-noicon ">
+                <li class="title-str"><h2 data-val="a2">认证管理</h2></li>
+                <li class="site-tree-noicon a2">
                     <a href="/shop/index.php?act=supplier_member&op=join_log">
                         <cite>城市公司认证记录</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a2">
                     <a href="/shop/index.php?act=supplier_member&op=join_city">
                         <cite>认证申请</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a2">
                     <a href="/shop/index.php?act=supplier_member&op=join_store">
                         <cite>开店申请</cite>
                     </a>
                 </li>
 
-                <li><h2>城市公司管理</h2></li>
-                <li class="site-tree-noicon ">
+                <li class="title-str"><h2 data-val="a3">城市公司管理</h2></li>
+                <li class="site-tree-noicon a3">
                     <a href="/shop/index.php?act=supplier_member&op=contacts_list">
                         <cite>联系人管理</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a3">
                     <a href="/shop/index.php?act=supplier_member&op=account_list">
                         <cite>开户银行管理</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a3">
                     <a href="/shop/index.php?act=supplier_member&op=settlement_list">
                         <cite>结算银行管理</cite>
                     </a>
                 </li>
 
-                <li><h2>银行信息管理</h2></li>
-                <li class="site-tree-noicon ">
-                    <a href="/doc/">
+                <li class="title-str"><h2 data-val="a4">银行信息管理</h2></li>
+                <li class="site-tree-noicon a4">
+                    <a href="/shop/index.php?act=supplier_member&op=bank_list"">
                         <cite>银行账户管理</cite>
                     </a>
                 </li>
 
-                <li><h2>交易管理</h2></li>
-                <li class="site-tree-noicon ">
+                <li class="title-str"><h2 data-val="a5">交易管理</h2></li>
+                <li class="site-tree-noicon a5">
                     <a href="/shop/index.php?act=member_unline&op=index">
                         <cite>线下订单</cite>
                     </a>
                 </li>
 
 
-                <li><h2>消息中心</h2></li>
-                <li class="site-tree-noicon ">
+                <li class="title-str"><h2 data-val="a6">消息中心</h2></li>
+                <li class="site-tree-noicon a6">
                     <a href="/shop/index.php?act=member_message&op=message">
                         <cite>收到消息</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a6">
                     <a href="/shop/index.php?act=member_message&op=privatemsg">
                         <cite>已发送消息</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a6">
                     <a href="/shop/index.php?act=member_message&op=systemmsg">
                         <cite>系统消息</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a6">
                     <a href="/shop/index.php?act=member_message&op=personalmsg">
                         <cite>私信</cite>
                     </a>
                 </li>
-                <li class="site-tree-noicon ">
+                <li class="site-tree-noicon a6">
                     <a href="/shop/index.php?act=member_message&op=setting">
                         <cite>接收设置</cite>
                     </a>
@@ -214,6 +209,15 @@
 <?php require_once template('footer');?>
 <link rel="stylesheet" href="<?php echo RESOURCE_SITE_URL;?>/js/layui/css/layui.css" media="all">
 <script>
+/*    $(".title-str").on("click", "h2", function() {
+        var key = $(this).attr('data-val');
+        $(".site-tree-noicon").each(function () {
+            $(this).hide();
+        });
+        $("."+key).each(function () {
+            $(this).show();
+        });
+    });*/
 </script>
 </body>
 </html>
